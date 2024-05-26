@@ -1,7 +1,5 @@
 #pragma once
 
-void helloWord();
-
 // typedef struct dimensoes {
 //     int altura, largura;
 // } Dimensoes;

@@ -1,4 +1,4 @@
-#include "image.h"
+#include <imgGray.h>
 #include <stdio.h>
 
 void helloWord()
