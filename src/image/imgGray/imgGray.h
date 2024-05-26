@@ -1,30 +1,13 @@
 #pragma once
 
-// typedef struct dimensoes {
-//     int altura, largura;
-// } Dimensoes;
+#include <imgStruct.h>
 
-// typedef struct pixelRGB {
-//     int red, blue, green;
-// } PixelRGB;
+void helloWord();
 
-// typedef struct pixelGray {
-//     int value;
-// } PixelGray;
 
-// typedef struct imageGray {
-//     Dimensoes dim;
-//     PixelGray *pixels;
-// } ImageGray;
-
-// typedef struct imageRGB {
-//     Dimensoes dim;
-//     PixelRGB *pixels;
-// } ImageRGB;
-
-// // Funções de criação e liberação
-// ImageGray *create_image_gray(int largura, int altura);
-// void free_image_gray(ImageGray *image);
+// Funções de criação e liberação
+ImageGray *create_image_gray(int largura, int altura);
+void free_image_gray(ImageGray *image);
 
 // ImageRGB *create_image_rgb(int largura, int altura);
 // void free_image_rgb(ImageRGB *image);
