@@ -1,4 +1,5 @@
-#include <image/image.h>
+#include <imgRGB.h>
+#include <imgGray.h>
 
 int main()
 {
