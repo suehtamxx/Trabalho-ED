@@ -4,9 +4,9 @@ typedef struct dimensoes {
     int altura, largura;
 } Dimensoes;
 
-// typedef struct pixelRGB {
-//     int red, blue, green;
-// } PixelRGB;
+typedef struct pixelRGB {
+    int red, blue, green;
+} PixelRGB;
 
 typedef struct pixelGray {
     int value;
@@ -17,7 +17,8 @@ typedef struct imageGray {
     PixelGray *pixels;
 } ImageGray;
 
-// typedef struct imageRGB {
-//     Dimensoes dim;
-//     PixelRGB *pixels;
-// } ImageRGB;
+ typedef struct imageRGB {
+   Dimensoes dim;
+   PixelRGB *pixels;
+ } ImageRGB;
+ 

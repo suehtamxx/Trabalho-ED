@@ -3,7 +3,6 @@
 
 int main()
 {
-
-  
-  helloWord();
+ImageRGB *create_image_rgb(int largura, int altura);
+void free_image_rgb(ImageRGB *image);
 }
