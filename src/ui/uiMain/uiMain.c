@@ -34,32 +34,7 @@ int start(int argc, char *argv[])
 
   gtk_container_add(GTK_CONTAINER(window), mainBox);
 
-  // RGB Image Handling
-  GtkWidget *imageBoxRGB = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-  gtk_stack_add_titled(GTK_STACK(stack), imageBoxRGB, "Manipulação RGB", "Manipulação RGB");
-
-  // GdkPixbuf *pixbufRGB = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
-  // set_img_to_pixbuf_rgb(imgRGB, pixbufRGB);
-
-  // imageWidgetRGB = gtk_image_new_from_pixbuf(pixbufRGB);
-  // gtk_box_pack_start(GTK_BOX(imageBoxRGB), imageWidgetRGB, TRUE, TRUE, 0);
-
-  GtkWidget *buttonBoxRGB = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  gtk_box_pack_start(GTK_BOX(imageBoxRGB), buttonBoxRGB, FALSE, FALSE, 0);
-
-  // Subistitituir por um toogle button
-  // GtkWidget *flipHorizontalButtonRGB = gtk_button_new_with_label("Flip Horizontal RGB");
-  // g_signal_connect(flipHorizontalButtonRGB, "clicked", G_CALLBACK(on_flip_horizontal_rgb_button_clicked), NULL);
-  // gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipHorizontalButtonRGB, TRUE, TRUE, 0);
-
-  // sub
-  GtkWidget *flipHorizontalButtonRGB = gtk_toggle_button_new_with_label("Flip Horizontal RGB");
-  g_signal_connect(flipHorizontalButtonRGB, "toggled", G_CALLBACK(on_flip_horizontal_rgb_button_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipHorizontalButtonRGB, TRUE, TRUE, 0);
-
-  GtkWidget *flipVerticalButtonRGB = gtk_toggle_button_new_with_label("Flip Vertical RGB");
-  g_signal_connect(flipVerticalButtonRGB, "clicked", G_CALLBACK(on_flip_vertical_rgb_button_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipVerticalButtonRGB, TRUE, TRUE, 0);
+  setup_ui_rgb(stack);
 
   // Grayscale Image Handling
   GtkWidget *imageBoxGray = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
