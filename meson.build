@@ -5,10 +5,15 @@ project(
   default_options: ['warning_level=3'],
 )
 
-subdir('src/image')
+# Depedencia do gtk 
+dep_gtk = dependency('gtk+-3.0', version: '>=3.0')
 
-includes = [includes_img_trat]
+subdir('src/image')
+subdir('src/ui')
+
+includes = [includes_img_trat, includes_ui]
 libs = lib_img
+libs += lib_ui
 
 configure_file(
   input: 'utils/input_image_example_Gray.txt',
@@ -28,5 +33,6 @@ executable(
   'main.c',
   include_directories: includes,
   link_with: libs,
+  dependencies: dep_gtk,
   install: true,
 )

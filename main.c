@@ -1,8 +1,9 @@
 #include <imgRGB.h>
 #include <imgGray.h>
+#include <uiMain.h>
 
 int main()
 {
-ImageRGB *create_image_rgb(int largura, int altura);
-void free_image_rgb(ImageRGB *image);
+  start(0, NULL); 
+  return 0;
 }

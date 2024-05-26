@@ -17,8 +17,7 @@ typedef struct imageGray {
     PixelGray *pixels;
 } ImageGray;
 
- typedef struct imageRGB {
-   Dimensoes dim;
-   PixelRGB *pixels;
- } ImageRGB;
- 
+typedef struct imageRGB {
+    Dimensoes dim;
+    PixelRGB *pixels;
+} ImageRGB;
