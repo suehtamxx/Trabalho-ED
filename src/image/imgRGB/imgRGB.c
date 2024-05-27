@@ -40,6 +40,7 @@ ImageRGB *flip_vertical_rgb(const ImageRGB *image){
     //to criando uma nova imagem e armazenando em nova_image.
     ImageRGB *nova_imageVertical=create_image_rgb(largura,altura);
     
+
     if(nova_imageVertical==NULL){
         return NULL;
     }
