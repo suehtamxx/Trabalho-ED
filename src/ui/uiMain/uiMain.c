@@ -5,8 +5,6 @@
 #include <uiGray.h>
 #include <gtk/gtk.h>
 
-GtkWidget *imageWidgetRGB;
-GtkWidget *imageWidgetGray;
 ImageRGB *imgRGB;
 ImageGray *imgGray;
 GtkWidget *aboutDialog;
