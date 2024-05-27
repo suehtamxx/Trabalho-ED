@@ -14,14 +14,14 @@ ImageGray *create_image_gray(int largura, int altura)
 
   return img;
 }
-// void free_image_gray(ImageGray *image)
-// {
-//   if (image)
-//   {
-//     free(image->pixels);
-//     free(image);
-//   }
-// }
+void free_image_gray(ImageGray *image)
+{
+  if (image)
+  {
+    free(image->pixels);
+    free(image);
+  }
+}
 
 ImageGray *read_image_gray_from_file(const char *filename)
 {
@@ -34,7 +34,7 @@ ImageGray *read_image_gray_from_file(const char *filename)
     strcpy(new_filename, suf);
     strcat(new_filename, filename);
     file = fopen(new_filename, "r");
-    if(!file)
+    if (!file)
     {
       fprintf(stderr, "Não foi possível abrir o arquivo %s\n", filename);
       return NULL;
@@ -66,49 +66,81 @@ ImageGray *read_image_gray_from_file(const char *filename)
   return image;
 }
 
-ImageGray *flip_vertical_gray(ImageGray *image){
-    if(image==NULL){
-        return NULL;
-    }
-    int largura=image->dim.largura;
-    int altura=image->dim.altura;
+ImageGray *flip_vertical_gray(ImageGray *image)
+{
+  if (image == NULL)
+  {
+    return NULL;
+  }
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
 
-    //to criando uma nova imagem e armazenando em nova_image.
-    ImageGray *nova_imageVertical=create_image_gray(largura,altura);
-    
-    if(nova_imageVertical==NULL){
-        return NULL;
+  // to criando uma nova imagem e armazenando em nova_image.
+  ImageGray *nova_imageVertical = create_image_gray(largura, altura);
+
+  if (nova_imageVertical == NULL)
+  {
+    return NULL;
+  }
+  // aqui ira copiar os pixels da imagem original para a nova imagem e inverter ela verticalmente.
+  for (int i = 0; i < altura; ++i)
+  {
+    for (int x = 0; x < largura; ++x)
+    {
+      nova_imageVertical->pixels[(altura - 1 - i) * largura + x] = image->pixels[i * largura + x];
     }
-    //aqui ira copiar os pixels da imagem original para a nova imagem e inverter ela verticalmente.
-    for(int i=0;i<altura;++i){
-        for(int x = 0;x<largura;++x ){
-            nova_imageVertical->pixels[(altura-1-i) * largura + x]=image->pixels[i*largura+x];
-        }
-    }
-    return nova_imageVertical;
+  }
+  return nova_imageVertical;
 }
 
-ImageGray *flip_horizontal_gray(ImageGray *image){
-    if(image==NULL){
-        return NULL;
+ImageGray *flip_horizontal_gray(ImageGray *image)
+{
+  if (image == NULL)
+  {
+    return NULL;
+  }
+
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  ImageGray *nova_imagem_horizontal = create_image_gray(largura, altura);
+
+  if (nova_imagem_horizontal == NULL)
+  {
+    return NULL;
+  }
+
+  for (int i = 0; i < altura; ++i)
+  {
+    for (int y = 0; y < largura; ++y)
+    {
+      nova_imagem_horizontal->pixels[i * largura + (largura - 1 - y)] = image->pixels[i * largura + y];
     }
+  }
+  return nova_imagem_horizontal;
+}
 
-    int largura=image->dim.largura;
-    int altura=image->dim.altura;
+ImageGray *transpose(const ImageGray *image)
+{
 
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
 
-    ImageGray *nova_imagem_horizontal=create_image_gray(largura,altura);
-    
-    if(nova_imagem_horizontal==NULL){
-        return NULL;
+  ImageGray *imagem_trasposta = create_image_gray(largura, altura);
+
+  if (imagem_trasposta == NULL)
+  {
+    return NULL;
+  }
+
+  for (int i = 0; i < largura; i++)
+  {
+    for (int j = 0; j < altura; j++)
+    {
+      imagem_trasposta->pixels[j * altura + i].value = image->pixels[i * largura + j].value;
     }
-
-    for(int i=0;i<altura;++i){
-        for(int y=0;y<largura;++y){
-            nova_imagem_horizontal->pixels[i*largura +(largura-1-y)]=image->pixels[i*largura + y];
-        }
-    }
-    return nova_imagem_horizontal;
+  }
+  return imagem_trasposta;
 }
 
 void helloWord()
