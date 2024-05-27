@@ -77,3 +77,48 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image){
     return nova_imagem_horizontal;
 }
 
+ImageRGB *read_imageRGB(const char *filename){
+    FILE *file=fopen(filename,"r");
+    if (file==NULL){
+        perror("erro ao abrir o arquivo");
+        return NULL;
+    }
+
+    int largura, altura;
+
+    fscanf(file,"%d %d",&largura,&altura);
+
+    ImageRGB *image=create_image_rgb(largura,altura);
+
+    if(image==NULL){
+        fclose(file);
+        return NULL;
+    }
+
+    for(int i=0;i<largura*altura;i++){
+        fscanf(file,"%d %d %d",&image->pixels[i].red,&image->pixels[i].green,&image->pixels[i].blue);
+        fgetc(file);
+    }
+
+    fclose(file);
+    return image;
+}
+
+void mostra_imageRGB(const ImageRGB *image){
+    if(image==NULL){
+        printf("imagem é NULL");
+        return;
+    }
+
+    int largura=image->dim.largura;
+    int altura=image->dim.altura;
+
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            PixelRGB pixel=image->pixels[i*largura+y];
+            printf("(%d,%d,%d)",pixel.red,pixel.green,pixel.blue);
+        }
+        printf("\n");
+    }
+}
+
