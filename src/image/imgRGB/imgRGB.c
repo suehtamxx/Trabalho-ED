@@ -104,7 +104,7 @@ ImageRGB *read_imageRGB(const char *filename){
     return image;
 }
 
-void mostra_imageRGB(const imageRGB *image){
+void mostra_imageRGB(const ImageRGB *image){
     if(image==NULL){
         printf("imagem é NULL");
         return;
