@@ -1,10 +1,9 @@
 #include <imgGray.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 ImageGray *create_image_gray(int largura, int altura)
 {
-  ImageGray *img = calloc(1,sizeof(ImageGray));
+  ImageGray *img = calloc(sizeof(ImageGray));
   img->dim.altura = altura;
   img->dim.largura = largura;
   img->pixels = calloc((largura * altura), sizeof(PixelGray));
@@ -30,7 +29,7 @@ ImageGray *read_image_gray_from_file(const char *filename)
   }
 
   int largura, altura;
-
+  // Leia as dimensões da imagem
   if (fscanf(file, "%d %d", &largura, &altura) != 2)
   {
     fprintf(stderr, "Falha ao ler as dimensões da imagem\n");
