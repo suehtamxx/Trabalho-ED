@@ -120,7 +120,7 @@ ImageGray *flip_horizontal_gray(ImageGray *image)
   return nova_imagem_horizontal;
 }
 
-ImageGray *transpose(const ImageGray *image)
+ImageGray *transpose_gray(const ImageGray *image)
 {
 
   int largura = image->dim.largura;
