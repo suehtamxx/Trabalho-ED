@@ -54,7 +54,7 @@ static void on_transpose_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  // imgGray = transpose_gray(imgGray);
+  imgGray = transpose_gray(imgGray);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
   set_img_to_pixbuf_gray(pixbuf);
@@ -90,7 +90,7 @@ void setup_ui_Gray(GtkWidget *stack)
   gtk_box_pack_start(GTK_BOX(menuBox), flipVerticalButtonGray, FALSE, FALSE, 5);
 
   GtkWidget *transposeButtonGray = gtk_toggle_button_new_with_label("Transpose");
-  g_signal_connect(transposeButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  g_signal_connect(transposeButtonGray, "clicked", G_CALLBACK(on_transpose_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), transposeButtonGray, FALSE, FALSE, 5);
 
   GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("Rotate 90º");
