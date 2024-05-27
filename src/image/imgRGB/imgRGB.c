@@ -1,6 +1,7 @@
 #include <imgRGB.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include <string.h>
 
 ImageRGB *create_image_rgb(int largura, int altura){
     ImageRGB *image=(ImageRGB*)malloc(sizeof(ImageRGB));
@@ -40,6 +41,7 @@ ImageRGB *flip_vertical_rgb(const ImageRGB *image){
     //to criando uma nova imagem e armazenando em nova_image.
     ImageRGB *nova_imageVertical=create_image_rgb(largura,altura);
     
+
     if(nova_imageVertical==NULL){
         return NULL;
     }
