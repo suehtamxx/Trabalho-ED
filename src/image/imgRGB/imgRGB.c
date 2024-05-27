@@ -95,6 +95,7 @@ ImageRGB *read_imageRGB(const char *filename){
 
     for(int i=0;i<largura*altura;i++){
         fscanf(file,"%d %d %d",&image->pixels[i].red,&image->pixels[i].green,&image->pixels[i].blue);
+        fgetc(file);
     }
 
     fclose(file);
@@ -106,7 +107,7 @@ void mostra_imageRGB(const imageRGB *image){
         printf("imagem é NULL");
         return;
     }
-    
+
     int largura=image->dim.largura;
     int altura=image->dim.altura;
 
