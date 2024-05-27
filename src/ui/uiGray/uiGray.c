@@ -26,9 +26,9 @@ static void on_flip_horizontal_gray_button_clicked(GtkWidget *widget, gpointer d
   (void)widget;
   (void)data;
 
-  // imgRGB = flip_horizontal_rgb(imgRGB);
+  imgGray = flip_horizontal_gray(imgGray);
 
-  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
   set_img_to_pixbuf_gray(pixbuf);
 
   gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
@@ -49,6 +49,19 @@ static void on_flip_vertical_gray_button_clicked(GtkWidget *widget, gpointer dat
   gtk_widget_show(imageWidgetGray);
 }
 
+static void on_transpose_gray_button_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  // imgGray = transpose_gray(imgGray);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+}
 
 void setup_ui_Gray(GtkWidget *stack)
 {
@@ -69,7 +82,7 @@ void setup_ui_Gray(GtkWidget *stack)
   gtk_box_pack_start(GTK_BOX(mainBox), menuBox, TRUE, TRUE, 10);
 
   GtkWidget *flipHorizontalButtonGray = gtk_toggle_button_new_with_label("Flip Horizontal");
-  g_signal_connect(flipHorizontalButtonGray, "toggled", G_CALLBACK(NULL), NULL);
+  g_signal_connect(flipHorizontalButtonGray, "toggled", G_CALLBACK(on_flip_horizontal_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipHorizontalButtonGray, FALSE, FALSE, 5);
 
   GtkWidget *flipVerticalButtonGray = gtk_toggle_button_new_with_label("Flip Vertical");

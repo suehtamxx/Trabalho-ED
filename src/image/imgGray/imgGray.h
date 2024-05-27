@@ -13,7 +13,7 @@ ImageGray *read_image_gray_from_file(const char *filename);
 // Operações para ImageGray
 ImageGray *flip_vertical_gray(ImageGray *image);
 ImageGray *flip_horizontal_gray(ImageGray *image);
-ImageGray *transpose(const ImageGray *image);
+ImageGray *transpose_gray(const ImageGray *image);
 
 // Manipulação por pixel para ImageGray
 ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height);
