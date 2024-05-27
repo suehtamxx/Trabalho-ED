@@ -1,5 +1,6 @@
 #include <imgGray.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 ImageGray *create_image_gray(int largura, int altura)
 {
