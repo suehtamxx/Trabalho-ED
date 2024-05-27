@@ -2,17 +2,19 @@
 #include <imgGray.h>
 #include <uiMain.h>
 #include <uiRGB.h>
+#include <uiGray.h>
 #include <gtk/gtk.h>
 
 GtkWidget *imageWidgetRGB;
 GtkWidget *imageWidgetGray;
 ImageRGB *imgRGB;
 ImageGray *imgGray;
+GtkWidget *aboutDialog;
 
 int start(int argc, char *argv[])
 {
   // imgRGB = set_imgRGB_from_arq("imgRGB.txt");
-  // imgGray = set_imgRGB_from_arq("imgGray.txt");
+  imgGray = read_image_gray_from_file("imgGray.txt");
 
   gtk_init(&argc, &argv);
 
@@ -34,36 +36,26 @@ int start(int argc, char *argv[])
 
   gtk_container_add(GTK_CONTAINER(window), mainBox);
 
-  // RGB Image Handling
-  GtkWidget *imageBoxRGB = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-  gtk_stack_add_titled(GTK_STACK(stack), imageBoxRGB, "Manipulação RGB", "Manipulação RGB");
+  // About Dialog
+  aboutDialog = gtk_about_dialog_new();
+  gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(aboutDialog), "Imagem RGB e Gray");
+  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(aboutDialog), "1.0");
+  gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(aboutDialog), "Trabalho de Estrutura de Dados I");
 
-  // GdkPixbuf *pixbufRGB = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
-  // set_img_to_pixbuf_rgb(imgRGB, pixbufRGB);
+  // Adicione a URL do site
+  gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(aboutDialog), "https://github.com/usuario/repositorio");
+  gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(aboutDialog), "GitHub");
 
-  // imageWidgetRGB = gtk_image_new_from_pixbuf(pixbufRGB);
-  // gtk_box_pack_start(GTK_BOX(imageBoxRGB), imageWidgetRGB, TRUE, TRUE, 0);
+  // Corrigido: Adicionado uma vírgula no final do array de autores
+  gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(aboutDialog), (const gchar *[]){"Kauã Henrique", "Flavio Lima", "Rayssa Alves", NULL});
+  gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(aboutDialog), GTK_LICENSE_GPL_3_0);
+  gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(aboutDialog), TRUE);
+  gtk_about_dialog_set_logo_icon_name(GTK_ABOUT_DIALOG(aboutDialog), "image-x-generic");
 
-  GtkWidget *buttonBoxRGB = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  gtk_box_pack_start(GTK_BOX(imageBoxRGB), buttonBoxRGB, FALSE, FALSE, 0);
-
-  // Subistitituir por um toogle button
-  // GtkWidget *flipHorizontalButtonRGB = gtk_button_new_with_label("Flip Horizontal RGB");
-  // g_signal_connect(flipHorizontalButtonRGB, "clicked", G_CALLBACK(on_flip_horizontal_rgb_button_clicked), NULL);
-  // gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipHorizontalButtonRGB, TRUE, TRUE, 0);
-
-  // sub
-  GtkWidget *flipHorizontalButtonRGB = gtk_toggle_button_new_with_label("Flip Horizontal RGB");
-  g_signal_connect(flipHorizontalButtonRGB, "toggled", G_CALLBACK(on_flip_horizontal_rgb_button_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipHorizontalButtonRGB, TRUE, TRUE, 0);
-
-  GtkWidget *flipVerticalButtonRGB = gtk_toggle_button_new_with_label("Flip Vertical RGB");
-  g_signal_connect(flipVerticalButtonRGB, "clicked", G_CALLBACK(on_flip_vertical_rgb_button_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(buttonBoxRGB), flipVerticalButtonRGB, TRUE, TRUE, 0);
+  setup_ui_rgb(stack);
+  setup_ui_Gray(stack);
 
   // Grayscale Image Handling
-  GtkWidget *imageBoxGray = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-  gtk_stack_add_titled(GTK_STACK(stack), imageBoxGray, "Manipulação Gray", "Manipulação Gray");
 
   // GdkPixbuf *pixbufGray = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
   // set_img_to_pixbuf_gray(imgGray, pixbufGray);
@@ -81,26 +73,6 @@ int start(int argc, char *argv[])
   // GtkWidget *flipVerticalButtonGray = gtk_button_new_with_label("Flip Vertical Gray");
   // g_signal_connect(flipVerticalButtonGray, "clicked", G_CALLBACK(on_flip_vertical_gray_button_clicked), NULL);
   // gtk_box_pack_start(GTK_BOX(buttonBoxGray), flipVerticalButtonGray, TRUE, TRUE, 0);
-
-  // About Dialog
-  GtkWidget *aboutDialog = gtk_about_dialog_new();
-  gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(aboutDialog), "Imagem RGB e Gray");
-  gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(aboutDialog), "1.0");
-  gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(aboutDialog), "Trabalho de Estrutura de Dados I");
-
-  // Adicione a URL do site
-  gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(aboutDialog), "https://github.com/usuario/repositorio");
-  gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(aboutDialog), "GitHub");
-
-  // Corrigido: Adicionado uma vírgula no final do array de autores
-  gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(aboutDialog), (const gchar *[]){"Kauã Henrique", "Flavio Lima", "Rayssa Alves", NULL});
-  gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(aboutDialog), GTK_LICENSE_GPL_3_0);
-  gtk_about_dialog_set_wrap_license(GTK_ABOUT_DIALOG(aboutDialog), TRUE);
-  gtk_about_dialog_set_logo_icon_name(GTK_ABOUT_DIALOG(aboutDialog), "image-x-generic");
-
-  GtkWidget *aboutButton = gtk_button_new_with_label("❤️");
-  g_signal_connect(aboutButton, "clicked", G_CALLBACK(on_about_button_clicked), aboutDialog);
-  gtk_box_pack_start(GTK_BOX(mainBox), aboutButton, FALSE, FALSE, 0);
 
   gtk_widget_show_all(window);
   gtk_main();

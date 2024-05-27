@@ -46,7 +46,7 @@ ImageRGB *flip_vertical_rgb(const ImageRGB *image){
     //aqui ira copiar os pixels da imagem original para a nova imagem e inverter ela verticalmente.
     for(int i=0;i<altura;++i){
         for(int x = 0;x<largura;++x ){
-            nova_image->pixels[(altura-1-i) * largura + x]=image->pixels[i*largura+x];
+            nova_imageVertical->pixels[(altura-1-i) * largura + x]=image->pixels[i*largura+x];
         }
     }
     return nova_imageVertical;

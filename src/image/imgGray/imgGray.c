@@ -4,7 +4,7 @@
 
 ImageGray *create_image_gray(int largura, int altura)
 {
-  ImageGray *img = calloc(sizeof(ImageGray));
+  ImageGray *img = calloc(1, sizeof(ImageGray));
   img->dim.altura = altura;
   img->dim.largura = largura;
   img->pixels = calloc((largura * altura), sizeof(PixelGray));
@@ -25,8 +25,18 @@ ImageGray *read_image_gray_from_file(const char *filename)
   FILE *file = fopen(filename, "r");
   if (!file)
   {
-    fprintf(stderr, "Não foi possível abrir o arquivo %s\n", filename);
-    return NULL;
+    // botar sufixo builddir no filename
+    char *suf = "builddir/";
+    char *new_filename = malloc(strlen(filename) + strlen(suf) + 1);
+    strcpy(new_filename, suf);
+    strcat(new_filename, filename);
+    file = fopen(new_filename, "r");
+    if(!file)
+    {
+      fprintf(stderr, "Não foi possível abrir o arquivo %s\n", filename);
+      return NULL;
+    }
+    free(new_filename);
   }
 
   int largura, altura;
@@ -49,15 +59,12 @@ ImageGray *read_image_gray_from_file(const char *filename)
   {
     for (int j = 0; j < largura; j++)
     {
-      if (fscanf(file, "%d", &image->pixels[i * largura + j].value) != 1)
-      {
-        fprintf(stderr, "Falha ao ler o valor do pixel em (%d, %d)\n", i, j);
-        free_image_gray(image);
-        fclose(file);
-        return NULL;
-      }
+      fscanf(file, "%d", &image->pixels[i * largura + j].value);
+      fgetc(file);
     }
   }
+
+  return image;
 }
 
 void helloWord()
