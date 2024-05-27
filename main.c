@@ -1,25 +1,26 @@
 #include <uiMain.h>
+#include <imgGray.h>
 
 int main()
 {
 
-  //start(0, NULL); 
-  FILE *arq;
-  arq = fopen("utils/input_image_example_Gray.txt", "r");
-  if(arq != NULL){
-    printf("Abriu!\n");
-  }
-  ImageGray *imgGray = read_image_gray_from_file("utils/input_image_example_Gray.txt");
+  start(0, NULL); 
+  // FILE *arq;
+  // arq = fopen("utils/input_image_example_Gray.txt", "r");
+  // if(arq != NULL){
+  //   printf("Abriu!\n");
+  // }
+  // ImageGray *imgGray = read_image_gray_from_file("utils/input_image_example_Gray.txt");
 
-  if (imgGray == NULL)
-  {
-    fclose(arq);
-    return 1;
-  }else{
-    printf("Deu certo!\n");
-  }
+  // if (imgGray == NULL)
+  // {
+  //   fclose(arq);
+  //   return 1;
+  // }else{
+  //   printf("Deu certo!\n");
+  // }
 
-  printf("%d - %d\n", imgGray->dim.altura, imgGray->dim.largura);
+  // printf("%d - %d\n", imgGray->dim.altura, imgGray->dim.largura);
   
   // Operações para ImageGray
   // ImageGray *flipped_vertical = ImageGray *flip_vertical_gray(imgGray);

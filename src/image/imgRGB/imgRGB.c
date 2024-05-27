@@ -1,6 +1,7 @@
 #include <imgRGB.h>
 #include<stdio.h>
 #include<stdlib.h>
+#include <string.h>
 
 ImageRGB *create_image_rgb(int largura, int altura){
     ImageRGB *image=(ImageRGB*)malloc(sizeof(ImageRGB));

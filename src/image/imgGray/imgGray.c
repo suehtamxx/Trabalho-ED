@@ -1,5 +1,6 @@
 #include <imgGray.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 ImageGray *create_image_gray(int largura, int altura)
@@ -41,7 +42,8 @@ ImageGray *read_image_gray_from_file(const char *filename)
   }
 
   int largura, altura;
-  fscanf(file, "%d %d", &largura, &altura);
+  fscanf(file, "%d", &altura);
+  fscanf(file, "%d", &largura);
   // Leia as dimensões da imagem
 
   ImageGray *image = create_image_gray(largura, altura);
