@@ -1,9 +1,9 @@
-#include <imgRGB.h>
-#include <imgGray.h>
 #include <uiMain.h>
 
 int main()
 {
+
+  //start(0, NULL); 
   FILE *arq;
   arq = fopen("utils/input_image_example_Gray.txt", "r");
   if(arq != NULL){
