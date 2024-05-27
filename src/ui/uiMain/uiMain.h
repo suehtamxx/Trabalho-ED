@@ -3,8 +3,6 @@
 #include <gtk/gtk.h>
 #include <imgStruct.h>
 
-extern GtkWidget *imageWidgetRGB;
-extern GtkWidget *imageWidgetGray;
 extern ImageRGB *imgRGB;
 extern ImageGray *imgGray;
 extern GtkWidget *aboutDialog;

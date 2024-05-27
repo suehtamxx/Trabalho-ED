@@ -2,6 +2,8 @@
 #include <imgGray.h>
 #include <uiMain.h>
 
+GtkWidget *imageWidgetGray;
+
 static void set_img_to_pixbuf_gray(GdkPixbuf *pixbuf)
 {
   guchar *pixels = gdk_pixbuf_get_pixels(pixbuf);
@@ -18,6 +20,36 @@ static void set_img_to_pixbuf_gray(GdkPixbuf *pixbuf)
   }
 }
 
+
+static void on_flip_horizontal_gray_button_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  // imgRGB = flip_horizontal_rgb(imgRGB);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+}
+
+static void on_flip_vertical_gray_button_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  imgGray = flip_vertical_gray(imgGray);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+}
+
+
 void setup_ui_Gray(GtkWidget *stack)
 {
   GtkWidget *mainBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
@@ -29,7 +61,7 @@ void setup_ui_Gray(GtkWidget *stack)
 
   GdkPixbuf *pixbufGray = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
   set_img_to_pixbuf_gray(pixbufGray);
-  GtkWidget *imageWidgetGray = gtk_image_new_from_pixbuf(pixbufGray);
+  imageWidgetGray = gtk_image_new_from_pixbuf(pixbufGray);
   gtk_box_pack_start(GTK_BOX(imageBoxGray), imageWidgetGray, TRUE, TRUE, 0);
 
   // Botões no menuBox
@@ -41,7 +73,7 @@ void setup_ui_Gray(GtkWidget *stack)
   gtk_box_pack_start(GTK_BOX(menuBox), flipHorizontalButtonGray, FALSE, FALSE, 5);
 
   GtkWidget *flipVerticalButtonGray = gtk_toggle_button_new_with_label("Flip Vertical");
-  g_signal_connect(flipVerticalButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  g_signal_connect(flipVerticalButtonGray, "clicked", G_CALLBACK(on_flip_vertical_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipVerticalButtonGray, FALSE, FALSE, 5);
 
   GtkWidget *transposeButtonGray = gtk_toggle_button_new_with_label("Transpose");
@@ -71,32 +103,4 @@ void setup_ui_Gray(GtkWidget *stack)
   GtkWidget *aboutButton = gtk_button_new_with_label("❤️");
   g_signal_connect(aboutButton, "clicked", G_CALLBACK(on_about_button_clicked), aboutDialog);
   gtk_box_pack_start(GTK_BOX(menuBox), aboutButton, FALSE, FALSE, 5);
-}
-
-static void on_flip_horizontal_gray_button_clicked(GtkWidget *widget, gpointer data)
-{
-  (void)widget;
-  (void)data;
-
-  // imgRGB = flip_horizontal_rgb(imgRGB);
-
-  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
-  set_img_to_pixbuf_gray(pixbuf);
-
-  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetRGB), pixbuf);
-  gtk_widget_show(imageWidgetRGB);
-}
-
-static void on_flip_vertical_gray_button_clicked(GtkWidget *widget, gpointer data)
-{
-  (void)widget;
-  (void)data;
-
-  // imgRGB = flip_vertical_rgb(imgRGB);
-
-  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgRGB->dim.largura, imgRGB->dim.altura);
-  set_img_to_pixbuf_gray(pixbuf);
-
-  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetRGB), pixbuf);
-  gtk_widget_show(imageWidgetRGB);
 }
