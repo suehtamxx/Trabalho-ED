@@ -1,5 +1,3 @@
-#include <imgRGB.h>
-#include <imgGray.h>
 #include <uiMain.h>
 
 int main()

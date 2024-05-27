@@ -2,6 +2,7 @@
 #include <imgGray.h>
 #include <uiMain.h>
 #include <uiRGB.h>
+#include <uiGray.h>
 #include <gtk/gtk.h>
 
 GtkWidget *imageWidgetRGB;
@@ -35,10 +36,10 @@ int start(int argc, char *argv[])
   gtk_container_add(GTK_CONTAINER(window), mainBox);
 
   setup_ui_rgb(stack);
+  setup_ui_Gray(stack);
 
   // Grayscale Image Handling
-  GtkWidget *imageBoxGray = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
-  gtk_stack_add_titled(GTK_STACK(stack), imageBoxGray, "Manipulação Gray", "Manipulação Gray");
+
 
   // GdkPixbuf *pixbufGray = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
   // set_img_to_pixbuf_gray(imgGray, pixbufGray);
