@@ -11,7 +11,7 @@ GtkWidget *aboutDialog;
 
 int start(int argc, char *argv[])
 {
-  // imgRGB = set_imgRGB_from_arq("imgRGB.txt");
+  imgRGB = read_imageRGB("imgRGB.txt");
   imgGray = read_image_gray_from_file("imgGray.txt");
 
   gtk_init(&argc, &argv);
@@ -41,8 +41,7 @@ int start(int argc, char *argv[])
   gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(aboutDialog), "Trabalho de Estrutura de Dados I");
 
   // Adicione a URL do site
-  gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(aboutDialog), "https://github.com/usuario/repositorio");
-  gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(aboutDialog), "GitHub");
+  gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(aboutDialog), "https://github.com/rayss4lves/work_01-TAD-Lista");
 
   // Corrigido: Adicionado uma vírgula no final do array de autores
   gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(aboutDialog), (const gchar *[]){"Kauã Henrique", "Flavio Lima", "Rayssa Alves", NULL});
