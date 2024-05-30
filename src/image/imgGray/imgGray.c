@@ -151,11 +151,11 @@ void calcula_histograma(const PixelGray *regiao, int width, int *histograma)
     histograma[i] = 0;
   }
 
-  for (int i = 0; i < 256; i++)
+  for (int i = 0; i < width; i++)
   {
-    for (int j = 0; j < 256; j++)
+    for (int j = 0; j < width; j++)
     {
-      int intensidade = regiao[j * width + i].value;
+      int intensidade = regiao[i * width + j].value;
       histograma[intensidade]++;
     }
   }
