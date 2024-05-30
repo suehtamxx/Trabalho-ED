@@ -230,7 +230,7 @@ void setup_ui_rgb(GtkWidget *stack)
   g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(on_neq90_rotation_rgb_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), rotate_90ButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *randomButton = gtk_button_new_with_label("*---Imagem Aleatória---*");
+  GtkWidget *randomButton = gtk_button_new_with_label("---Imagem Aleatória---");
   g_signal_connect(randomButton, "clicked", G_CALLBACK(NULL), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), randomButton, TRUE, TRUE, 5);
 
