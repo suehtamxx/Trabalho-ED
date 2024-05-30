@@ -85,7 +85,7 @@ static void on_clahe_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray);
+  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray, 8, 8);
   adicionarHistoricoGray(newImage);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
@@ -102,7 +102,7 @@ static void on_median_blur_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray);
+  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray, 3);
   adicionarHistoricoGray(newImage);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
@@ -229,7 +229,7 @@ void setup_ui_Gray(GtkWidget *stack)
   g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(on_neq90_rotation_gray_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), rotate_90ButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *randomButton = gtk_button_new_with_label("*---Imagem Aleatória---*");
+  GtkWidget *randomButton = gtk_button_new_with_label("---Imagem Aleatória---");
   g_signal_connect(randomButton, "clicked", G_CALLBACK(NULL), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), randomButton, TRUE, TRUE, 5);
 

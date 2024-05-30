@@ -108,18 +108,14 @@ ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
     return newImg;
 }
 
-ImageRGB *clahe_rgb(const ImageRGB *image)
+ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
 {
-    int tile_width, tile_height;
-
     ImageRGB *newImg = image;
     return newImg;
 }
 
-ImageRGB *median_blur_rgb(const ImageRGB *image)
+ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
 {
-    int kernel_size;
-
     ImageRGB *newImg = image;
     return newImg;
 }

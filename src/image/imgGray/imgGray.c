@@ -276,6 +276,21 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
   return resultado;
 }
 
+ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
+{
+  return image;
+}
+
+ImageGray *add90_rotation_gray(const ImageGray *image)
+{
+  return image;
+}
+
+ImageGray *neq90_rotation_gray(const ImageGray *image)
+{
+  return image;
+}
+
 void helloWord()
 {
   printf("Hello, World!\n");

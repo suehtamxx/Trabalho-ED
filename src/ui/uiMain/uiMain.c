@@ -13,6 +13,9 @@ int start(int argc, char *argv[])
   GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   g_signal_connect(window, "destroy", G_CALLBACK(on_window_destroy), NULL);
 
+  GtkSettings *settings = gtk_settings_get_default();
+  g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
+
   GtkWidget *stack = gtk_stack_new();
   GtkWidget *stackSwitcher = gtk_stack_switcher_new();
   gtk_stack_switcher_set_stack(GTK_STACK_SWITCHER(stackSwitcher), GTK_STACK(stack));
