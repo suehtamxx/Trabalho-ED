@@ -80,6 +80,74 @@ static void on_transpose_gray_button_clicked(GtkWidget *widget, gpointer data)
   verificarBotoes();
 }
 
+static void on_clahe_gray_button_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray);
+  adicionarHistoricoGray(newImage);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+
+  verificarBotoes();
+}
+
+static void on_median_blur_gray_button_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray);
+  adicionarHistoricoGray(newImage);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+
+  verificarBotoes();
+}
+
+static void on_add90_rotation_gray_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  ImageGray *newImage = add90_rotation_gray(historicoGrayAtual->imgGray);
+  adicionarHistoricoGray(newImage);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+
+  verificarBotoes();
+}
+
+static void on_neq90_rotation_gray_clicked(GtkWidget *widget, gpointer data)
+{
+  (void)widget;
+  (void)data;
+
+  ImageGray *newImage = neq90_rotation_gray(historicoGrayAtual->imgGray);
+  adicionarHistoricoGray(newImage);
+
+  GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
+  set_img_to_pixbuf_gray(pixbuf);
+
+  gtk_image_set_from_pixbuf(GTK_IMAGE(imageWidgetGray), pixbuf);
+  gtk_widget_show(imageWidgetGray);
+
+  verificarBotoes();
+}
+
 static void on_back_button_clicked(GtkWidget *widget, gpointer data)
 {
   (void)widget;
@@ -145,20 +213,20 @@ void setup_ui_Gray(GtkWidget *stack)
   g_signal_connect(transposeButtonGray, "clicked", G_CALLBACK(on_transpose_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), transposeButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *claheButtonGray = gtk_button_new_with_label("*filtro CLAHE*");
-  g_signal_connect(claheButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  GtkWidget *claheButtonGray = gtk_button_new_with_label("filtro CLAHE");
+  g_signal_connect(claheButtonGray, "clicked", G_CALLBACK(on_clahe_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), claheButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *medianBlurButtonGray = gtk_button_new_with_label("*filtro Median Blur*");
-  g_signal_connect(medianBlurButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  GtkWidget *medianBlurButtonGray = gtk_button_new_with_label("filtro Median Blur");
+  g_signal_connect(medianBlurButtonGray, "clicked", G_CALLBACK(on_median_blur_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), medianBlurButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("*Rotate 90º*");
-  g_signal_connect(rotate90ButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("Rotate 90º");
+  g_signal_connect(rotate90ButtonGray, "clicked", G_CALLBACK(on_add90_rotation_gray_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), rotate90ButtonGray, TRUE, TRUE, 5);
 
-  GtkWidget *rotate_90ButtonGray = gtk_button_new_with_label("*Rotate -90º*");
-  g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(NULL), NULL);
+  GtkWidget *rotate_90ButtonGray = gtk_button_new_with_label("Rotate -90º");
+  g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(on_neq90_rotation_gray_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), rotate_90ButtonGray, TRUE, TRUE, 5);
 
   GtkWidget *randomButton = gtk_button_new_with_label("*---Imagem Aleatória---*");
