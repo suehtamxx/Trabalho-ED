@@ -143,7 +143,7 @@ ImageGray *transpose_gray(const ImageGray *image)
 }
 
 //calcula o histograma
-void calcula_histograma(const PixelGray *regiao, int width, int height, int *histograma)
+void calcula_histograma(const PixelGray *regiao, int width, int *histograma)
 {
   for (int i = 0; i < 256; i++)
   {
@@ -196,7 +196,7 @@ void calcula_cdf(const int *histograma, float *cdf)
   }
 }
 
-void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cfd)
+void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cdf)
 {
   for (int i = 0; i < width * height; i++)
   {
@@ -223,9 +223,9 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
   int *histograma = (int *)calloc(256, sizeof(int));
   float *cdf = (float *)calloc(256, sizeof(float));
 
-  for (int tile_y = 0; tile_y < num_tiles_y; tile_y++)
+  for (int tile_y = 0; tile_y < numero_tiles_altura; tile_y++)
   {
-    for (int tile_x = 0; tile_x < num_tiles_x; tile_x++)
+    for (int tile_x = 0; tile_x < numero_tiles_largura; tile_x++)
     {
       int start_x = tile_x * tile_width;
       int start_y = tile_y * tile_height;
@@ -251,7 +251,7 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
       }
 
       
-      calcula_histograma(regiao, largura, altura, histograma);
+      calcula_histograma(regiao, largura, histograma);
       
       limite_Histograma(histograma, limite_pixels);
       
