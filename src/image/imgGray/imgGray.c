@@ -1,6 +1,5 @@
 #include <imgGray.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -75,14 +74,14 @@ ImageGray *flip_vertical_gray(ImageGray *image)
   int largura = image->dim.largura;
   int altura = image->dim.altura;
 
-  // to criando uma nova imagem e armazenando em nova_image.
+  // Criando uma nova imagem e armazenando em nova_image.
   ImageGray *nova_imageVertical = create_image_gray(largura, altura);
 
   if (nova_imageVertical == NULL)
   {
     return NULL;
   }
-  // aqui ira copiar os pixels da imagem original para a nova imagem e inverter ela verticalmente.
+  // Aqui ira copiar os pixels da imagem original para a nova imagem e inverter ela verticalmente.
   for (int i = 0; i < altura; ++i)
   {
     for (int x = 0; x < largura; ++x)
@@ -141,6 +140,140 @@ ImageGray *transpose_gray(const ImageGray *image)
     }
   }
   return imagem_trasposta;
+}
+
+//calcula o histograma
+void calcula_histograma(const PixelGray *regiao, int width, int height, int *histograma)
+{
+  for (int i = 0; i < 256; i++)
+  {
+    // inicializa histograma com 0
+    histograma[i] = 0;
+  }
+
+  for (int i = 0; i < 256; i++)
+  {
+    for (int j = 0; j < 256; j++)
+    {
+      int intensidade = regiao[j * width + i].value;
+      histograma[intensidade]++;
+    }
+  }
+}
+
+void limite_Histograma(int *histograma, float limite)
+{
+  int excesso_pixel = 0;
+  for (int i = 0; i < 256; i++)
+  {
+    if (histograma[i] > limite)
+    {
+      excesso_pixel += histograma[i] - limite;
+      histograma[i] = limite;
+    }
+  }
+  int redestribuir = excesso_pixel / 256;
+
+  for (int i = 0; i < 256; i++)
+  {
+    histograma[i] = redestribuir;
+  }
+}
+
+void calcula_cdf(const int *histograma, float *cdf)
+{
+  float total = 0;
+
+  for (int i = 0; i < 256; i++)
+  {
+    total += histograma[i];
+    cdf[i] = total;
+  }
+
+  for (int i = 0; i < 256; i++)
+  {
+    cdf[i] /= total;
+  }
+}
+
+void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cfd)
+{
+  for (int i = 0; i < width * height; i++)
+  {
+    int valor_pixel = regiao[i].value;
+    regiao[i].value = (int)(cdf[valor_pixel] * 255);
+  }
+}
+
+ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
+{
+
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  int numero_tiles_largura = (largura + tile_width - 1) / tile_width;
+  int numero_tiles_altura = (altura + tile_height - 1) / tile_height;
+  
+  float limite_clip = 4.0;
+
+  int limite_pixels = (int)(limite_clip * ((tile_height * tile_width) / 256));
+
+  ImageGray *resultado = create_image_gray(largura, altura);
+
+  int *histograma = (int *)calloc(256, sizeof(int));
+  float *cdf = (float *)calloc(256, sizeof(float));
+
+  for (int tile_y = 0; tile_y < num_tiles_y; tile_y++)
+  {
+    for (int tile_x = 0; tile_x < num_tiles_x; tile_x++)
+    {
+      int start_x = tile_x * tile_width;
+      int start_y = tile_y * tile_height;
+      int end_x = (tile_x + 1) * tile_width;
+      int end_y = (tile_y + 1) * tile_height;
+
+      if (end_x > largura)
+        end_x = largura;
+      if (end_y > altura)
+        end_y = altura;
+
+      int largura_regiao = end_x - start_x;
+      int altura_regiao = end_y - start_y;
+
+      PixelGray *regiao = (PixelGray *)calloc(largura_regiao * altura_regiao, sizeof(PixelGray));
+
+      for (int i = 0; i < altura_regiao; i++)
+      {
+        for (int j = 0; j < largura_regiao; j++)
+        {
+          regiao[i * largura_regiao + j] = image->pixels[(start_y + i) * largura + start_x + j];
+        }
+      }
+
+      
+      calcula_histograma(regiao, largura, altura, histograma);
+      
+      limite_Histograma(histograma, limite_pixels);
+      
+      calcula_cdf(histograma, cdf);
+      
+      equalizar_regiao(regiao, largura_regiao, altura_regiao, cdf);
+
+      for (int k = 0; k < altura_regiao; k++)
+      {
+        for (int l = 0; l < largura_regiao; l++)
+        {
+          resultado->pixels[(start_y + k) * largura + start_x + l] = regiao[k * largura_regiao + l];
+        }
+      }
+      free(regiao);
+    }
+  }
+
+  free(histograma);
+  free(cdf);
+
+  return resultado;
 }
 
 void helloWord()
