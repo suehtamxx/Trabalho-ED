@@ -143,7 +143,7 @@ ImageGray *transpose_gray(const ImageGray *image)
 }
 
 //calcula o histograma
-void calcula_histograma(const PixelGray *regiao, int width, int *histograma)
+void calcula_histograma(const PixelGray *regiao, int width, int height, int *histograma)
 {
   for (int i = 0; i < 256; i++)
   {
@@ -151,14 +151,15 @@ void calcula_histograma(const PixelGray *regiao, int width, int *histograma)
     histograma[i] = 0;
   }
 
-  for (int i = 0; i < 256; i++)
-  {
-    for (int j = 0; j < 256; j++)
+  for (int i = 0; i < height; i++)
+{
+    for (int j = 0; j < width; j++)
     {
-      int intensidade = regiao[j * width + i].value;
-      histograma[intensidade]++;
+        int intensidade = regiao[i * width + j].value;
+        histograma[intensidade]++;
     }
-  }
+}
+
 }
 
 void limite_Histograma(int *histograma, float limite)
@@ -207,7 +208,6 @@ void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cdf
 
 ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
 {
-
   int largura = image->dim.largura;
   int altura = image->dim.altura;
 
@@ -251,7 +251,7 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
       }
 
       
-      calcula_histograma(regiao, largura, histograma);
+      calcula_histograma(regiao, largura, altura, histograma);
       
       limite_Histograma(histograma, limite_pixels);
       
