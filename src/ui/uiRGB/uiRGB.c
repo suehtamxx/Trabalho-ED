@@ -86,7 +86,7 @@ static on_filter_clahe_rgb_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageRGB *newImgRGB = clahe_rgb(historicoRGBAtual->imgRGB);
+  ImageRGB *newImgRGB = clahe_rgb(historicoRGBAtual->imgRGB, 8, 8);
   adicionarHistoricoRGB(newImgRGB);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoRGBAtual->imgRGB->dim.largura, historicoRGBAtual->imgRGB->dim.altura);
@@ -103,7 +103,7 @@ static void on_filter_median_rgb_button_clicked(GtkWidget *widget, gpointer data
   (void)widget;
   (void)data;
 
-  ImageRGB *newImgRGB = median_blur_rgb(historicoRGBAtual->imgRGB);
+  ImageRGB *newImgRGB = median_blur_rgb(historicoRGBAtual->imgRGB, 3);
   adicionarHistoricoRGB(newImgRGB);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoRGBAtual->imgRGB->dim.largura, historicoRGBAtual->imgRGB->dim.altura);

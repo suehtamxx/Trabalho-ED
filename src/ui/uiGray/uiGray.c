@@ -85,7 +85,7 @@ static void on_clahe_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray);
+  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray, 8, 8);
   adicionarHistoricoGray(newImage);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
@@ -102,7 +102,7 @@ static void on_median_blur_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray);
+  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray, 3);
   adicionarHistoricoGray(newImage);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);
