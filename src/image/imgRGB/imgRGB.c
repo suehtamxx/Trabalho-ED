@@ -110,7 +110,7 @@ ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
 
 ImageRGB *clahe_rgb(const ImageRGB *image)
 {
-    int tile_width, int tile_height;
+    int tile_width, tile_height;
 
     ImageRGB *newImg = image;
     return newImg;
