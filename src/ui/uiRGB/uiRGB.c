@@ -81,7 +81,7 @@ static void on_transpose_rgb_button_clicked(GtkWidget *widget, gpointer data)
   verificarBotoes();
 }
 
-static on_filter_clahe_rgb_button_clicked(GtkWidget *widget, gpointer data)
+static void on_filter_clahe_rgb_button_clicked(GtkWidget *widget, gpointer data)
 {
   (void)widget;
   (void)data;
