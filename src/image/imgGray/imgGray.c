@@ -206,10 +206,8 @@ void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cdf
   }
 }
 
-ImageGray *clahe_gray(const ImageGray *image)
+ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
 {
-  int tile_width = 32;
-  int tile_height = 32;
   int largura = image->dim.largura;
   int altura = image->dim.altura;
 
