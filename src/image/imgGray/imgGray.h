@@ -24,9 +24,11 @@ void limite_Histograma(int *histograma, float limite);
 void calcula_cdf(const int *histograma, float *cdf);
 void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cfd);
 
-ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height);
+ImageGray *clahe_gray(const ImageGray *image);
 
 //funçoes auxiliares para filtro median_blur_gray
 
+ImageGray *median_blur_gray(const ImageGray *image);
 
-ImageGray *median_blur_gray(const ImageGray *image, int kernel_size);
+ImageGray *add90_rotation_gray(const ImageGray *image);
+ImageGray *neq90_rotation_gray(const ImageGray *image);

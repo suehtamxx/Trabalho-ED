@@ -142,20 +142,20 @@ ImageGray *transpose_gray(const ImageGray *image)
   return imagem_trasposta;
 }
 
-//calcula o histograma
+// calcula o histograma
 void calcula_histograma(const PixelGray *regiao, int width, int *histograma)
 {
-  for (int i = 0; i < 256; i++)
+  for (int i = 0; i < width; i++)
   {
     // inicializa histograma com 0
     histograma[i] = 0;
   }
 
-  for (int i = 0; i < 256; i++)
+  for (int i = 0; i < width; i++)
   {
-    for (int j = 0; j < 256; j++)
+    for (int j = 0; j < width; j++)
     {
-      int intensidade = regiao[j * width + i].value;
+      int intensidade = regiao[i * width + j].value;
       histograma[intensidade]++;
     }
   }
@@ -205,15 +205,17 @@ void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cdf
   }
 }
 
-ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
+ImageGray *clahe_gray(const ImageGray *image)
 {
+  int tile_width = 32;
+  int tile_height = 32;
 
   int largura = image->dim.largura;
   int altura = image->dim.altura;
 
   int numero_tiles_largura = (largura + tile_width - 1) / tile_width;
   int numero_tiles_altura = (altura + tile_height - 1) / tile_height;
-  
+
   float limite_clip = 4.0;
 
   int limite_pixels = (int)(limite_clip * ((tile_height * tile_width) / 256));
@@ -250,13 +252,12 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
         }
       }
 
-      
       calcula_histograma(regiao, largura, histograma);
-      
+
       limite_Histograma(histograma, limite_pixels);
-      
+
       calcula_cdf(histograma, cdf);
-      
+
       equalizar_regiao(regiao, largura_regiao, altura_regiao, cdf);
 
       for (int k = 0; k < altura_regiao; k++)
@@ -274,6 +275,31 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
   free(cdf);
 
   return resultado;
+}
+
+ImageGray *median_blur_gray(const ImageGray *image)
+{
+  // ALTERE A NEWIMAGE PARA A IMAGEM QUE SERÁ RETORNADA
+  ImageGray *newImage = image;
+
+  // DEFINA O KERNEL_SIZE AQUI, OU ME AVISE PARA EU MUDAR DIRETO NA GUI QUANDO FOR CHAMADA
+  int kernel_size = NULL;
+
+  return newImage;
+}
+
+ImageGray *add90_rotation_gray(const ImageGray *image)
+{
+  ImageGray *newImage = image;
+
+  return newImage;
+}
+
+ImageGray *neq90_rotation_gray(const ImageGray *image)
+{
+  ImageGray *newImage = image;
+
+  return newImage;
 }
 
 void helloWord()
