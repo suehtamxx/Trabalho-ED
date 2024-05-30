@@ -90,6 +90,40 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
     return nova_imagem_horizontal;
 }
 
+ImageRGB *transpose_rgb(const ImageRGB *image)
+{
+    ImageRGB *newImg = image;
+    return newImg;
+}
+
+ImageRGB *add90_rotation_RGB(const ImageRGB *image)
+{
+    ImageRGB *newImg = image;
+    return newImg;
+}
+
+ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
+{
+    ImageRGB *newImg = image;
+    return newImg;
+}
+
+ImageRGB *clahe_rgb(const ImageRGB *image)
+{
+    int tile_width, tile_height;
+
+    ImageRGB *newImg = image;
+    return newImg;
+}
+
+ImageRGB *median_blur_rgb(const ImageRGB *image)
+{
+    int kernel_size;
+
+    ImageRGB *newImg = image;
+    return newImg;
+}
+
 ImageRGB *read_imageRGB(const char *filename)
 {
     FILE *file = fopen(filename, "r");
