@@ -166,10 +166,6 @@ void equaliza_histograma(int *histograma,int total_pixels){
     }
 }
 
-void aplica_clahe(unsigned char *channel,int largura,int altura, int tile_width,int tile_height){
-    int num_tile_x=(largura+tile_width-1)/tile_width;
-    int num_tile_y
-}
 
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
 {
