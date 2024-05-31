@@ -90,11 +90,28 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
     return nova_imagem_horizontal;
 }
 
-ImageRGB *transpose_rgb(const ImageRGB *image)
-{
-    ImageRGB *newImg = image;
-    return newImg;
+ImageRGB *transpose_rgb(const ImageRGB *image){
+    if(image==NULL){
+        return NULL;
+
+    }
+    int largura=image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB*transpose_image=create_image_rgb(altura,largura);
+
+    if(transpose_image==NULL){
+        return NULL;
+    }
+
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            transpose_image->pixels[y*altura+i]=image->pixels[i*largura+y];
+        }
+    }
+    return  transpose_image;
 }
+
 
 ImageRGB *add90_rotation_RGB(const ImageRGB *image)
 {
@@ -184,24 +201,3 @@ void mostra_imageRGB(const ImageRGB *image)
     }
 }
 
-ImageRGB *transpose_rgb(const ImageRGB *image){
-    if(image==NULL){
-        return NULL;
-
-    }
-    int largura=image->dim.largura;
-    int altura=image->dim.altura;
-
-    ImageRGB*transpose_image=create_image_rgb(altura,largura);
-
-    if(transpose_image==NULL){
-        return NULL;
-    }
-
-    for(int i=0;i<altura;++i){
-        for(int y=0;y<largura;++y){
-            transpose_image->pixels[y*altura+i]=image->pixels[i*largura+y];
-        }
-    }
-    return  transpose_image;
-}
