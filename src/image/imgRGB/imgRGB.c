@@ -90,23 +90,82 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
     return nova_imagem_horizontal;
 }
 
-ImageRGB *transpose_rgb(const ImageRGB *image)
-{
-    ImageRGB *newImg = image;
-    return newImg;
+ImageRGB *transpose_rgb(const ImageRGB *image){
+    if(image==NULL){
+        return NULL;
+
+    }
+    int largura=image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB*transpose_image=create_image_rgb(altura,largura);
+
+    if(transpose_image==NULL){
+        return NULL;
+    }
+
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            transpose_image->pixels[y*altura+i]=image->pixels[i*largura+y];
+        }
+    }
+    return  transpose_image;
 }
+
 
 ImageRGB *add90_rotation_RGB(const ImageRGB *image)
 {
-    ImageRGB *newImg = image;
+    if(image==NULL){
+        return NULL;
+    }
+    int largura =image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB *newImg =create_image_rgb(altura,largura);
+    if(newImg==NULL){
+        return NULL;
+    }
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            newImg->pixels[y*altura + (altura-1-i)]=image->pixels[i*largura+y];
+        }
+    }
+
     return newImg;
 }
 
 ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
 {
-    ImageRGB *newImg = image;
+    if(image==NULL){
+        return NULL;
+    }
+    int largura=image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB *newImg = create_image_rgb(altura,largura);
+    if(newImg==NULL){
+        return NULL;
+    }
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            newImg->pixels[(largura-1-y)*altura+i]=image->pixels[i*largura+y];
+        }
+    }
     return newImg;
 }
+
+void equaliza_histograma(int *histograma,int total_pixels){
+    int acumulador_histograma[256];
+    acumulador_histograma[0]=histograma[0];
+    
+    for(int i=1;i<256;++i){
+        acumulador_histograma[i]=acumulador_histograma[i-1]+histograma[i];
+    }
+    for(int i=0;i<256;++i){
+        histograma[i]=(acumulador_histograma[i]*255)/total_pixels;
+    }
+}
+
 
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
 {
@@ -183,3 +242,4 @@ void mostra_imageRGB(const ImageRGB *image)
         printf("\n");
     }
 }
+
