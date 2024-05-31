@@ -3,8 +3,6 @@
 #include <gtk/gtk.h>
 #include <imgStruct.h>
 
-extern ImageRGB *imgRGB;
-extern ImageGray *imgGray;
 extern GtkWidget *aboutDialog;
 
 void on_about_button_clicked(GtkWidget *widget, gpointer data);

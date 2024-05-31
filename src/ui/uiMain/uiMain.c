@@ -1,23 +1,20 @@
-#include <imgRGB.h>
-#include <imgGray.h>
 #include <uiMain.h>
 #include <uiRGB.h>
 #include <uiGray.h>
+#include <uiHistorico.h>
 #include <gtk/gtk.h>
 
-ImageRGB *imgRGB;
-ImageGray *imgGray;
 GtkWidget *aboutDialog;
 
 int start(int argc, char *argv[])
 {
-  imgRGB = read_imageRGB("imgRGB.txt");
-  imgGray = read_image_gray_from_file("imgGray.txt");
-
   gtk_init(&argc, &argv);
 
   GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   g_signal_connect(window, "destroy", G_CALLBACK(on_window_destroy), NULL);
+
+  GtkSettings *settings = gtk_settings_get_default();
+  g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
 
   GtkWidget *stack = gtk_stack_new();
   GtkWidget *stackSwitcher = gtk_stack_switcher_new();
@@ -52,25 +49,6 @@ int start(int argc, char *argv[])
   setup_ui_rgb(stack);
   setup_ui_Gray(stack);
 
-  // Grayscale Image Handling
-
-  // GdkPixbuf *pixbufGray = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, imgGray->dim.largura, imgGray->dim.altura);
-  // set_img_to_pixbuf_gray(imgGray, pixbufGray);
-
-  // imageWidgetGray = gtk_image_new_from_pixbuf(pixbufGray);
-  // gtk_box_pack_start(GTK_BOX(imageBoxGray), imageWidgetGray, TRUE, TRUE, 0);
-
-  // GtkWidget *buttonBoxGray = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  // gtk_box_pack_start(GTK_BOX(imageBoxGray), buttonBoxGray, FALSE, FALSE, 0);
-
-  // GtkWidget *flipHorizontalButtonGray = gtk_button_new_with_label("Flip Horizontal Gray");
-  // g_signal_connect(flipHorizontalButtonGray, "clicked", G_CALLBACK(on_flip_horizontal_gray_button_clicked), NULL);
-  // gtk_box_pack_start(GTK_BOX(buttonBoxGray), flipHorizontalButtonGray, TRUE, TRUE, 0);
-
-  // GtkWidget *flipVerticalButtonGray = gtk_button_new_with_label("Flip Vertical Gray");
-  // g_signal_connect(flipVerticalButtonGray, "clicked", G_CALLBACK(on_flip_vertical_gray_button_clicked), NULL);
-  // gtk_box_pack_start(GTK_BOX(buttonBoxGray), flipVerticalButtonGray, TRUE, TRUE, 0);
-
   gtk_widget_show_all(window);
   gtk_main();
 
@@ -91,6 +69,7 @@ void on_window_destroy(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  // free_image_rgb(imgRGB);
+  removerHistoricoGray();
+  removerHistoricoRGB();
   gtk_main_quit();
 }
