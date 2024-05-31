@@ -154,6 +154,23 @@ ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
     return newImg;
 }
 
+void equaliza_histograma(int *histograma,int total_pixels){
+    int acumulador_histograma[256];
+    acumulador_histograma[0]=histograma[0];
+    
+    for(int i=1;i<256;++i){
+        acumulador_histograma[i]=acumulador_histograma[i-1]+histograma[i];
+    }
+    for(int i=0;i<256;++i){
+        histograma[i]=(acumulador_histograma[i]*255)/total_pixels;
+    }
+}
+
+void aplica_clahe(unsigned char *channel,int largura,int altura, int tile_width,int tile_height){
+    int num_tile_x=(largura+tile_width-1)/tile_width;
+    int num_tile_y
+}
+
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
 {
     ImageRGB *newImg = image;
