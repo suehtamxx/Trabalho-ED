@@ -85,7 +85,7 @@ static void on_clahe_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray, 8, 8);
+  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray, 512, 512);
   adicionarHistoricoGray(newImage);
 
   GdkPixbuf *pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, FALSE, 8, historicoGrayAtual->imgGray->dim.largura, historicoGrayAtual->imgGray->dim.altura);

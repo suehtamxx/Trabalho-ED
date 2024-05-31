@@ -18,9 +18,9 @@ ImageGray *transpose_gray(const ImageGray *image);
 
 // funçoes auxiliares para filtro clahe_gray
 
-void calcula_histograma(const PixelGray *regiao, int width, int height, int *histograma);
+void calcular_histograma(int fim_x, int inicio_x, int fim_y, int inicio_y, int *histograma, const ImageGray *img, int largura);
 void limite_Histograma(int *histograma, float limite);
-void calcula_cdf(const int *histograma, float *cdf);
+void calcular_destribuicao(const int *histograma, int num_blocos, int total_pixels, int *cdf);
 void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cfd);
 
 ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height);
