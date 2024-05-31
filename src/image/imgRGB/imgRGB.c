@@ -115,13 +115,42 @@ ImageRGB *transpose_rgb(const ImageRGB *image){
 
 ImageRGB *add90_rotation_RGB(const ImageRGB *image)
 {
-    ImageRGB *newImg = image;
+    if(image==NULL){
+        return NULL;
+    }
+    int largura =image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB *newImg =create_image_rgb(altura,largura);
+    if(newImg==NULL){
+        return NULL;
+    }
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            newImg->pixels[y*altura + (altura-1-i)]=image->pixels[i*largura+y];
+        }
+    }
+
     return newImg;
 }
 
 ImageRGB *neq90_rotation_RGB(const ImageRGB *image)
 {
-    ImageRGB *newImg = image;
+    if(image==NULL){
+        return NULL;
+    }
+    int largura=image->dim.largura;
+    int altura=image->dim.altura;
+
+    ImageRGB *newImg = create_image_rgb(altura,largura);
+    if(newImg==NULL){
+        return NULL;
+    }
+    for(int i=0;i<altura;++i){
+        for(int y=0;y<largura;++y){
+            newImg->pixels[(largura-1-y)*altura+i]=image->pixels[i*largura+y];
+        }
+    }
     return newImg;
 }
 
