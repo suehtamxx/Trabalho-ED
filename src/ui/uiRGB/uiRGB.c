@@ -203,7 +203,6 @@ void setup_ui_rgb(GtkWidget *stack)
 
   GtkWidget *flipHorizontalButtonGray = gtk_button_new_with_label("Flip Horizontal");
   g_signal_connect(flipHorizontalButtonGray, "clicked", G_CALLBACK(on_flip_horizontal_rgb_button_clicked), NULL);
-  g_signal_connect(flipHorizontalButtonGray, "clicked", G_CALLBACK(verificarBotoes), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipHorizontalButtonGray, TRUE, TRUE, 5);
 
   GtkWidget *flipVerticalButtonGray = gtk_button_new_with_label("Flip Vertical");
