@@ -17,7 +17,7 @@ GtkWidget *medianBlurButtonGray;
 
 static void atualizarToggleBotao(GtkWidget *button, gboolean estado, GCallback callback)
 {
-  gulong handler_id = g_signal_handler_find(G_OBJECT(button), G_SIGNAL_MATCH_FUNC, 0, 0, NULL, callback, NULL);
+  gulong handler_id = g_signal_handler_find(G_OBJECT(button), G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) callback, NULL);
   if (handler_id)
     g_signal_handler_block(G_OBJECT(button), handler_id);
 
@@ -103,8 +103,19 @@ static void on_clahe_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = clahe_gray(historicoGrayAtual->imgGray, 512, 512);
-  adicionarHistoricoGray(newImage, CLAHE);
+  ImageGray *newImage;
+
+  if (historicoGrayAtual->buttonStatus.clahe)
+  {
+    newImage = refrashHistoricFuncGray(CLAHE);
+    adicionarHistoricoGray(newImage, CLAHE);
+  }
+
+  else if (!historicoGrayAtual->buttonStatus.clahe)
+  {
+    newImage = clahe_gray(historicoGrayAtual->imgGray, 512, 512);
+    adicionarHistoricoGray(newImage, CLAHE);
+  }
 
   refresh_image_gray();
   verificarBotoes();

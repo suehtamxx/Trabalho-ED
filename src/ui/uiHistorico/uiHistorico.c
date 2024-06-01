@@ -90,6 +90,41 @@ void adicionarHistoricoRGB(ImageRGB *newImgRGB, FuncUsed funcUsed)
   historicoRGBAtual = novaEntrada;
 }
 
+ImageGray *refrashHistoricFuncGray(FuncUsed funcUsed)
+{
+  if (historicoGrayAtual == NULL || historicoGrayInicio == NULL)
+  {
+    fprintf(stderr, "Erro: histórico atual ou inicial é nulo.\n");
+    return NULL;
+  }
+
+  ImageGray *newImage = create_image_gray(historicoGrayInicio->imgGray->dim.altura, historicoGrayInicio->imgGray->dim.largura);
+  if (newImage == NULL)
+  {
+    fprintf(stderr, "Erro ao alocar memória para nova imagem.\n");
+    return NULL;
+  }
+
+  newImage = read_image_gray_from_file("imgGray.txt");
+
+  if (funcUsed != FLIP_HORIZONTAL && historicoGrayAtual->buttonStatus.flip_horizontal)
+    newImage = flip_horizontal_gray(newImage);
+
+  if (funcUsed != FLIP_VERTICAL && historicoGrayAtual->buttonStatus.flip_vertical)
+    newImage = flip_vertical_gray(newImage);
+
+  if (funcUsed != TRANSPOSE && historicoGrayAtual->buttonStatus.transpose)
+    newImage = transpose_gray(newImage);
+
+  if (funcUsed != CLAHE && historicoGrayAtual->buttonStatus.clahe)
+    newImage = clahe_gray(newImage, 512, 512);
+
+  if (funcUsed != MEDIAN_BLUR && historicoGrayAtual->buttonStatus.median_blur)
+    newImage = median_blur_gray(newImage, 3);
+
+  return newImage;
+}
+
 void SeguirHistoricoRGB()
 {
   if (historicoRGBAtual != NULL && historicoRGBAtual->next != NULL)

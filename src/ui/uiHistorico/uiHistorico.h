@@ -54,3 +54,4 @@ void SeguirHistoricoGray();
 void VoltarHistoricoGray();
 void removerHistoricoGray();
 
+ImageGray *refrashHistoricFuncGray(FuncUsed funcUsed);
