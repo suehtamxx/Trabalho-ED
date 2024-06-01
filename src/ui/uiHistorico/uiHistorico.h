@@ -2,6 +2,7 @@
 #include <imgStruct.h>
 
 typedef enum funcUsed {
+  NONE,
   FLIP_VERTICAL,
   FLIP_HORIZONTAL,
   TRANSPOSE,
@@ -17,6 +18,8 @@ typedef struct ButtonStatus{
   int transpose;
   int clahe;
   int median_blur;
+  int qtdFlipAdd90;
+  int qtdFlipNeq90;
 } ButtonStatus;
 
 typedef struct imgHistoricoRGB
@@ -33,6 +36,7 @@ typedef struct imgHistoricoGray
   struct imgHistoricoGray *prev;
   struct imgHistoricoGray *next;
   ButtonStatus buttonStatus;
+  FuncUsed funcUsed;
 } ImgHistoricoGray;
 
 extern ImgHistoricoRGB *historicoRGBInicio;
@@ -54,3 +58,4 @@ void SeguirHistoricoGray();
 void VoltarHistoricoGray();
 void removerHistoricoGray();
 
+ImageGray *refrashHistoricFuncGray(FuncUsed funcUsed);
