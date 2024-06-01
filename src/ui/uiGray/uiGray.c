@@ -5,6 +5,10 @@
 
 GtkWidget *imageWidgetGray;
 GtkWidget *navBoxGray;
+GtkWidget *rotateBoxAdd90;
+GtkWidget *rotateBoxNeq90;
+GtkWidget *counterLabelNeq90;
+GtkWidget *counterLabelAdd90;
 
 GtkWidget *forwardButtonGray;
 GtkWidget *backButtonGray;
@@ -34,6 +38,9 @@ static void verificarBotoes()
   atualizarToggleBotao(transposeButtonGray, historicoGrayAtual->buttonStatus.transpose, G_CALLBACK(on_transpose_gray_button_clicked));
   atualizarToggleBotao(claheButtonGray, historicoGrayAtual->buttonStatus.clahe, G_CALLBACK(on_clahe_gray_button_clicked));
   atualizarToggleBotao(medianBlurButtonGray, historicoGrayAtual->buttonStatus.median_blur, G_CALLBACK(on_median_blur_gray_button_clicked));
+
+  gtk_label_set_text(GTK_LABEL(counterLabelAdd90), g_strdup_printf("%d", historicoGrayAtual->buttonStatus.qtdFlipAdd90));
+  gtk_label_set_text(GTK_LABEL(counterLabelNeq90), g_strdup_printf("%d", historicoGrayAtual->buttonStatus.qtdFlipNeq90));
 
   gtk_widget_set_sensitive(forwardButtonGray, historicoGrayAtual->next != NULL);
   gtk_widget_set_sensitive(backButtonGray, historicoGrayAtual->prev != NULL);
@@ -126,12 +133,12 @@ static void on_median_blur_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  if(historicoGrayAtual->buttonStatus.median_blur)
+  if (historicoGrayAtual->buttonStatus.median_blur)
   {
     ImageGray *newImage = refrashHistoricFuncGray(MEDIAN_BLUR);
     adicionarHistoricoGray(newImage, MEDIAN_BLUR);
   }
-  else if(!historicoGrayAtual->buttonStatus.median_blur)
+  else if (!historicoGrayAtual->buttonStatus.median_blur)
   {
     ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray, 3);
     adicionarHistoricoGray(newImage, MEDIAN_BLUR);
@@ -208,6 +215,26 @@ void setup_ui_Gray(GtkWidget *stack)
   GtkWidget *menuBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
   gtk_box_pack_start(GTK_BOX(mainBox), menuBox, TRUE, TRUE, 10);
 
+  rotateBoxAdd90 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+  gtk_box_pack_start(GTK_BOX(menuBox), rotateBoxAdd90, TRUE, TRUE, 5);
+
+  GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("Rotate 90º");
+  g_signal_connect(rotate90ButtonGray, "clicked", G_CALLBACK(on_add90_rotation_gray_clicked), NULL);
+  gtk_box_pack_start(GTK_BOX(rotateBoxAdd90), rotate90ButtonGray, TRUE, TRUE, 5);
+
+  counterLabelAdd90 = gtk_label_new("0");
+  gtk_box_pack_start(GTK_BOX(rotateBoxAdd90), counterLabelAdd90, TRUE, TRUE, 5);
+
+  rotateBoxNeq90 = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+  gtk_box_pack_start(GTK_BOX(menuBox), rotateBoxNeq90, TRUE, TRUE, 5);
+
+  GtkWidget *rotate_90ButtonGray = gtk_button_new_with_label("Rotate -90º");
+  g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(on_neq90_rotation_gray_clicked), NULL);
+  gtk_box_pack_start(GTK_BOX(rotateBoxNeq90), rotate_90ButtonGray, TRUE, TRUE, 5);
+
+  counterLabelNeq90 = gtk_label_new("0");
+  gtk_box_pack_start(GTK_BOX(rotateBoxNeq90), counterLabelNeq90, TRUE, TRUE, 5);
+
   flipHorizontalButtonGray = gtk_toggle_button_new_with_label("Flip Horizontal");
   g_signal_connect(flipHorizontalButtonGray, "toggled", G_CALLBACK(on_flip_horizontal_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipHorizontalButtonGray, TRUE, TRUE, 5);
@@ -227,14 +254,6 @@ void setup_ui_Gray(GtkWidget *stack)
   medianBlurButtonGray = gtk_toggle_button_new_with_label("filtro Median Blur");
   g_signal_connect(medianBlurButtonGray, "toggled", G_CALLBACK(on_median_blur_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), medianBlurButtonGray, TRUE, TRUE, 5);
-
-  GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("Rotate 90º");
-  g_signal_connect(rotate90ButtonGray, "clicked", G_CALLBACK(on_add90_rotation_gray_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(menuBox), rotate90ButtonGray, TRUE, TRUE, 5);
-
-  GtkWidget *rotate_90ButtonGray = gtk_button_new_with_label("Rotate -90º");
-  g_signal_connect(rotate_90ButtonGray, "clicked", G_CALLBACK(on_neq90_rotation_gray_clicked), NULL);
-  gtk_box_pack_start(GTK_BOX(menuBox), rotate_90ButtonGray, TRUE, TRUE, 5);
 
   GtkWidget *randomButton = gtk_button_new_with_label("---Imagem Aleatória---");
   g_signal_connect(randomButton, "clicked", G_CALLBACK(NULL), NULL);
