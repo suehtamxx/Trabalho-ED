@@ -25,6 +25,12 @@ void iniciarHistoricoRGB()
     return;
   }
 
+  historicoRGBInicio->buttonStatus.flip_horizontal = 0;
+  historicoRGBInicio->buttonStatus.flip_vertical = 0;
+  historicoRGBInicio->buttonStatus.transpose = 0;
+  historicoRGBInicio->buttonStatus.clahe = 0;
+  historicoRGBInicio->buttonStatus.median_blur = 0;
+
   historicoRGBInicio->prev = NULL;
   historicoRGBInicio->next = NULL;
   historicoRGBAtual = historicoRGBInicio;
@@ -46,7 +52,7 @@ void removerValoresAFrenteRGB()
   historicoRGBAtual->next = NULL;
 }
 
-void adicionarHistoricoRGB(ImageRGB *newImgRGB)
+void adicionarHistoricoRGB(ImageRGB *newImgRGB, FuncUsed funcUsed)
 {
   ImgHistoricoRGB *novaEntrada = (ImgHistoricoRGB *)malloc(sizeof(ImgHistoricoRGB));
   if (novaEntrada == NULL)
@@ -55,9 +61,21 @@ void adicionarHistoricoRGB(ImageRGB *newImgRGB)
     return;
   }
 
+  novaEntrada->buttonStatus = historicoRGBAtual->buttonStatus;
   novaEntrada->imgRGB = newImgRGB;
   novaEntrada->prev = historicoRGBAtual;
   novaEntrada->next = NULL;
+
+  if (funcUsed == FLIP_HORIZONTAL)
+    novaEntrada->buttonStatus.flip_horizontal = !novaEntrada->buttonStatus.flip_horizontal;
+  else if (funcUsed == FLIP_VERTICAL)
+    novaEntrada->buttonStatus.flip_vertical = !novaEntrada->buttonStatus.flip_vertical;
+  else if (funcUsed == TRANSPOSE)
+    novaEntrada->buttonStatus.transpose = !novaEntrada->buttonStatus.transpose;
+  else if (funcUsed == CLAHE)
+    novaEntrada->buttonStatus.clahe = !novaEntrada->buttonStatus.clahe;
+  else if (funcUsed == MEDIAN_BLUR)
+    novaEntrada->buttonStatus.median_blur = !novaEntrada->buttonStatus.median_blur;
 
   if (historicoRGBInicio == NULL)
   {
@@ -101,6 +119,12 @@ void iniciarHistoricoGray()
     return;
   }
 
+  historicoGrayInicio->buttonStatus.flip_horizontal = 0;
+  historicoGrayInicio->buttonStatus.flip_vertical = 0;
+  historicoGrayInicio->buttonStatus.transpose = 0;
+  historicoGrayInicio->buttonStatus.clahe = 0;
+  historicoGrayInicio->buttonStatus.median_blur = 0;
+
   historicoGrayInicio->prev = NULL;
   historicoGrayInicio->next = NULL;
   historicoGrayAtual = historicoGrayInicio;
@@ -122,7 +146,7 @@ void removerValoresAFrenteGray()
   historicoGrayAtual->next = NULL;
 }
 
-void adicionarHistoricoGray(ImageGray *newImgGray)
+void adicionarHistoricoGray(ImageGray *newImgGray, FuncUsed funcUsed)
 {
   ImgHistoricoGray *novaEntrada = (ImgHistoricoGray *)malloc(sizeof(ImgHistoricoGray));
   if (novaEntrada == NULL)
@@ -131,9 +155,21 @@ void adicionarHistoricoGray(ImageGray *newImgGray)
     return;
   }
 
+  novaEntrada->buttonStatus = historicoGrayAtual->buttonStatus;
   novaEntrada->imgGray = newImgGray;
   novaEntrada->prev = historicoGrayAtual;
   novaEntrada->next = NULL;
+
+  if (funcUsed == FLIP_HORIZONTAL)
+    novaEntrada->buttonStatus.flip_horizontal = !novaEntrada->buttonStatus.flip_horizontal;
+  else if (funcUsed == FLIP_VERTICAL)
+    novaEntrada->buttonStatus.flip_vertical = !novaEntrada->buttonStatus.flip_vertical;
+  else if (funcUsed == TRANSPOSE)
+    novaEntrada->buttonStatus.transpose = !novaEntrada->buttonStatus.transpose;
+  else if (funcUsed == CLAHE)
+    novaEntrada->buttonStatus.clahe = !novaEntrada->buttonStatus.clahe;
+  else if (funcUsed == MEDIAN_BLUR)
+    novaEntrada->buttonStatus.median_blur = !novaEntrada->buttonStatus.median_blur;
 
   if (historicoGrayInicio == NULL)
   {
@@ -147,7 +183,6 @@ void adicionarHistoricoGray(ImageGray *newImgGray)
   novaEntrada->prev = historicoGrayAtual;
   historicoGrayAtual = novaEntrada;
 }
-
 
 void SeguirHistoricoGray()
 {

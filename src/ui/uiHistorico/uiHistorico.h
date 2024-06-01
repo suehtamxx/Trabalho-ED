@@ -1,11 +1,30 @@
 
 #include <imgStruct.h>
 
+typedef enum funcUsed {
+  FLIP_VERTICAL,
+  FLIP_HORIZONTAL,
+  TRANSPOSE,
+  CLAHE,
+  MEDIAN_BLUR,
+  FLIP_ADD90,
+  FLIP_NEQ90,
+} FuncUsed;
+
+typedef struct ButtonStatus{
+  int flip_vertical;
+  int flip_horizontal;
+  int transpose;
+  int clahe;
+  int median_blur;
+} ButtonStatus;
+
 typedef struct imgHistoricoRGB
 {
   ImageRGB *imgRGB;
   struct imgHistoricoRGB *prev;
   struct imgHistoricoRGB *next;
+  ButtonStatus buttonStatus;
 } ImgHistoricoRGB;
 
 typedef struct imgHistoricoGray
@@ -13,6 +32,7 @@ typedef struct imgHistoricoGray
   ImageGray *imgGray;
   struct imgHistoricoGray *prev;
   struct imgHistoricoGray *next;
+  ButtonStatus buttonStatus;
 } ImgHistoricoGray;
 
 extern ImgHistoricoRGB *historicoRGBInicio;
@@ -22,14 +42,14 @@ extern ImgHistoricoGray *historicoGrayAtual;
 
 void iniciarHistoricoRGB();
 void removerValoresAFrenteRGB();
-void adicionarHistoricoRGB(ImageRGB *newImgRGB);
+void adicionarHistoricoRGB(ImageRGB *newImgRGB, FuncUsed funcUsed);
 void SeguirHistoricoRGB();
 void VoltarHistoricoRGB();
 void removerHistoricoRGB();
 
 void iniciarHistoricoGray();
 void removerValoresAFrenteGray();
-void adicionarHistoricoGray(ImageGray *newImgGray);
+void adicionarHistoricoGray(ImageGray *newImgGray, FuncUsed funcUsed);
 void SeguirHistoricoGray();
 void VoltarHistoricoGray();
 void removerHistoricoGray();
