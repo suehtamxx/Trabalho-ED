@@ -116,6 +116,7 @@ ImageGray *flip_horizontal_gray(ImageGray *image)
       nova_imagem_horizontal->pixels[i * largura + (largura - 1 - y)] = image->pixels[i * largura + y];
     }
   }
+
   return nova_imagem_horizontal;
 }
 
@@ -141,7 +142,6 @@ ImageGray *transpose_gray(const ImageGray *image)
   }
   return imagem_trasposta;
 }
-
 
 // Funcao para calcular os valores do histograma
 void calcular_histograma(int fim_x, int inicio_x, int fim_y, int inicio_y, int *histograma, const ImageGray *img, int largura)
@@ -227,14 +227,13 @@ ImageGray *clahe_gray(const ImageGray *imagem, int tile_width, int tile_height)
   if (resultado == NULL)
     return NULL;
 
-
   int num_blocos_horizontal = (largura + tile_width - 1) / tile_width;
   int num_blocos_vertical = (altura + tile_height - 1) / tile_height;
 
   int num_bins = 256;
   int *histograma = (int *)calloc(largura * altura, sizeof(int));
 
-  //usado para redestribuir os valores do histograma
+  // usado para redestribuir os valores do histograma
   int *cdf = (int *)calloc(num_bins, sizeof(int));
 
   if (!histograma || !cdf)
@@ -254,8 +253,8 @@ ImageGray *clahe_gray(const ImageGray *imagem, int tile_width, int tile_height)
 
       int inicio_x = id_horizontal * tile_width;
       int inicio_y = id_vertical * tile_height;
-      int fim_x = inicio_x + tile_width;  
-      int fim_y = inicio_y + tile_height; 
+      int fim_x = inicio_x + tile_width;
+      int fim_y = inicio_y + tile_height;
 
       // Ajustar os limites se for necessario para a ultima coluna ou linha
       if (fim_x > largura)
@@ -296,19 +295,130 @@ ImageGray *clahe_gray(const ImageGray *imagem, int tile_width, int tile_height)
   return resultado;
 }
 
+int getPixel(const ImageGray *image, int x, int y)
+{
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  if (x < 0)
+    x = 0;
+  else if (x >= largura)
+    x = largura - 1;
+  if (y < 0)
+    y = 0;
+  else if (y >= altura)
+    y = altura - 1;
+  return image->pixels[y * largura + x].value;
+}
+
+int ValorMedio(int *valores, int kernel_size)
+{
+  for (int i = 0; i < kernel_size * kernel_size - 1; i++)
+  {
+    for (int j = 0; j < kernel_size * kernel_size - i - 1; j++)
+    {
+      if (valores[j] > valores[j + 1])
+      {
+        int aux = valores[j];
+        valores[j] = valores[j + 1];
+        valores[j + 1] = aux;
+      }
+    }
+  }
+  return valores[(kernel_size * kernel_size) / 2];
+}
+
+void setPixel(ImageGray *image, int x, int y, int valor)
+{
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  if (x < 0)
+    x = 0;
+  else if (x >= largura)
+    x = largura - 1;
+  if (y < 0)
+    y = 0;
+  else if (y >= altura)
+    y = altura - 1;
+
+  image->pixels[y * largura + x].value = valor;
+}
+
 ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
 {
-  return image;
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  ImageGray *resultado = create_image_gray(largura, altura);
+  if (resultado == NULL)
+  {
+    return NULL;
+  }
+
+  for (int y = 0; y < altura; y++)
+  {
+    for (int x = 0; x < largura; x++)
+    {
+      int metade_kernel = kernel_size / 2;
+      int valores[kernel_size * kernel_size];
+
+      // Preenche o kernel com os valores dos pixels vizinhos
+      int indice_kernel = 0;
+      for (int ky = 0; ky < kernel_size; ky++)
+      {
+        for (int kx = 0; kx < kernel_size; kx++)
+        {
+          int pixelx = x - metade_kernel + kx;
+          int pixely = y - metade_kernel + ky;
+
+          valores[indice_kernel++] = getPixel(image, pixelx, pixely);
+        }
+      }
+
+      // Calcula o valor medio e atribui ao pixel na imagem resultado
+      int valor_medio = ValorMedio(valores, kernel_size);
+      setPixel(resultado, x, y, valor_medio);
+    }
+  }
+
+  return resultado;
 }
 
 ImageGray *add90_rotation_gray(const ImageGray *image)
 {
-  return image;
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  ImageGray *resultado = create_image_gray(altura, largura);
+
+  for (int i = 0; i < altura; i++)
+  {
+    for (int j = 0; j < largura; j++)
+    {
+      resultado->pixels[j * altura + (altura - 1 - i)].value = image->pixels[i * largura + j].value;
+    }
+  }
+
+  return resultado;
 }
 
 ImageGray *neq90_rotation_gray(const ImageGray *image)
 {
-  return image;
+  int largura = image->dim.largura;
+  int altura = image->dim.altura;
+
+  ImageGray *resultado = create_image_gray(altura, largura);
+
+  for (int i = 0; i < altura; i++)
+  {
+    for (int j = 0; j < largura; j++)
+    {
+      resultado->pixels[(largura - 1 - j) * altura + i].value = image->pixels[i * largura + j].value;
+    }
+  }
+
+  return resultado;
 }
 
 void helloWord()

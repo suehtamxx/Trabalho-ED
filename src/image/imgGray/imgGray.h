@@ -13,7 +13,6 @@ ImageGray *read_image_gray_from_file(const char *filename);
 ImageGray *flip_vertical_gray(ImageGray *image);
 ImageGray *flip_horizontal_gray(ImageGray *image);
 ImageGray *transpose_gray(const ImageGray *image);
-
 // Manipulação por pixel para ImageGray
 
 // funçoes auxiliares para filtro clahe_gray
@@ -26,7 +25,9 @@ void equalizar_regiao(PixelGray *regiao, int width, int height, const float *cfd
 ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height);
 
 // funçoes auxiliares para filtro median_blur_gray
-
+int getPixel(const ImageGray *image, int x, int y);
+void setPixel(ImageGray *image, int x, int y, int valor);
+int ValorMedio(int *valores, int kernel_size);
 ImageGray *median_blur_gray(const ImageGray *image, int kernel_size);
 
 ImageGray *add90_rotation_gray(const ImageGray *image);
