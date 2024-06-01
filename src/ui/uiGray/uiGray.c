@@ -126,8 +126,16 @@ static void on_median_blur_gray_button_clicked(GtkWidget *widget, gpointer data)
   (void)widget;
   (void)data;
 
-  ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray, 3);
-  adicionarHistoricoGray(newImage, MEDIAN_BLUR);
+  if(historicoGrayAtual->buttonStatus.median_blur)
+  {
+    ImageGray *newImage = refrashHistoricFuncGray(MEDIAN_BLUR);
+    adicionarHistoricoGray(newImage, MEDIAN_BLUR);
+  }
+  else if(!historicoGrayAtual->buttonStatus.median_blur)
+  {
+    ImageGray *newImage = median_blur_gray(historicoGrayAtual->imgGray, 3);
+    adicionarHistoricoGray(newImage, MEDIAN_BLUR);
+  }
 
   refresh_image_gray();
   verificarBotoes();
@@ -201,23 +209,23 @@ void setup_ui_Gray(GtkWidget *stack)
   gtk_box_pack_start(GTK_BOX(mainBox), menuBox, TRUE, TRUE, 10);
 
   flipHorizontalButtonGray = gtk_toggle_button_new_with_label("Flip Horizontal");
-  g_signal_connect(flipHorizontalButtonGray, "clicked", G_CALLBACK(on_flip_horizontal_gray_button_clicked), NULL);
+  g_signal_connect(flipHorizontalButtonGray, "toggled", G_CALLBACK(on_flip_horizontal_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipHorizontalButtonGray, TRUE, TRUE, 5);
 
   flipVerticalButtonGray = gtk_toggle_button_new_with_label("Flip Vertical");
-  g_signal_connect(flipVerticalButtonGray, "clicked", G_CALLBACK(on_flip_vertical_gray_button_clicked), NULL);
+  g_signal_connect(flipVerticalButtonGray, "toggled", G_CALLBACK(on_flip_vertical_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), flipVerticalButtonGray, TRUE, TRUE, 5);
 
   transposeButtonGray = gtk_toggle_button_new_with_label("Transpose");
-  g_signal_connect(transposeButtonGray, "clicked", G_CALLBACK(on_transpose_gray_button_clicked), NULL);
+  g_signal_connect(transposeButtonGray, "toggled", G_CALLBACK(on_transpose_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), transposeButtonGray, TRUE, TRUE, 5);
 
   claheButtonGray = gtk_toggle_button_new_with_label("filtro CLAHE");
-  g_signal_connect(claheButtonGray, "clicked", G_CALLBACK(on_clahe_gray_button_clicked), NULL);
+  g_signal_connect(claheButtonGray, "toggled", G_CALLBACK(on_clahe_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), claheButtonGray, TRUE, TRUE, 5);
 
   medianBlurButtonGray = gtk_toggle_button_new_with_label("filtro Median Blur");
-  g_signal_connect(medianBlurButtonGray, "clicked", G_CALLBACK(on_median_blur_gray_button_clicked), NULL);
+  g_signal_connect(medianBlurButtonGray, "toggled", G_CALLBACK(on_median_blur_gray_button_clicked), NULL);
   gtk_box_pack_start(GTK_BOX(menuBox), medianBlurButtonGray, TRUE, TRUE, 5);
 
   GtkWidget *rotate90ButtonGray = gtk_button_new_with_label("Rotate 90º");

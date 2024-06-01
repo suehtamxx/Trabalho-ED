@@ -18,6 +18,8 @@ typedef struct ButtonStatus{
   int transpose;
   int clahe;
   int median_blur;
+  int qtdFlipAdd90;
+  int qtdFlipNeq90;
 } ButtonStatus;
 
 typedef struct imgHistoricoRGB

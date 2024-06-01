@@ -76,6 +76,10 @@ void adicionarHistoricoRGB(ImageRGB *newImgRGB, FuncUsed funcUsed)
     novaEntrada->buttonStatus.clahe = !novaEntrada->buttonStatus.clahe;
   else if (funcUsed == MEDIAN_BLUR)
     novaEntrada->buttonStatus.median_blur = !novaEntrada->buttonStatus.median_blur;
+  else if (funcUsed == FLIP_ADD90)
+    novaEntrada->buttonStatus.qtdFlipAdd90++;
+  else if (funcUsed == FLIP_NEQ90)
+    novaEntrada->buttonStatus.qtdFlipNeq90++;
 
   if (historicoRGBInicio == NULL)
   {
@@ -117,10 +121,14 @@ ImageGray *refrashHistoricFuncGray(FuncUsed funcUsed)
         newImage = flip_vertical_gray(newImage);
       else if (aux->funcUsed == TRANSPOSE)
         newImage = transpose_gray(newImage);
-      else if (aux->funcUsed == CLAHE)
+      else if (aux->funcUsed == CLAHE && historicoGrayAtual->buttonStatus.clahe)
         newImage = clahe_gray(newImage, 512, 512);
-      else if (aux->funcUsed == MEDIAN_BLUR)
+      else if (aux->funcUsed == MEDIAN_BLUR && historicoGrayAtual->buttonStatus.median_blur)
         newImage = median_blur_gray(newImage, 3);
+      else if (aux->funcUsed == FLIP_ADD90)
+        newImage = add90_rotation_gray(newImage);
+      else if (aux->funcUsed == FLIP_NEQ90)
+        newImage = neq90_rotation_gray(newImage);
     }
 
     aux = aux->next;
@@ -164,6 +172,9 @@ void iniciarHistoricoGray()
   historicoGrayInicio->buttonStatus.clahe = 0;
   historicoGrayInicio->buttonStatus.median_blur = 0;
   historicoGrayInicio->funcUsed = NONE;
+
+  historicoGrayInicio->buttonStatus.qtdFlipAdd90 = 0; 
+  historicoGrayInicio->buttonStatus.qtdFlipNeq90 = 0;
 
   historicoGrayInicio->prev = NULL;
   historicoGrayInicio->next = NULL;
