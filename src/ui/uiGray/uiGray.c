@@ -17,7 +17,7 @@ GtkWidget *medianBlurButtonGray;
 
 static void atualizarToggleBotao(GtkWidget *button, gboolean estado, GCallback callback)
 {
-  gulong handler_id = g_signal_handler_find(G_OBJECT(button), G_SIGNAL_MATCH_FUNC, 0, 0, NULL, (gpointer) callback, NULL);
+  gulong handler_id = g_signal_handler_find(G_OBJECT(button), G_SIGNAL_MATCH_FUNC, 0, 0, NULL, callback, NULL);
   if (handler_id)
     g_signal_handler_block(G_OBJECT(button), handler_id);
 

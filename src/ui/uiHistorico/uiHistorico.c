@@ -106,21 +106,25 @@ ImageGray *refrashHistoricFuncGray(FuncUsed funcUsed)
   }
 
   newImage = read_image_gray_from_file("imgGray.txt");
+  ImgHistoricoGray *aux = historicoGrayInicio;
+  do
+  {
+    if (funcUsed != aux->funcUsed)
+    {
+      if (aux->funcUsed == FLIP_HORIZONTAL)
+        newImage = flip_horizontal_gray(newImage);
+      else if (aux->funcUsed == FLIP_VERTICAL)
+        newImage = flip_vertical_gray(newImage);
+      else if (aux->funcUsed == TRANSPOSE)
+        newImage = transpose_gray(newImage);
+      else if (aux->funcUsed == CLAHE)
+        newImage = clahe_gray(newImage, 512, 512);
+      else if (aux->funcUsed == MEDIAN_BLUR)
+        newImage = median_blur_gray(newImage, 3);
+    }
 
-  if (funcUsed != FLIP_HORIZONTAL && historicoGrayAtual->buttonStatus.flip_horizontal)
-    newImage = flip_horizontal_gray(newImage);
-
-  if (funcUsed != FLIP_VERTICAL && historicoGrayAtual->buttonStatus.flip_vertical)
-    newImage = flip_vertical_gray(newImage);
-
-  if (funcUsed != TRANSPOSE && historicoGrayAtual->buttonStatus.transpose)
-    newImage = transpose_gray(newImage);
-
-  if (funcUsed != CLAHE && historicoGrayAtual->buttonStatus.clahe)
-    newImage = clahe_gray(newImage, 512, 512);
-
-  if (funcUsed != MEDIAN_BLUR && historicoGrayAtual->buttonStatus.median_blur)
-    newImage = median_blur_gray(newImage, 3);
+    aux = aux->next;
+  } while (aux != NULL);
 
   return newImage;
 }
@@ -159,6 +163,7 @@ void iniciarHistoricoGray()
   historicoGrayInicio->buttonStatus.transpose = 0;
   historicoGrayInicio->buttonStatus.clahe = 0;
   historicoGrayInicio->buttonStatus.median_blur = 0;
+  historicoGrayInicio->funcUsed = NONE;
 
   historicoGrayInicio->prev = NULL;
   historicoGrayInicio->next = NULL;
@@ -193,6 +198,7 @@ void adicionarHistoricoGray(ImageGray *newImgGray, FuncUsed funcUsed)
   novaEntrada->buttonStatus = historicoGrayAtual->buttonStatus;
   novaEntrada->imgGray = newImgGray;
   novaEntrada->prev = historicoGrayAtual;
+  novaEntrada->funcUsed = funcUsed;
   novaEntrada->next = NULL;
 
   if (funcUsed == FLIP_HORIZONTAL)
