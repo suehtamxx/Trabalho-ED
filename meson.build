@@ -30,7 +30,7 @@ configure_file(
 
 executable(
   'work_01-TAD-Lista',
-  'main.c',
+  'src/main.c',
   include_directories: includes,
   link_with: libs,
   dependencies: dep_gtk,
