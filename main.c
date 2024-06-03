@@ -5,27 +5,35 @@
 
 int main()
 {
-    ImageGray *imageGray;
-    //ImageRGB *imageRGB;
-
+    ImageGray *imageGray = malloc(sizeof(imageGray));
+    //ImageRGB *imageRGB = NULL;
+    if (imageGray == NULL)
+    {
+        printf("ERRO ao alocar!\n");
+        exit(1);
+    }
+    
     //Criando arquivo
     FILE *arqGray;
-    arqGray = fopen("./input_image_example_RGB.txt", "r");
+    arqGray = fopen("imageGray.txt", "r");
     if (arqGray == NULL)
     {
         printf("ERRO ao abrir o arquivo!\n");
+        fclose(arqGray);
         exit(1);
     }
 
     //Retirando as dimensoes
     fscanf(arqGray, "%d", &imageGray->dim.largura);
     fscanf(arqGray, "%d", &imageGray->dim.altura);
+    
+    printf("%d %d", imageGray->dim.altura, imageGray->dim.largura);
 
-    imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
+    //imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
 
     fclose(arqGray);
 
-    free_image_gray(imageGray);
+    //free_image_gray(imageGray);
 
     return 0;
 }
