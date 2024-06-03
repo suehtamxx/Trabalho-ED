@@ -1,15 +1,6 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-typedef struct listagray{
-    Listagray *prox;
-    ImageGray imgray;
-} Listagray;
-
-typedef struct listargb{
-    Listargb *prox;
-    ImageRGB imgrgb;
-} Listargb;
 
 typedef struct dimensoes {
     int altura, largura;
@@ -32,6 +23,16 @@ typedef struct imageRGB {
     Dimensoes dim;
     PixelRGB *pixels;
 } ImageRGB;
+
+typedef struct listagray{
+    struct listagray *prox;
+    ImageGray imgray;
+} Listagray;
+
+typedef struct listargb{
+    struct listargb *prox;
+    ImageRGB imgrgb;
+} Listargb;
 
 // Funções de criação e liberação
 ImageGray *create_image_gray(int largura, int altura);
