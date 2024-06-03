@@ -29,7 +29,7 @@ int main()
     
     printf("%d %d", imageGray->dim.altura, imageGray->dim.largura);
 
-    //imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
+    imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
 
     fclose(arqGray);
 
