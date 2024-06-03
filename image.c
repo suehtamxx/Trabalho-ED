@@ -3,20 +3,20 @@
 #include <stdlib.h>
 
 // Funções de criação e liberação
-// ImageGray *create_image_gray(int largura, int altura)
-// {
-//     ImageGray *image;
+ImageGray *create_image_gray(int largura, int altura)
+{
+    ImageGray *image;
 
     
     
 
-//     //Alocando memoria
+    //Alocando memoria
     
     
-//     return image;
-// }
+    return image;
+}
 
-// void free_image_gray(ImageGray *image)
-// {
-//     free(image);
-// }
+void free_image_gray(ImageGray *image)
+{
+    free(image);
+}
