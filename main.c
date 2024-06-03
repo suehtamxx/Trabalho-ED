@@ -2,7 +2,7 @@
 #include "image.c"
 #include <stdio.h>
 #include <stdlib.h>
-
+//oiiiiiiiiii
 int main()
 {
     ImageGray *imageGray = malloc(sizeof(imageGray));
