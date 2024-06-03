@@ -2,12 +2,12 @@
 #define IMAGE_H
 
 typedef struct listagray{
-    listagray *prox;
+    Listagray *prox;
     ImageGray imgray;
 } Listagray;
 
 typedef struct listargb{
-    listargb *prox;
+    Listargb *prox;
     ImageRGB imgrgb;
 } Listargb;
 
