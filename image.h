@@ -1,8 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
-
 //oi, my name is Viviniany
-
+//we are the champions
+//oi
 typedef struct dimensoes {
     int altura, largura;
 } Dimensoes;
