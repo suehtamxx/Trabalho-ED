@@ -1,6 +1,16 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+typedef struct listagray{
+    listagray *prox;
+    ImageGray imgray;
+} Listagray;
+
+typedef struct listargb{
+    listargb *prox;
+    ImageRGB imgrgb;
+} Listargb;
+
 typedef struct dimensoes {
     int altura, largura;
 } Dimensoes;
