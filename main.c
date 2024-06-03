@@ -26,8 +26,6 @@ int main()
     //Retirando as dimensoes
     fscanf(arqGray, "%d", &imageGray->dim.largura);
     fscanf(arqGray, "%d", &imageGray->dim.altura);
-    
-    printf("%d %d", imageGray->dim.altura, imageGray->dim.largura);
 
     imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
 
