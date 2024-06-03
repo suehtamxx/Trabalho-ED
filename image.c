@@ -5,15 +5,12 @@
 // Funções de criação e liberação
 ImageGray *create_image_gray(int largura, int altura)
 {
-    ImageGray *image;
-
-    
-    
+    ImageGray *imageGray = malloc(sizeof(imageGray));
 
     //Alocando memoria
     
     
-    return image;
+    return imageGray;
 }
 
 void free_image_gray(ImageGray *image)
