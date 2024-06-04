@@ -28,6 +28,8 @@ int main()
     readFileGray();
     readFileRGB();
 
+    imageGray = transpose_gray(imageGray);
+
     fclose(arqGray);
     fclose(arqRGB);
 
