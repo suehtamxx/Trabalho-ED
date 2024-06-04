@@ -2,7 +2,7 @@
 #include "image.c"
 #include <stdio.h>
 #include <stdlib.h>
-//oiiiiiiiiii
+
 int main()
 {
     ImageGray *imageGray = malloc(sizeof(imageGray));
@@ -27,9 +27,9 @@ int main()
     fscanf(arqGray, "%d", &imageGray->dim.largura);
     fscanf(arqGray, "%d", &imageGray->dim.altura);
 
-    imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
-
     fclose(arqGray);
+    
+    imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
 
     //free_image_gray(imageGray);
 
