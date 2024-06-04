@@ -53,7 +53,7 @@ void readFileGray()
 
         //Atribuindo o valor do pixel
         imageGray->pixels[i].value = pixel;
-        //printf("%d ", imageGray->pixels[i].value);   
+        printf("%d ", imageGray->pixels[i].value);   
     }
 
     fclose(arqGray);
@@ -109,44 +109,10 @@ void readFileRGB()
         imageRGB->pixels[i].red = r;
         imageRGB->pixels[i].green = g;
         imageRGB->pixels[i].blue = b;
-        //printf("%d %d %d ", imageRGB->pixels[i].red, imageRGB->pixels[i].green, imageRGB->pixels[i].blue);   
+        printf("%d %d %d ", imageRGB->pixels[i].red, imageRGB->pixels[i].green, imageRGB->pixels[i].blue);   
     }
 
     fclose(arqRGB);
 }
 
-void free_image_gray(ImageGray *image)
-{
-    free(image);
-}
 
-ImageGray *transpose_gray(const ImageGray *image)
-{
-    ImageGray *image_transpose = malloc(sizeof(ImageGray));
-    if(image_transpose == NULL)
-    {
-        printf("erro ao alocarrrr!");
-        exit(1);
-    }
-
-    image_transpose->dim.largura = image->dim.altura;
-    image_transpose->dim.altura = image->dim.largura;
-
-    image_transpose->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelGray));
-    if(image_transpose->pixels == NULL)
-    {
-        printf("erro ao alocar!");
-        free(image_transpose);
-        exit(1);
-    }
-
-    for(int i = 0; i < image->dim.altura; i++)
-    {
-        for(int j = 0; j < image->dim.largura; j++)
-        {
-            image_transpose->pixels[j * image->dim.altura + i] = image->pixels[i * image->dim.largura + j];
-            printf("%d ", image_transpose->pixels[i * image->dim.altura + j].value);
-        }    
-    }
-    return image_transpose;
-}

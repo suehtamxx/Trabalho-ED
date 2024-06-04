@@ -25,13 +25,12 @@ int main()
         exit(1);
     }
 
+    fclose(arqGray);
+    fclose(arqRGB);
+    
     readFileGray();
     readFileRGB();
 
-    imageGray = transpose_gray(imageGray);
-
-    fclose(arqGray);
-    fclose(arqRGB);
 
     //free_image_gray(imageGray);
 
