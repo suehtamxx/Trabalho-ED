@@ -2,7 +2,6 @@
 #include "image.c"
 #include <stdio.h>
 #include <stdlib.h>
-
 int main()
 {
     ImageGray *imageGray = malloc(sizeof(imageGray));
@@ -27,11 +26,36 @@ int main()
     fscanf(arqGray, "%d", &imageGray->dim.largura);
     fscanf(arqGray, "%d", &imageGray->dim.altura);
 
-    fclose(arqGray);
-    
     imageGray = create_image_gray(imageGray->dim.largura, imageGray->dim.altura);
+
+    fclose(arqGray);
 
     //free_image_gray(imageGray);
 
+    ImageGray *imageRGB = malloc(sizeof(ImageRGB));
+    //ImageRGB *imageRGB = NULL;
+    if (imageRGB == NULL)
+    {
+        printf("ERRO ao alocar!\n");
+        exit(1);
+    }
+    
+    //Criando arquivo
+    FILE *arqRGB;
+    arqRGB = fopen("imageRGB.txt", "r");
+    if (arqRGB == NULL)
+    {
+        printf("ERRO ao abrir o arquivo!\n");
+        fclose(arqRGB);
+        exit(1);
+    }
+
+    //Retirando as dimensoes
+    fscanf(arqRGB, "%d", &imageRGB->dim.largura);
+    fscanf(arqRGB, "%d", &imageRGB->dim.altura);
+
+    imageRGB = create_image_rgb(imageRGB->dim.largura, imageRGB->dim.altura);
+
+    fclose(arqRGB);
     return 0;
 }
