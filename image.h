@@ -24,14 +24,26 @@ typedef struct imageRGB {
     PixelRGB *pixels;
 } ImageRGB;
 
+typedef struct hGray{
+    struct hGray *prox;
+    ImageGray imgray;
+} HGray;
+
+typedef struct hRGB{
+    struct hRGB *prox;
+    ImageRGB imgrgb;
+} HRGB;
+
 typedef struct listagray{
     struct listagray *prox;
-    ImageGray imgray;
+    struct listagray *ant;
+    ImageGray imgGray;
 } Listagray;
 
 typedef struct listargb{
     struct listargb *prox;
-    ImageRGB imgrgb;
+    struct listargb *ant;
+    ImageRGB imgRGB;
 } Listargb;
 
 // Ler arquivo
