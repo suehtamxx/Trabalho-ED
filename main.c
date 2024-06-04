@@ -32,7 +32,7 @@ int main()
 
     //free_image_gray(imageGray);
 
-    ImageGray *imageRGB = malloc(sizeof(ImageRGB));
+    ImageRGB *imageRGB = malloc(sizeof(ImageRGB));
     //ImageRGB *imageRGB = NULL;
     if (imageRGB == NULL)
     {
