@@ -34,6 +34,10 @@ typedef struct listargb{
     ImageRGB imgrgb;
 } Listargb;
 
+// Ler arquivo
+void readFileGray();
+void readFileRGB();
+
 // Funções de criação e liberação
 ImageGray *create_image_gray(int largura, int altura);
 void free_image_gray(ImageGray *image);

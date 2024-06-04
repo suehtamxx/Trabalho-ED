@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Funções de criação e liberação
-ImageGray *create_image_gray(int largura, int altura)
+// Ler arquivos
+void readFileGray()
 {
     ImageGray *imageGray = malloc(sizeof(ImageGray));
 
@@ -16,7 +16,8 @@ ImageGray *create_image_gray(int largura, int altura)
         fclose(arqGray);
         exit(1);
     }
-    if(fscanf(arqGray,"%d %d", &largura, &altura) !=2)
+
+    if (fscanf(arqGray,"%d %d", &imageGray->dim.largura, &imageGray->dim.altura) !=2)
     {
         printf("erro na leitura da dimensão");
         fclose(arqGray);
@@ -25,8 +26,9 @@ ImageGray *create_image_gray(int largura, int altura)
     }
 
     fgetc(arqGray);
+
     //Alocando memoria
-    imageGray->pixels = malloc(largura * altura * sizeof(PixelGray));
+    imageGray->pixels = malloc(imageGray->dim.largura * imageGray->dim.altura * sizeof(PixelGray));
     if (imageGray->pixels == NULL)
     {
         printf("ERRO ao alocar pixels!\n");
@@ -35,8 +37,8 @@ ImageGray *create_image_gray(int largura, int altura)
         exit(1);
     }
 
-    //lendo os pixels
-    for(int i = 0; i < altura * largura; i++)
+    //Lendo os pixels
+    for(int i = 0; i < imageGray->dim.largura * imageGray->dim.altura; i++)
     {
         int pixel;
         char separador;
@@ -55,11 +57,9 @@ ImageGray *create_image_gray(int largura, int altura)
     }
 
     fclose(arqGray);
-    
-    return imageGray;
 }
 
-ImageRGB *create_image_rgb(int largura, int altura)
+void readFileRGB()
 {
     ImageRGB *imageRGB = malloc(sizeof(ImageRGB));
 
@@ -72,7 +72,7 @@ ImageRGB *create_image_rgb(int largura, int altura)
         fclose(arqRGB);
         exit(1);
     }
-    if(fscanf(arqRGB,"%d %d", &largura, &altura) !=2)
+    if (fscanf(arqRGB,"%d %d", &imageRGB->dim.largura, &imageRGB->dim.altura) !=2)
     {
         printf("erro na leitura da dimensão");
         fclose(arqRGB);
@@ -81,8 +81,9 @@ ImageRGB *create_image_rgb(int largura, int altura)
     }
 
     fgetc(arqRGB);
+
     //Alocando memoria
-    imageRGB->pixels = malloc(largura * altura * sizeof(PixelRGB));
+    imageRGB->pixels = malloc(imageRGB->dim.largura * imageRGB->dim.altura * sizeof(PixelRGB));
     if (imageRGB->pixels == NULL)
     {
         printf("ERRO ao alocar pixels!\n");
@@ -91,8 +92,8 @@ ImageRGB *create_image_rgb(int largura, int altura)
         exit(1);
     }
 
-    //lendo os pixels
-    for(int i = 0; i < altura * largura; i++)
+    //Lendo os pixels
+    for(int i = 0; i < imageRGB->dim.largura * imageRGB->dim.altura; i++)
     {
         int r, g, b;
         char separador;
@@ -112,8 +113,6 @@ ImageRGB *create_image_rgb(int largura, int altura)
     }
 
     fclose(arqRGB);
-    
-    return imageRGB;
 }
 
 void free_image_gray(ImageGray *image)
