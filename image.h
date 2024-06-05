@@ -7,6 +7,7 @@ typedef struct dimensoes {
 
 typedef struct pixelRGB {
     int red, blue, green;
+    int value;
 } PixelRGB;
 
 typedef struct pixelGray {
