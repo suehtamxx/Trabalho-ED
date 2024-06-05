@@ -6,10 +6,12 @@
 int main()
 {
     
-    int larguraGray, alturaGray, larguraRGB, alturaRGB;
+    int larguraGray, alturaGray, larguraRGB, alturaRGB, numAlteracoesGray = 1, numAlteracoesRGB = 1;
 
+    //Criando listas
     LinkedRGB *listargb = criar_RGB();
     LinkedGray *listagray = criar_gray();
+
     //Criando arquivo
     FILE *arqGray;
     arqGray = fopen("imageGray.txt", "r");
@@ -55,13 +57,17 @@ int main()
     adicionar_rgb(listargb, imageRGB);
     adicionar_gray(listagray, imageGray);
 
-    imageGray = transpose_gray(imageGray);
-    adicionar_gray(listagray, transpose_gray);
-    convertGraytxt(imageGray);
+    // imageGray = transpose_gray(imageGray);
+    // adicionar_gray(listagray, imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
     
-    imageRGB = transpose_rgb(imageRGB);
-    adicionar_rgb(listargb, transpose_rgb);
-    convertRGBtxt(imageRGB);
+    // imageRGB = transpose_rgb(imageRGB);
+    // adicionar_rgb(listargb, imageRGB);
+    // convertRGBtxt(imageRGB, &numAlteracoesRGB);
+    
+    // imageGray = flip_horizontal_gray(imageGray);
+    // adicionar_gray(listagray, imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
