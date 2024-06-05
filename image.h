@@ -37,14 +37,24 @@ typedef struct hRGB{
 typedef struct listagray{
     struct listagray *prox;
     struct listagray *ant;
-    ImageGray imgGray;
+    ImageGray *image;
 } Listagray;
 
 typedef struct listargb{
     struct listargb *prox;
     struct listargb *ant;
-    ImageRGB imgRGB;
+    ImageRGB *image;
 } Listargb;
+
+typedef struct{
+    Listagray *cabeca;
+    Listagray *corpo;
+} LinkedGray;
+
+typedef struct{
+    Listargb *cabeca;
+    Listargb *corpo;
+} LinkedRGB;
 
 // Ler arquivo
 void readFileGray();
@@ -79,4 +89,12 @@ ImageGray *median_blur_gray(const ImageGray *image, int kernel_size);
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height);
 ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size);
 
+LinkedRGB *criar_RGB();
+LinkedGray *criar_gray();
+
+void adicionar_rgb(LinkedRGB *l, ImageRGB *image);
+void adicionar_gray(LinkedGray *l, ImageGray *image);
+
+void liberar_rgb(LinkedRGB *l);
+void liberar_gray(LinkedGray *l);
 #endif // IMAGE_H
