@@ -6,7 +6,7 @@
 int main()
 {
     
-    int larguraGray, alturaGray, larguraRGB, alturaRGB;
+    int larguraGray, alturaGray, larguraRGB, alturaRGB, numAlteracoesGray = 1, numAlteracoesRGB = 1;
 
     //Criando arquivo
     FILE *arqGray;
@@ -50,10 +50,13 @@ int main()
     fclose(arqGray);
     fclose(arqRGB);
 
-    //imageGray = transpose_gray(imageGray);
-    //convertGraytxt(imageGray);
-    imageRGB = transpose_rgb(imageRGB);
-    convertRGBtxt(imageRGB);
+    // imageGray = transpose_gray(imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
+    // imageRGB = transpose_rgb(imageRGB);
+    // convertRGBtxt(imageRGB, &numAlteracoesRGB);
+
+    // imageGray = flip_horizontal_gray(imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
