@@ -5,6 +5,7 @@
 
 int main()
 {
+    
     int larguraGray, alturaGray, larguraRGB, alturaRGB;
 
     //Criando arquivo
@@ -49,8 +50,8 @@ int main()
     fclose(arqGray);
     fclose(arqRGB);
 
-    imageGray = transpose_gray(imageGray);
-    convertGraytxt(imageGray);
+    //imageGray = transpose_gray(imageGray);
+    //convertGraytxt(imageGray);
     imageRGB = transpose_rgb(imageRGB);
     convertRGBtxt(imageRGB);
 
