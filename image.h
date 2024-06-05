@@ -1,7 +1,6 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
-
 typedef struct dimensoes {
     int altura, largura;
 } Dimensoes;
@@ -56,6 +55,10 @@ void free_image_gray(ImageGray *image);
 
 ImageRGB *create_image_rgb(int largura, int altura);
 void free_image_rgb(ImageRGB *image);
+
+// Converter struct para txt
+void convertGraytxt(ImageGray *image);
+void convertRGBtxt(ImageRGB *image);
 
 // Operações para ImageGray
 ImageGray *flip_vertical_gray(ImageGray *image);
