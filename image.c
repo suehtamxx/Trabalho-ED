@@ -77,7 +77,6 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
     }
     l->corpo = novo;
 }
-
 void liberar_rgb(LinkedRGB *l)
 {
     Listargb *aux = l->cabeca;
@@ -102,7 +101,6 @@ LinkedGray *criar_gray()
     l->corpo = NULL;
     return l;
 }
-
 void adicionar_gray(LinkedGray *l, ImageGray *image)
 {
     Listagray *novo = malloc(sizeof(Listagray));
@@ -120,7 +118,6 @@ void adicionar_gray(LinkedGray *l, ImageGray *image)
     }
     l->corpo = novo;
 }
-
 void liberar_gray(LinkedGray *l)
 {
     Listagray *aux = l->cabeca;
@@ -133,7 +130,6 @@ void liberar_gray(LinkedGray *l)
     }
     free(l);
 }
-
 
 // Funções de criação e liberação de struct
 ImageGray *create_image_gray(int largura, int altura)
