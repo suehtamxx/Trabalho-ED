@@ -27,7 +27,7 @@ void readFileGray(ImageGray *imageGray, FILE *arqGray)
 void readFileRGB(ImageRGB *imageRGB, FILE *arqRGB)
 {
     //Lendo os pixels
-    for(int i = 0; i < (imageRGB->dim.largura * imageRGB->dim.altura); i++)
+    for(int i = 0; i < imageRGB->dim.largura * imageRGB->dim.altura; i++)
     {
         int r, g, b;
         char separador;
@@ -161,6 +161,7 @@ void convertRGBtxt(ImageRGB *image)
     {
         for (int j = 0; j < image->dim.largura; j++)
         {
+            PixelRGB pixel = image->pixels[i * image->dim.largura + j];
             if (j == image->dim.largura - 1) fprintf(arqRGB, "%d %d %d,\n", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
             else fprintf(arqRGB, "%d %d %d, ", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
         }
@@ -217,7 +218,7 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
     image_transpose->dim.altura = image->dim.largura;
     //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
 
-    image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelGray));
+    image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelRGB));
     if(image_transpose->pixels == NULL)
     {
         printf("ERRO ao alocar pixels transpose rgb!");
