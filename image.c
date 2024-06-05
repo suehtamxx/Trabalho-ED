@@ -114,11 +114,17 @@ void free_image_rgb(ImageRGB *image)
 }
 
 // Converter struct para txt
-void convertGraytxt(ImageGray *image)
+void convertGraytxt(ImageGray *image, int *numAlteracoes)
 {
+    //Criando nome do arquivo
+    char NomeArq[25];
+    sprintf(NomeArq, "AlteracaoGray%d.txt", *numAlteracoes);
+    //printf("%d", *numAlteracoes);
+    (*numAlteracoes)++;
+
     //Criando o arquivo
     FILE *arqGray;
-    arqGray = fopen("transposeGray.txt", "w");
+    arqGray = fopen(NomeArq, "w");
     if (arqGray == NULL)
     {
         printf("ERRO ao criar arquivo.\n");
@@ -141,12 +147,18 @@ void convertGraytxt(ImageGray *image)
     
     fclose(arqGray);
 }
-void convertRGBtxt(ImageRGB *image)
+void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
 {
+    //Criando nome do arquivo
+    char NomeArq[25];
+    sprintf(NomeArq, "AlteracaoRGB%d.txt", *numAlteracoes);
+    //printf("%d", *numAlteracoes);
+    (*numAlteracoes)++;
+
     //Criando o arquivo
     FILE *arqRGB;
-    arqRGB = fopen("transposeRGB.txt", "w");
-    if (arqRGB == NULL) 
+    arqRGB = fopen(NomeArq, "w");
+    if (arqRGB == NULL)
     {
         printf("ERRO ao criar arquivo.\n");
         exit(1);
@@ -161,7 +173,6 @@ void convertRGBtxt(ImageRGB *image)
     {
         for (int j = 0; j < image->dim.largura; j++)
         {
-            PixelRGB pixel = image->pixels[i * image->dim.largura + j];
             if (j == image->dim.largura - 1) fprintf(arqRGB, "%d %d %d,\n", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
             else fprintf(arqRGB, "%d %d %d, ", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
         }
@@ -173,6 +184,7 @@ void convertRGBtxt(ImageRGB *image)
 // Operações para ImageGray
 ImageGray *transpose_gray(const ImageGray *image)
 {
+    //Criando struct nova
     ImageGray *image_transpose = malloc(sizeof(ImageGray));
     if(image_transpose == NULL)
     {
@@ -180,10 +192,12 @@ ImageGray *transpose_gray(const ImageGray *image)
         exit(1);
     }
 
+    //Atribuindo as dimensoes para a struct nova
     image_transpose->dim.largura = image->dim.altura;
     image_transpose->dim.altura = image->dim.largura;
     //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
 
+    //Alocando os pixels
     image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelGray));
     if(image_transpose->pixels == NULL)
     {
@@ -192,6 +206,7 @@ ImageGray *transpose_gray(const ImageGray *image)
         exit(1);
     }
 
+    //Trocando as linhas pelas colunas
     for(int i = 0; i < image_transpose->dim.altura; i++)
     {
         for(int j = 0; j < image_transpose->dim.largura; j++)
@@ -203,10 +218,47 @@ ImageGray *transpose_gray(const ImageGray *image)
 
     return image_transpose;
 }
+ImageGray *flip_horizontal_gray(ImageGray *image)
+{
+    //Criando struct nova
+    ImageGray *image_horizontal = malloc(sizeof(ImageGray));
+    if(image_horizontal == NULL)
+    {
+        printf("ERRO ao alocar flip horizontal gray!");
+        exit(1);
+    }
+
+    //Atribuindo as dimensoes para a struct nova
+    image_horizontal->dim.largura = image->dim.altura;
+    image_horizontal->dim.altura = image->dim.largura;
+    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+
+    //Alocando os pixels
+    image_horizontal->pixels = malloc(image_horizontal->dim.altura * image_horizontal->dim.largura * sizeof(PixelGray));
+    if(image_horizontal->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels flip horizontal gray!");
+        free(image_horizontal);
+        exit(1);
+    }
+
+    for (int i = 0; i < image_horizontal->dim.altura; i++)
+    {
+        for (int j = 0; j < image_horizontal->dim.largura; j++)
+        {
+            image_horizontal->pixels[i * image_horizontal->dim.largura + j] = image->pixels[i * image->dim.largura + (image->dim.largura - j - 1)];
+            //printf("%d ", image_horizontal->pixels[i * image_horizontal->dim.largura + j].value);
+        }
+    }
+    
+    return image_horizontal;
+}
+
 
 // Operações para ImageRGB
 ImageRGB *transpose_rgb(const ImageRGB *image)
 {
+    //Criando a struct nova
     ImageRGB *image_transpose = malloc(sizeof(ImageRGB));
     if(image_transpose == NULL)
     {
@@ -214,10 +266,12 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
         exit(1);
     }
 
+    //Atribuindo as dimensoes para a struct nova
     image_transpose->dim.largura = image->dim.altura;
     image_transpose->dim.altura = image->dim.largura;
     //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
 
+    //Alocando os pixels
     image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelRGB));
     if(image_transpose->pixels == NULL)
     {
@@ -226,6 +280,7 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
         exit(1);
     }
 
+    //Trocando as linhas pelas colunas
     for(int i = 0; i < image_transpose->dim.altura; i++)
     {
         for(int j = 0; j < image_transpose->dim.largura; j++)
