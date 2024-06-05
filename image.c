@@ -48,6 +48,93 @@ void readFileRGB(ImageRGB *imageRGB, FILE *arqRGB)
     }
 }
 
+LinkedRGB *criar_RGB()
+{
+    LinkedRGB *l = malloc(sizeof(LinkedRGB));
+    if(l == NULL){
+        printf("erro ao alocar");
+        exit(1);
+    }
+    l->cabeca = NULL;
+    l->corpo = NULL;
+    return l;
+}
+
+void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
+{
+    Listargb *novo = malloc(sizeof(Listargb));
+    if(novo == NULL){
+        printf("erro ao alocar!");
+        exit(1);
+    }
+    novo->image = image;
+    novo->prox = NULL;
+    novo->ant = l->corpo;
+    if(l->corpo != NULL){
+        l->corpo->prox = novo;
+    } else {
+        l->cabeca = novo;
+    }
+    l->corpo = novo;
+}
+
+void liberar_rgb(LinkedRGB *l)
+{
+    Listargb *aux = l->cabeca;
+    while(aux != NULL){
+        Listargb *prox = aux->prox;
+        free(aux->image->pixels);
+        free(aux->image);
+        free(aux);
+        aux = prox;
+    }
+    free(l);
+}
+
+LinkedGray *criar_gray()
+{
+    LinkedGray *l = malloc(sizeof(LinkedGray));
+    if(l == NULL){
+        printf("erro ao alocar");
+        exit(1);
+    }
+    l->cabeca = NULL;
+    l->corpo = NULL;
+    return l;
+}
+
+void adicionar_gray(LinkedGray *l, ImageGray *image)
+{
+    Listagray *novo = malloc(sizeof(Listagray));
+    if(novo == NULL){
+        printf("erro ao alocar!");
+        exit(1);
+    }
+    novo->image = image;
+    novo->prox = NULL;
+    novo->ant = l->corpo;
+    if(l->corpo != NULL){
+        l->corpo->prox = novo;
+    } else {
+        l->cabeca = novo;
+    }
+    l->corpo = novo;
+}
+
+void liberar_gray(LinkedGray *l)
+{
+    Listagray *aux = l->cabeca;
+    while(aux != NULL){
+        Listagray *prox = aux->prox;
+        free(aux->image->pixels);
+        free(aux->image);
+        free(aux);
+        aux = prox;
+    }
+    free(l);
+}
+
+
 // Funções de criação e liberação
 ImageGray *create_image_gray(int largura, int altura)
 {
@@ -237,3 +324,4 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
 
     return image_transpose;
 }
+
