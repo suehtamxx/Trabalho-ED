@@ -48,6 +48,7 @@ void readFileRGB(ImageRGB *imageRGB, FILE *arqRGB)
     }
 }
 
+// Funcções de criação e liberação de listas
 LinkedRGB *criar_RGB()
 {
     LinkedRGB *l = malloc(sizeof(LinkedRGB));
@@ -59,7 +60,6 @@ LinkedRGB *criar_RGB()
     l->corpo = NULL;
     return l;
 }
-
 void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
 {
     Listargb *novo = malloc(sizeof(Listargb));
@@ -135,7 +135,7 @@ void liberar_gray(LinkedGray *l)
 }
 
 
-// Funções de criação e liberação
+// Funções de criação e liberação de struct
 ImageGray *create_image_gray(int largura, int altura)
 {
     //Alocando struct
