@@ -68,8 +68,8 @@ ImageRGB *create_image_rgb(int largura, int altura);
 void free_image_rgb(ImageRGB *image);
 
 // Converter struct para txt
-void convertGraytxt(ImageGray *image);
-void convertRGBtxt(ImageRGB *image);
+void convertGraytxt(ImageGray *image, int *numAlteracoes);
+void convertRGBtxt(ImageRGB *image, int *numAlteracoes);
 
 // Operações para ImageGray
 ImageGray *flip_vertical_gray(ImageGray *image);
