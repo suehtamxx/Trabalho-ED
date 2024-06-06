@@ -66,7 +66,7 @@ int main()
 
     numAlteracoesRGB = 3;
     imageRGB = flip_horizontal_rgb(imageRGB);
-    adicionar_rgb(listargb, imageGray);
+    adicionar_rgb(listargb, imageRGB);
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
 
     free_image_gray(imageGray);
