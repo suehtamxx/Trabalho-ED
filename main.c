@@ -6,7 +6,7 @@
 int main()
 {
     
-    int larguraGray, alturaGray, larguraRGB, alturaRGB;
+    int larguraGray, alturaGray, larguraRGB, alturaRGB, numAlteracoesGray = 1, numAlteracoesRGB = 1;
 
     LinkedRGB *listargb = criar_RGB();
     LinkedGray *listagray = criar_gray();
@@ -55,13 +55,19 @@ int main()
     adicionar_rgb(listargb, imageRGB);
     adicionar_gray(listagray, imageGray);
 
-    imageGray = transpose_gray(imageGray);
-    adicionar_gray(listagray, transpose_gray);
-    convertGraytxt(imageGray);
+    //trasnpose
+    // imageGray = transpose_gray(imageGray);
+    // adicionar_gray(listagray, imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
     
-    imageRGB = transpose_rgb(imageRGB);
-    adicionar_rgb(listargb, transpose_rgb);
-    convertRGBtxt(imageRGB);
+    // imageRGB = transpose_rgb(imageRGB);
+    // adicionar_rgb(listargb, imageRGB);
+    // convertRGBtxt(imageRGB, &numAlteracoesRGB);
+
+    numAlteracoesRGB = 3;
+    imageRGB = flip_horizontal_rgb(imageRGB);
+    adicionar_rgb(listargb, imageGray);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
