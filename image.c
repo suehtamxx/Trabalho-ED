@@ -437,6 +437,28 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
     
     return image_horizontal;
 }
-// ImageRGB flip_vertical_rgb(ImageRGB *image)
-// {
-// }
+ImageRGB *flip_vertical_rgb(const ImageRGB *image)
+{
+    ImageRGB *flip_image = malloc(sizeof(ImageRGB));
+    if(flip_image == NULL){
+        printf("erro ao alocar");
+        exit(1);
+    }
+
+    flip_image->dim.altura = image->dim.altura;
+    flip_image->dim.largura = image->dim.largura;
+    flip_image->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelRGB));
+    if(flip_image->pixels == NULL){
+        printf("erro ao alocar rgb");
+        free(flip_image);
+        exit(1);
+    }
+    for(int i = 0; i < image->dim.altura; i++)
+    {
+        for(int j = 0; j < image->dim.largura; j++)
+        {
+            flip_image->pixels[i * image->dim.largura + j] = image->pixels[(image->dim.altura - 1 - i) * image->dim.largura + j];
+        }
+    }
+    return flip_image;
+}
