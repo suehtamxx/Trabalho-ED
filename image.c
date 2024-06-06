@@ -201,7 +201,7 @@ void convertGraytxt(ImageGray *image, int *numAlteracoes)
 {
     //Criando nome do arquivo
     char NomeArq[25];
-    sprintf(NomeArq, "AlteracaoGray%d.txt", *numAlteracoes);
+    sprintf(NomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
     (*numAlteracoes)++;
 
@@ -234,7 +234,7 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
 {
     //Criando nome do arquivo
     char NomeArq[25];
-    sprintf(NomeArq, "AlteracaoRGB%d.txt", *numAlteracoes);
+    sprintf(NomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
     (*numAlteracoes)++;
 
@@ -336,9 +336,6 @@ ImageGray *flip_horizontal_gray(ImageGray *image)
     
     return image_horizontal;
 }
-
-
-
 ImageGray *flip_vertical_gray(ImageGray *image)
 {
     ImageGray *flip_image = malloc(sizeof(PixelGray));
@@ -365,6 +362,7 @@ ImageGray *flip_vertical_gray(ImageGray *image)
     return flip_image;
 }
 
+<<<<<<< HEAD
 ImageRGB *flip_vertical_rgb(ImageRGB *image)
 {
     ImageRGB *flip_image = malloc(sizeof(PixelRGB));
@@ -390,6 +388,8 @@ ImageRGB *flip_vertical_rgb(ImageRGB *image)
     }
     return flip_image;
 }
+=======
+>>>>>>> 7c05cbd843af7d698a14e637f2edcb10753dd3fb
 // Operações para ImageRGB
 ImageRGB *transpose_rgb(const ImageRGB *image)
 {
@@ -427,4 +427,41 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
 
     return image_transpose;
 }
+ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
+{
+    //Criando struct nova
+    ImageRGB *image_horizontal = malloc(sizeof(ImageRGB));
+    if(image_horizontal == NULL)
+    {
+        printf("ERRO ao alocar flip horizontal rgb!");
+        exit(1);
+    }
 
+    //Atribuindo as dimensoes para a struct nova
+    image_horizontal->dim.largura = image->dim.altura;
+    image_horizontal->dim.altura = image->dim.largura;
+    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+
+    //Alocando os pixels
+    image_horizontal->pixels = malloc(image_horizontal->dim.altura * image_horizontal->dim.largura * sizeof(PixelRGB));
+    if(image_horizontal->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels flip horizontal rgb!");
+        free(image_horizontal);
+        exit(1);
+    }
+
+    for (int i = 0; i < image_horizontal->dim.altura; i++)
+    {
+        for (int j = 0; j < image_horizontal->dim.largura; j++)
+        {
+            image_horizontal->pixels[i * image_horizontal->dim.largura + j] = image->pixels[i * image->dim.largura + (image->dim.largura - j - 1)];
+            //printf("%d %d %d ", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
+        }
+    }
+    
+    return image_horizontal;
+}
+// ImageRGB flip_vertical_rgb(ImageRGB *image)
+// {
+// }
