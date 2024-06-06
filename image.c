@@ -201,7 +201,7 @@ void convertGraytxt(ImageGray *image, int *numAlteracoes)
 {
     //Criando nome do arquivo
     char NomeArq[25];
-    sprintf(NomeArq, "AlteracaoGray%d.txt", *numAlteracoes);
+    sprintf(NomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
     (*numAlteracoes)++;
 
@@ -234,7 +234,7 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
 {
     //Criando nome do arquivo
     char NomeArq[25];
-    sprintf(NomeArq, "AlteracaoRGB%d.txt", *numAlteracoes);
+    sprintf(NomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
     (*numAlteracoes)++;
 
