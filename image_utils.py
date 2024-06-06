@@ -58,10 +58,11 @@ def image_rgb_from_txt(txt_path, output_path):
         nova_imagem.save(output_path)
 
 
-image_gray_from_txt("AlteracaoGray1.txt", "AlteracaoGray1.png")
-image_rgb_from_txt("AlteracaoRGB1.txt", "AlteracaoRGB1.png")
+# image_gray_from_txt("AlteracaoGray1.txt", "AlteracaoGray1.png")
+# image_rgb_from_txt("AlteracaoRGB1.txt", "AlteracaoRGB1.png")
 
-image_gray_from_txt("AlteracaoGray2.txt", "AlteracaoGray2.png")
-image_rgb_from_txt("AlteracaoRGB2.txt", "AlteracaoRGB2.png")
+# image_gray_from_txt("AlteracaoGray2.txt", "AlteracaoGray2.png")
+# image_rgb_from_txt("AlteracaoRGB2.txt", "AlteracaoRGB2.png")
 
-image_gray_from_txt("AlteracaoGray3.txt", "AlteracaoGray3.png")
+# image_gray_from_txt("AlteracaoGray3.txt", "AlteracaoGray3.png")
+image_rgb_from_txt("AlteracaoRGB3.txt", "AlteracaoRGB3.png")
