@@ -69,10 +69,15 @@ int main()
     // adicionar_rgb(listargb, imageRGB);
     // convertRGBtxt(imageRGB, &numAlteracoesRGB);
 
-    numAlteracoesGray = 3;
-    imageGray = flip_vertical_gray(imageGray);
-    adicionar_gray(listagray, imageGray);
-    convertGraytxt(imageGray, &numAlteracoesGray);
+    // numAlteracoesGray = 3;
+    // imageGray = flip_vertical_gray(imageGray);
+    // adicionar_gray(listagray, imageGray);
+    // convertGraytxt(imageGray, &numAlteracoesGray);
+
+    numAlteracoesRGB = 3;
+    imageRGB = flip_vertical_rgb(imageRGB);
+    adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
