@@ -338,17 +338,19 @@ ImageGray *flip_horizontal_gray(ImageGray *image)
 }
 ImageGray *flip_vertical_gray(ImageGray *image)
 {
-    ImageGray *flip_image = malloc(sizeof(PixelGray));
+    ImageGray *flip_image = malloc(sizeof(ImageGray));
     if(flip_image == NULL){
-        printf("erro ao alocar");
+        printf("erro ao alocar flip vertical gray!\n");
         exit(1);
     }
 
     flip_image->dim.altura = image->dim.altura;
     flip_image->dim.largura = image->dim.largura;
+    printf("Dimensoes: %d %d", flip_image->dim.largura, flip_image->dim.altura);
+
     flip_image->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelGray));
     if(flip_image->pixels == NULL){
-        printf("erro ao alocar");
+        printf("erro ao alocar pixels flip vertical gray!\n");
         free(flip_image);
         exit(1);
     }
@@ -356,7 +358,8 @@ ImageGray *flip_vertical_gray(ImageGray *image)
     {
         for(int j = 0; j < image->dim.largura; j++)
         {
-            flip_image->pixels[i * image->dim.largura + j] = image->pixels[(image->dim.altura - 1 - j) * image->dim.largura + j];
+            flip_image->pixels[i * image->dim.largura + j] = image->pixels[(image->dim.altura - 1 - i) * image->dim.largura + j];
+            //printf("%d ", flip_image->pixels[i * flip_image->dim.largura + j].value);
         }
     }
     return flip_image;
