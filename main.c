@@ -78,10 +78,10 @@ int main()
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
     */
    
-    numAlteracoesRGB = 4;
-    imageRGB = clahe_rgb(imageRGB, 512, 512);
-    adicionar_rgb(listargb, imageRGB);
-    convertRGBtxt(imageRGB, &numAlteracoesRGB);
+    numAlteracoesGray = 4;
+    imageGray = clahe_gray(imageGray, 128, 128);
+    adicionar_gray(listagray, imageGray);
+    convertGraytxt(imageGray, &numAlteracoesGray);
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
