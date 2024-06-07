@@ -364,92 +364,103 @@ ImageGray *flip_vertical_gray(ImageGray *image)
     }
     return flip_image;
 }
-ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
-{
+ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height) {
     int largura = image->dim.largura;
     int altura = image->dim.altura;
 
     ImageGray *clahe = malloc(sizeof(ImageGray));
-    if(clahe == NULL){
-        printf("erro ao alocar");
+    if (clahe == NULL) {
+        printf("Erro ao alocar memória para a nova imagem.\n");
         exit(1);
     }
 
     clahe->dim.largura = largura;
     clahe->dim.altura = altura;
     clahe->pixels = malloc(largura * altura * sizeof(PixelGray));
-    if(clahe->pixels == NULL){
-        printf("erro ao alocar");
+    if (clahe->pixels == NULL) {
+        printf("Erro ao alocar memória para os pixels da nova imagem.\n");
         free(clahe);
         exit(1);
     }
 
-    //"funcao" para definir o limite
     int n_tilesx = (largura + tile_width - 1) / tile_width;
     int n_tilesy = (altura + tile_height - 1) / tile_height;
-    int lim = (tile_width * tile_height) / 8; //vc define seu limite
+    int lim = (tile_width * tile_height) / 8;
 
-    //aqui vai percorrer cada bloco
-    //iy itera sobre as linhas de blocos
-    //n_tilesy é numero total de blocos na direçao vertical
-    //jx itera sobre as colunas dos blocos
-    //n_tilesx é o numero total de blocos na direcao horizontal
-    for(int iy = 0; iy < n_tilesy; iy++)
-    {
-        for(int jx = 0; jx < n_tilesx; jx++)
-        {
+    // Para armazenar as cdfs de cada bloco
+    int (*cdf)[n_tilesx][256] = malloc(n_tilesy * n_tilesx * 256 * sizeof(int));
+    if (cdf == NULL) {
+        printf("Erro ao alocar memória para o cdf.\n");
+        free(clahe->pixels);
+        free(clahe);
+        exit(1);
+    }
+
+    memset(cdf, 0, n_tilesy * n_tilesx * 256 * sizeof(int));
+
+    for (int iy = 0; iy < n_tilesy; iy++) {
+        for (int jx = 0; jx < n_tilesx; jx++) {
             int x_inicio = jx * tile_width;
             int y_inicio = iy * tile_height;
             int x_fim = (x_inicio + tile_width > largura) ? largura : x_inicio + tile_width;
             int y_fim = (y_inicio + tile_height > altura) ? altura : y_inicio + tile_height;
 
-            //declara o histograma
             int hist[256] = {0};
 
-            //calculo do histograma para o bloco atual
-            for(int i = y_inicio; i < y_fim; i++)
-            {
-                for(int j = x_inicio; j < x_fim; j++)
-                {
+            for (int i = y_inicio; i < y_fim; i++) {
+                for (int j = x_inicio; j < x_fim; j++) {
                     hist[image->pixels[i * largura + j].value]++;
                 }
             }
 
-            //"funcao" para limitar o histograma
             int excesso = 0;
-            for(int i = 0; i < 256; i++)
-            {
-                if(hist[i] > lim){
+            for (int i = 0; i < 256; i++) {
+                if (hist[i] > lim) {
                     excesso += hist[i] - lim;
                     hist[i] = lim;
                 }
             }
 
-            //"funcao" pra redistribuir excesso
             int redistribuir = excesso / 256;
-            for(int i = 0; i < 256; i++)
+            for (int i = 0; i < 256; i++)
                 hist[i] += redistribuir;
 
-            //calcula a cdf (funcao de distribuicao acumulada)
-            int cdf[256] = {0};
-            cdf[0] = hist[0];
-            for(int i = 1; i < 256; i++)
-            {
-                cdf[i] = cdf[i - 1] + hist[i];
-            }
-
-            //aqui aplica transformação baseada na cdf
-            for(int i = y_inicio; i < y_fim; i++)
-            {
-                for(int j = x_inicio; j < x_fim; j++)
-                {
-                    int valor = image->pixels[i * largura + j].value;
-                    clahe->pixels[i * largura + j].value = (cdf[valor] * 255) / cdf[255];
-                }  
+            cdf[iy][jx][0] = hist[0];
+            for (int i = 1; i < 256; i++) {
+                cdf[iy][jx][i] = cdf[iy][jx][i - 1] + hist[i];
             }
         }
     }
 
+    // Aplicação da transformação CLAHE com interpolação bilinear
+    for (int i = 0; i < altura; i++) {
+        for (int j = 0; j < largura; j++) {
+            int tile_x = j / tile_width;
+            int tile_y = i / tile_height;
+
+            int next_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
+            int next_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
+
+            float dx = (float)(j % tile_width) / tile_width;
+            float dy = (float)(i % tile_height) / tile_height;
+
+            unsigned char value = image->pixels[i * largura + j].value;
+
+            int cdf_tl = cdf[tile_y][tile_x][value];
+            int cdf_tr = cdf[tile_y][next_tile_x][value];
+            int cdf_bl = cdf[next_tile_y][tile_x][value];
+            int cdf_br = cdf[next_tile_y][next_tile_x][value];
+
+            float cdf_top = (1 - dx) * cdf_tl + dx * cdf_tr;
+            float cdf_bottom = (1 - dx) * cdf_bl + dx * cdf_br;
+
+            float final_cdf = (1 - dy) * cdf_top + dy * cdf_bottom;
+
+            clahe->pixels[i * largura + j].value = (final_cdf * 255) / cdf[tile_y][tile_x][255];
+        }
+    }
+
+    free(cdf);
     return clahe;
 }
 
