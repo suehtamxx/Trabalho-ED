@@ -462,3 +462,91 @@ ImageRGB *flip_vertical_rgb(const ImageRGB *image)
     }
     return flip_image;
 }
+
+ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
+{
+    int largura = image->dim.largura;
+    int altura = image->dim.altura;
+
+    ImageGray *clahe = malloc(sizeof(ImageGray));
+    if(clahe == NULL){
+        printf("erro ao alocar");
+        exit(1);
+    }
+
+    clahe->dim.largura = largura;
+    clahe->dim.altura = altura;
+    clahe->pixels = malloc(largura * altura * sizeof(PixelGray));
+    if(clahe->pixels == NULL){
+        printf("erro ao alocar");
+        free(clahe);
+        exit(1);
+    }
+
+    //"funcao" para definir o limite
+    int n_tilesx = (largura + tile_width - 1) / tile_width;
+    int n_tilesy = (altura + tile_height - 1) / tile_height;
+    int lim = (tile_width * tile_height) / 8; //vc define seu limite
+
+    //aqui vai percorrer cada bloco
+    //iy itera sobre as linhas de blocos
+    //n_tilesy é numero total de blocos na direçao vertical
+    //jx itera sobre as colunas dos blocos
+    //n_tilesx é o numero total de blocos na direcao horizontal
+    for(int iy = 0; iy < n_tilesy; iy++)
+    {
+        for(int jx = 0; jx < n_tilesx; jx++)
+        {
+            int x_inicio = jx * tile_width;
+            int y_inicio = iy * tile_height;
+            int x_fim = (x_inicio + tile_width > largura) ? largura : x_inicio + tile_width;
+            int y_fim = (y_inicio + tile_height > altura) ? altura : y_inicio + tile_height;
+
+            //declara o histograma
+            int hist[256] = {0};
+
+            //calculo do histograma para o bloco atual
+            for(int i = y_inicio; i < y_fim; i++)
+            {
+                for(int j = x_inicio; j < x_fim; j++)
+                {
+                    hist[image->pixels[i * largura + j].value]++;
+                }
+            }
+
+            //"funcao" para limitar o histograma
+            int excesso = 0;
+            for(int i = 0; i < 256; i++)
+            {
+                if(hist[i] > lim){
+                    excesso += hist[i] - lim;
+                    hist[i] = lim;
+                }
+            }
+
+            //"funcao" pra redistribuir excesso
+            int redistribuir = excesso / 256;
+            for(int i = 0; i < 256; i++)
+                hist[i] += redistribuir;
+
+            //calcula a cdf (funcao de distribuicao acumulada)
+            int cdf[256] = {0};
+            cdf[0] = hist[0];
+            for(int i = 1; i < 256; i++)
+            {
+                cdf[i] = cdf[i - 1] + hist[i];
+            }
+
+            //aqui aplica transformação baseada na cdf
+            for(int i = y_inicio; i < y_fim; i++)
+            {
+                for(int j = x_inicio; j < x_fim; j++)
+                {
+                    int valor = image->pixels[i * largura + j].value;
+                    clahe->pixels[i * largura + j].value = (cdf[valor] * 255) / cdf[255];
+                }  
+            }
+        }
+    }
+    return clahe;
+}
