@@ -650,13 +650,30 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
             for (int i = y_inicio; i < y_fim; i++) {
                 for (int j = x_inicio; j < x_fim; j++) {
                     PixelRGB *pixel = &clahe->pixels[i * largura + j];
-                    pixel->red = (cdf_r[image->pixels[i * largura + j].red] * 255) / total_pixels;
-                    pixel->green = (cdf_g[image->pixels[i * largura + j].green] * 255) / total_pixels;
-                    pixel->blue = (cdf_b[image->pixels[i * largura + j].blue] * 255) / total_pixels;
+                    float x_fracao = ((float)j - x_inicio) / (x_fim - x_inicio);
+                    float y_fracao = ((float)i - y_inicio) / (y_fim - y_inicio);
+                    int x0 = (int)(x_fracao * 255);
+                    int y0 = (int)(y_fracao * 255);
+                    int x1 = (x0 < 255) ? x0 + 1 : x0;
+                    int y1 = (y0 < 255) ? y0 + 1 : y0;
+                    int valor_r = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_r[y0 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_r[y0 * 255 + x1] +
+                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_r[y1 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_r[y1 * 255 + x1];
+                    int valor_g = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_g[y0 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_g[y0 * 255 + x1] +
+                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_g[y1 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_g[y1 * 255 + x1];
+                    int valor_b = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_b[y0 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_b[y0 * 255 + x1] +
+                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_b[y1 * 255 + x0] +
+                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_b[y1 * 255 + x1];
+                                  pixel->red = valor_r;
+                                  pixel->green = valor_g;
+                                  pixel->blue = valor_b;
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
-
-    return clahe;
+            return clahe;
 }
