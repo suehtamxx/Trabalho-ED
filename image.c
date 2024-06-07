@@ -550,3 +550,113 @@ ImageRGB *flip_vertical_rgb(const ImageRGB *image)
     }
     return flip_image;
 }
+ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
+{
+    int largura = image->dim.largura;
+    int altura = image->dim.altura;
+
+    ImageRGB *clahe = malloc(sizeof(ImageRGB));
+    if(clahe == NULL){
+        printf("erro ao alocar");
+        exit(1);
+    }
+
+    clahe->dim.largura = largura;
+    clahe->dim.altura = altura;
+    clahe->pixels = malloc(largura * altura * sizeof(PixelRGB));
+    if(clahe->pixels == NULL){
+        printf("erro ao alocar");
+        free(clahe);
+        exit(1);
+    }
+
+    //"funcao" para definir o limite
+    int n_tilesx = (largura + tile_width - 1) / tile_width;
+    int n_tilesy = (altura + tile_height - 1) / tile_height;
+
+    //aqui vai percorrer cada bloco
+    //iy itera sobre as linhas de blocos
+    //n_tilesy é numero total de blocos na direçao vertical
+    //jx itera sobre as colunas dos blocos
+    //n_tilesx é o numero total de blocos na direcao horizontal
+    for(int iy = 0; iy < n_tilesy; iy++)
+    {
+        for(int jx = 0; jx < n_tilesx; jx++)
+        {
+            int x_inicio = jx * tile_width;
+            int y_inicio = iy * tile_height;
+            int x_fim = (x_inicio + tile_width > largura) ? largura : x_inicio + tile_width;
+            int y_fim = (y_inicio + tile_height > altura) ? altura : y_inicio + tile_height;
+
+            //declara o histograma
+            int histR[256] = {0};
+            int histG[256] = {0};
+            int histB[256] = {0};
+
+            //calculo do histograma para o bloco atual
+            for(int i = y_inicio; i < y_fim; i++)
+            {
+                for(int j = x_inicio; j < x_fim; j++)
+                {
+                    PixelRGB pixel = image->pixels[i * largura + j]; 
+                    histR[pixel.red]++;
+                    histG[pixel.green]++;
+                    histB[pixel.blue]++;
+                }
+            }
+
+            //"funcao" para limitar o histograma
+            int total_pixels = (x_fim - x_inicio) * (y_fim - y_inicio);
+            int limite = total_pixels / 64;
+            int clipped_r = 0, clipped_g = 0, clipped_b = 0;
+            for(int i = 0; i < 256; i++)
+            {
+                if(histR[i] > limite){
+                    clipped_r += histR[i] - limite;
+                    histR[i] = limite;
+                }
+                if(histG[i] > limite){
+                    clipped_g += histG[i] - limite;
+                    histG[i] = limite;
+                }
+                if(histB[i] > limite){
+                    clipped_b += histB[i] - limite;
+                    histB[i] = limite;
+                }
+            }
+
+            //"funcao" pra redistribuir excesso
+            int redistribuirR = clipped_r / 256, redistribuirG = clipped_g / 256, redistribuirB = clipped_b / 256;
+            for(int i = 0; i < 256; i++)
+            {
+                histR[i] += redistribuirR;
+                histG[i] += redistribuirG;
+                histB[i] += redistribuirB;
+            }
+
+            //calcula a cdf (funcao de distribuicao acumulada)
+            int cdf_r[256] = {0}, cdf_g[256] = {0}, cdf_b[256] = {0};
+            cdf_r[0] = histR[0];
+            cdf_g[0] = histG[0];
+            cdf_b[0] = histB[0];
+
+            for (int i = 1; i < 256; ++i) {
+                cdf_r[i] = cdf_r[i - 1] + histR[i];
+                cdf_g[i] = cdf_g[i - 1] + histG[i];
+                cdf_b[i] = cdf_b[i - 1] + histB[i];
+            }
+
+            //aqui aplica transformação baseada na cdf
+            for (int i = y_inicio; i < y_fim; i++) {
+                for (int j = x_inicio; j < x_fim; j++) {
+                    PixelRGB *pixel = &clahe->pixels[i * largura + j];
+                    pixel->red = (cdf_r[image->pixels[i * largura + j].red] * 255) / total_pixels;
+                    pixel->green = (cdf_g[image->pixels[i * largura + j].green] * 255) / total_pixels;
+                    pixel->blue = (cdf_b[image->pixels[i * largura + j].blue] * 255) / total_pixels;
+                }
+            }
+        }
+    }
+
+    return clahe;
+}
