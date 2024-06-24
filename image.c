@@ -688,3 +688,104 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
                 }
             return clahe;
 }
+void insertion_sort(unsigned char *vet, int cont) 
+{
+    for (int i = 1; i < cont; i++) 
+    {
+        unsigned char key = vet[i];
+        int j = i - 1;
+        while (j >= 0 && vet[j] > key) 
+        {
+            vet[j + 1] = vet[j];
+            j--;
+        }
+        vet[j + 1] = key;
+    }
+}
+ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
+{
+    //Criando struct nova
+    ImageRGB *image_median = malloc(sizeof(ImageRGB));
+    if(image_median == NULL)
+    {
+        printf("ERRO ao alocar median blur rgb!");
+        exit(1);
+    }
+
+    //Atribuindo as dimensoes para a struct nova
+    image_median->dim.largura = image->dim.altura;
+    image_median->dim.altura = image->dim.largura;
+    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+
+    //Alocando os pixels
+    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelRGB));
+    if(image_median->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels median blur rgb!");
+        free(image_median);
+        exit(1);
+    }
+
+    int offset = kernel_size / 2; //Determinando o intervalo de indices ao redor do pixel
+    int window_size = kernel_size * kernel_size; //Calculando o total de pixels da janela
+    
+    //Alocanco janelas para cada cor
+    unsigned char *window_r = malloc(window_size * sizeof(unsigned char));
+    unsigned char *window_g = malloc(window_size * sizeof(unsigned char));
+    unsigned char *window_b = malloc(window_size * sizeof(unsigned char));
+
+    if(window_r == NULL || window_g == NULL || window_b == NULL)
+    {
+        printf("ERRO ao alocar janelas median blur rgb!");
+        free(image_median->pixels);
+        free(image_median);
+        free(window_r);
+        free(window_g);
+        free(window_b);
+        exit(1);
+    }
+
+    //Percorrendo os pixels
+    for (int i = 0; i < image_median->dim.altura; i++)
+    {
+        for (int j = 0; j < image_median->dim.largura; j++)
+        {
+            int cont = 0;
+
+            //Encontrando o centro da janela
+            for (int m = -offset; m <= offset; m++)
+            {
+                for (int n = -offset; n <= offset; n++)
+                {
+                    int x = j + n;
+                    int y = i + m;
+                    
+                    if (x >= 0 && x < image_median->dim.largura && y >= 0 && y < image_median->dim.altura)
+                    {
+                        PixelRGB pixel = image->pixels[y * image_median->dim.largura + x];
+                        window_r[cont] = pixel.red;
+                        window_g[cont] = pixel.green;
+                        window_b[cont] = pixel.blue;
+                        cont++;
+                    }
+                }
+            }
+            
+            //Ordenando
+            insertion_sort(window_r, cont);
+            insertion_sort(window_g, cont);
+            insertion_sort(window_b, cont);
+
+            //Calculando a mediana e atribuindo ao pixel
+            image_median->pixels[i * image_median->dim.largura + j].red = window_r[cont / 2];
+            image_median->pixels[i * image_median->dim.largura + j].green = window_g[cont / 2];
+            image_median->pixels[i * image_median->dim.largura + j].blue = window_b[cont / 2];
+        }
+    }
+
+    free(window_r);
+    free(window_g);
+    free(window_b);
+    
+    return image_median;
+}
