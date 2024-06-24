@@ -78,10 +78,19 @@ int main()
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
     */
    
-    numAlteracoesGray = 4;
-    imageGray = clahe_gray(imageGray, 128, 128);
-    adicionar_gray(listagray, imageGray);
-    convertGraytxt(imageGray, &numAlteracoesGray);
+    numAlteracoesRGB = 5;
+    imageRGB = median_blur_rgb(imageRGB, 3);
+    adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
+
+    imageRGB = median_blur_rgb(imageRGB, 3);
+    adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
+
+    imageRGB = median_blur_rgb(imageRGB, 3);
+    adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
+
 
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
