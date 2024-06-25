@@ -78,7 +78,7 @@ int main()
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
     */
    
-    numAlteracoesRGB = 5;
+    /* numAlteracoesRGB = 5;
     imageRGB = median_blur_rgb(imageRGB, 3);
     adicionar_rgb(listargb, imageRGB);
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
@@ -89,9 +89,21 @@ int main()
 
     imageRGB = median_blur_rgb(imageRGB, 3);
     adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB); */
+
+    numAlteracoesGray = 5;
+    imageGray = median_blur_gray(imageGray, 3);
+    adicionar_gray(listagray, imageGray);
+    convertGraytxt(imageGray, &numAlteracoesGray);
+
+    /* imageRGB = median_blur_rgb(imageRGB, 3);
+    adicionar_rgb(listargb, imageRGB);
     convertRGBtxt(imageRGB, &numAlteracoesRGB);
 
-
+    imageRGB = median_blur_rgb(imageRGB, 3);
+    adicionar_rgb(listargb, imageRGB);
+    convertRGBtxt(imageRGB, &numAlteracoesRGB);
+ */
     free_image_gray(imageGray);
     free_image_rgb(imageRGB);
 
