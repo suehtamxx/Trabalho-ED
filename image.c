@@ -789,3 +789,68 @@ ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
     
     return image_median;
 }
+
+ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
+{
+    ImageGray *image_median = malloc(sizeof(ImageGray));
+    if(image_median == NULL)
+    {
+        printf("ERRO ao alocar median blur gray");
+        exit(1);
+    }
+
+    image_median->dim.largura = image->dim.largura;
+    image_median->dim.altura = image->dim.altura;
+
+    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelGray));
+    if(image_median->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels median blur gray");
+        free(image_median);
+        exit(1);
+    }
+    
+    int offset = kernel_size / 2;
+    int window_size = kernel_size * kernel_size;
+
+    unsigned char *window_gray = malloc(window_size * sizeof(unsigned char));
+
+    if(window_gray == NULL)
+    {
+        printf("ERRO ao alocar janelas median blur gray");
+        free(image_median->pixels);
+        free(image_median);
+        exit(1);
+    }
+
+    for(int i = 0; i < image_median->dim.altura; i++)
+    {
+        for(int j = 0; j < image_median->dim.largura; j++)
+        {
+            int cont = 0;
+
+            for(int m = -offset; m <= offset; m++)
+            {
+                for(int n = -offset; n <= offset; n++)
+                {
+                    int x = j + n;
+                    int y = i + m;
+
+                    if(x >= 0 && x < image_median->dim.largura && y >= 0 && y < image_median->dim.altura)
+                    {
+                        PixelGray pixel = image->pixels[y * image_median->dim.largura + x];
+                        window_gray[cont] = pixel.value;
+                        cont++;
+                    }
+                }
+            }
+
+            insertion_sort(window_gray, cont);
+
+            image_median->pixels[i * image_median->dim.largura + j].value = window_gray[cont / 2];
+        }
+    }
+    free(window_gray);
+
+    return image_median;
+}
