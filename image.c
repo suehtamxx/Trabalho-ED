@@ -1,6 +1,7 @@
 #include "image.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Ler arquivos
 void readFileGray(ImageGray *imageGray, FILE *arqGray)
@@ -200,14 +201,14 @@ void free_image_rgb(ImageRGB *image)
 void convertGraytxt(ImageGray *image, int *numAlteracoes)
 {
     //Criando nome do arquivo
-    char NomeArq[25];
-    sprintf(NomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
+    char nomeArq[25];
+    sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
     (*numAlteracoes)++;
 
     //Criando o arquivo
     FILE *arqGray;
-    arqGray = fopen(NomeArq, "w");
+    arqGray = fopen(nomeArq, "w");
     if (arqGray == NULL)
     {
         printf("ERRO ao criar arquivo.\n");
@@ -262,6 +263,21 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
     }
     
     fclose(arqRGB);
+}
+
+void insertion_sort(unsigned char *vet, int cont) 
+{
+    for (int i = 1; i < cont; i++) 
+    {
+        unsigned char key = vet[i];
+        int j = i - 1;
+        while (j >= 0 && vet[j] > key) 
+        {
+            vet[j + 1] = vet[j];
+            j--;
+        }
+        vet[j + 1] = key;
+    }
 }
 
 // Operações para ImageGray
@@ -346,7 +362,7 @@ ImageGray *flip_vertical_gray(ImageGray *image)
 
     flip_image->dim.altura = image->dim.altura;
     flip_image->dim.largura = image->dim.largura;
-    printf("Dimensoes: %d %d", flip_image->dim.largura, flip_image->dim.altura);
+    //printf("Dimensoes: %d %d", flip_image->dim.largura, flip_image->dim.altura);
 
     flip_image->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelGray));
     if(flip_image->pixels == NULL){
@@ -364,7 +380,8 @@ ImageGray *flip_vertical_gray(ImageGray *image)
     }
     return flip_image;
 }
-ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height) {
+ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height) 
+{
     int largura = image->dim.largura;
     int altura = image->dim.altura;
 
@@ -462,6 +479,70 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height) {
 
     free(cdf);
     return clahe;
+}
+ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
+{
+    ImageGray *image_median = malloc(sizeof(ImageGray));
+    if(image_median == NULL)
+    {
+        printf("ERRO ao alocar median blur gray");
+        exit(1);
+    }
+
+    image_median->dim.largura = image->dim.largura;
+    image_median->dim.altura = image->dim.altura;
+
+    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelGray));
+    if(image_median->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels median blur gray");
+        free(image_median);
+        exit(1);
+    }
+    
+    int offset = kernel_size / 2;
+    int window_size = kernel_size * kernel_size;
+
+    unsigned char *window_gray = malloc(window_size * sizeof(unsigned char));
+
+    if(window_gray == NULL)
+    {
+        printf("ERRO ao alocar janelas median blur gray");
+        free(image_median->pixels);
+        free(image_median);
+        exit(1);
+    }
+
+    for(int i = 0; i < image_median->dim.altura; i++)
+    {
+        for(int j = 0; j < image_median->dim.largura; j++)
+        {
+            int cont = 0;
+
+            for(int m = -offset; m <= offset; m++)
+            {
+                for(int n = -offset; n <= offset; n++)
+                {
+                    int x = j + n;
+                    int y = i + m;
+
+                    if(x >= 0 && x < image_median->dim.largura && y >= 0 && y < image_median->dim.altura)
+                    {
+                        PixelGray pixel = image->pixels[y * image_median->dim.largura + x];
+                        window_gray[cont] = pixel.value;
+                        cont++;
+                    }
+                }
+            }
+
+            insertion_sort(window_gray, cont);
+
+            image_median->pixels[i * image_median->dim.largura + j].value = window_gray[cont / 2];
+        }
+    }
+    free(window_gray);
+
+    return image_median;
 }
 
 // Operações para ImageRGB
@@ -688,20 +769,6 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
                 }
             return clahe;
 }
-void insertion_sort(unsigned char *vet, int cont) 
-{
-    for (int i = 1; i < cont; i++) 
-    {
-        unsigned char key = vet[i];
-        int j = i - 1;
-        while (j >= 0 && vet[j] > key) 
-        {
-            vet[j + 1] = vet[j];
-            j--;
-        }
-        vet[j + 1] = key;
-    }
-}
 ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
 {
     //Criando struct nova
@@ -787,70 +854,5 @@ ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
     free(window_g);
     free(window_b);
     
-    return image_median;
-}
-
-ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
-{
-    ImageGray *image_median = malloc(sizeof(ImageGray));
-    if(image_median == NULL)
-    {
-        printf("ERRO ao alocar median blur gray");
-        exit(1);
-    }
-
-    image_median->dim.largura = image->dim.largura;
-    image_median->dim.altura = image->dim.altura;
-
-    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelGray));
-    if(image_median->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels median blur gray");
-        free(image_median);
-        exit(1);
-    }
-    
-    int offset = kernel_size / 2;
-    int window_size = kernel_size * kernel_size;
-
-    unsigned char *window_gray = malloc(window_size * sizeof(unsigned char));
-
-    if(window_gray == NULL)
-    {
-        printf("ERRO ao alocar janelas median blur gray");
-        free(image_median->pixels);
-        free(image_median);
-        exit(1);
-    }
-
-    for(int i = 0; i < image_median->dim.altura; i++)
-    {
-        for(int j = 0; j < image_median->dim.largura; j++)
-        {
-            int cont = 0;
-
-            for(int m = -offset; m <= offset; m++)
-            {
-                for(int n = -offset; n <= offset; n++)
-                {
-                    int x = j + n;
-                    int y = i + m;
-
-                    if(x >= 0 && x < image_median->dim.largura && y >= 0 && y < image_median->dim.altura)
-                    {
-                        PixelGray pixel = image->pixels[y * image_median->dim.largura + x];
-                        window_gray[cont] = pixel.value;
-                        cont++;
-                    }
-                }
-            }
-
-            insertion_sort(window_gray, cont);
-
-            image_median->pixels[i * image_median->dim.largura + j].value = window_gray[cont / 2];
-        }
-    }
-    free(window_gray);
-
     return image_median;
 }
