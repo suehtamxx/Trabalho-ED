@@ -1,4 +1,5 @@
 from PIL import Image
+import sys
 
 
 def txt_from_image_gray(image_path, output_path, gray=True):
@@ -58,18 +59,24 @@ def image_rgb_from_txt(txt_path, output_path):
         nova_imagem.save(output_path)
 
 
-# image_gray_from_txt("AlteracaoGray1.txt", "AlteracaoGray1.png")
-# image_rgb_from_txt("AlteracaoRGB1.txt", "AlteracaoRGB1.png")
+# def main():
+#     if len(sys.argv) != 4:
+#         print("Usage: python image_utils.py nomeArq nomeImage mode")
+#         return
 
-# image_gray_from_txt("AlteracaoGray2.txt", "AlteracaoGray2.png")
-# image_rgb_from_txt("AlteracaoRGB2.txt", "AlteracaoRGB2.png")
+#     nomeArq = sys.argv[1]
+#     nomeImage = sys.argv[2]
+#     mode = sys.argv[3]
 
-# image_gray_from_txt("AlteracaoGray3.txt", "AlteracaoGray3.png")
-# image_rgb_from_txt("AlteracaoRGB3.txt", "AlteracaoRGB3.png")
+#     if mode == "gray":
+#         image_gray_from_txt(nomeArq, nomeImage)
+#     elif mode == "rgb":
+#         image_rgb_from_txt(nomeArq, nomeImage)
+#     else:
+#         print(f"Unknown mode: {mode}")
 
-# image_gray_from_txt("AlteracaoGray4.txt", "AlteracaoGray4.png")
-# image_rgb_from_txt("AlteracaoRGB4.txt", "AlteracaoRGB4.png")
 
-image_rgb_from_txt("AlteracaoRGB5.txt", "AlteracaoRGB5.png")
-image_rgb_from_txt("AlteracaoRGB6.txt", "AlteracaoRGB6.png")
-image_rgb_from_txt("AlteracaoRGB7.txt", "AlteracaoRGB7.png")
+# if __name__ == "__main__":
+#     main()
+
+image_gray_from_txt("AlteracaoGray2.txt", "AlteracaoGray2.png")
