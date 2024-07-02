@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 // Ler arquivos
 void readFileGray(ImageGray *imageGray, FILE *arqGray)
@@ -13,7 +14,7 @@ void readFileGray(ImageGray *imageGray, FILE *arqGray)
         char separador;
         if(fscanf(arqGray, "%d%c", &pixel, &separador) != 2)
         {
-            printf("erro na leitura do pixel\n");
+            printf("erro na leitura do pixel gray\n");
             fclose(arqGray);
             free(imageGray->pixels);
             free(imageGray);
@@ -34,7 +35,7 @@ void readFileRGB(ImageRGB *imageRGB, FILE *arqRGB)
         char separador;
         if(fscanf(arqRGB, "%d %d %d%c", &r, &g, &b, &separador) != 4)
         {
-            printf("ERRO na leitura do pixel\n");
+            printf("ERRO na leitura do pixel rgb\n");
             free(imageRGB->pixels);
             free(imageRGB);
             fclose(arqRGB);
@@ -544,6 +545,111 @@ ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
 
     return image_median;
 }
+void random_gray(ImageGray *image)
+{
+    int randon = 5, numAlteracoes = 1, op = 0;
+
+    //Criando lista dupla
+    LinkedGray *l = criar_gray();
+
+    //Criando struct nova
+    ImageGray *image_random = malloc(sizeof(ImageGray));
+    if(image_random == NULL)
+    {
+        printf("ERRO ao alocar random gray!");
+        exit(1);
+    }
+
+    //Atribuindo as dimensoes para a struct nova
+    image_random->dim.largura = image->dim.altura;
+    image_random->dim.altura = image->dim.largura;
+    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+
+    //Alocando os pixels
+    image_random->pixels = malloc(image_random->dim.altura * image_random->dim.largura * sizeof(PixelGray));
+    if(image_random->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels random gray!");
+        free(image_random);
+        exit(1);
+    }
+    
+    for (int i = 0; i < randon; i++)
+    {
+        int num = rand() % 5;
+        
+        switch (num)
+        {
+        case 0:
+            image_random = transpose_gray(image_random);
+            convertGraytxt(image_random, &numAlteracoes);
+            adicionar_gray(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 1:
+            image_random = flip_horizontal_gray(image_random);
+            convertGraytxt(image_random, &numAlteracoes);
+            adicionar_gray(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 2:
+            image_random = flip_vertical_gray(image_random);
+            convertGraytxt(image_random, &numAlteracoes);
+            adicionar_gray(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 3:
+            image_random = clahe_gray(image_random, image_random->dim.largura, image_random->dim.altura);
+            convertGraytxt(image_random, &numAlteracoes);
+            adicionar_gray(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 4:
+            image_random = median_blur_gray(image_random, 5);
+            convertGraytxt(image_random, &numAlteracoes);
+            adicionar_gray(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+        
+        default:
+            break;
+        }
+    }
+
+    do
+    {
+        printf("\n===MENU ALEATORIO GRAY===\n");
+        printf("1 - Desfazer\n");
+        printf("2 - Refazer\n");
+        printf("3 - Historico\n");
+        printf("4 - Voltar\n");
+
+        printf("Escolha uma opcao:\n");
+        scanf(" %d", &op); 
+
+        switch (op)
+        {
+        case 1:
+            /* code */
+            break;
+
+        case 2:
+            break;
+
+        case 4:
+            printf("Voltando...\n");
+            break;
+        
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+    } while (op != 4);
+}
 
 // Operações para ImageRGB
 ImageRGB *transpose_rgb(const ImageRGB *image)
@@ -855,4 +961,109 @@ ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
     free(window_b);
     
     return image_median;
+}
+void random_rgb(ImageRGB *image)
+{
+    int randon = 5, numAlteracoes = 1, op = 0;
+
+    //Criando lista dupla
+    LinkedRGB *l = criar_RGB();
+
+    //Criando struct nova
+    ImageRGB *image_random = malloc(sizeof(ImageRGB));
+    if(image_random == NULL)
+    {
+        printf("ERRO ao alocar random rgb!");
+        exit(1);
+    }
+
+    //Atribuindo as dimensoes para a struct nova
+    image_random->dim.largura = image->dim.altura;
+    image_random->dim.altura = image->dim.largura;
+    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+
+    //Alocando os pixels
+    image_random->pixels = malloc(image_random->dim.altura * image_random->dim.largura * sizeof(PixelGray));
+    if(image_random->pixels == NULL)
+    {
+        printf("ERRO ao alocar pixels random gray!");
+        free(image_random);
+        exit(1);
+    }
+    
+    for (int i = 0; i < randon; i++)
+    {
+        int num = rand() % 5;
+        
+        switch (num)
+        {
+        case 0:
+            image_random = transpose_rgb(image_random);
+            convertRGBtxt(image_random, &numAlteracoes);
+            adicionar_rgb(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 1:
+            image_random = flip_horizontal_rgb(image_random);
+            convertRGBtxt(image_random, &numAlteracoes);
+            adicionar_rgb(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 2:
+            image_random = flip_vertical_rgb(image_random);
+            convertRGBtxt(image_random, &numAlteracoes);
+            adicionar_rgb(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 3:
+            image_random = clahe_rgb(image_random, image_random->dim.largura, image_random->dim.altura);
+            convertRGBtxt(image_random, &numAlteracoes);
+            adicionar_rgb(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+
+        case 4:
+            image_random = median_blur_rgb(image_random, 5);
+            convertRGBtxt(image_random, &numAlteracoes);
+            adicionar_rgb(l, image_random);
+            //call_python_gray(&numAlteracoes);
+            break;
+        
+        default:
+            break;
+        }
+    }
+
+    do
+    {
+        printf("\n===MENU ALEATORIO GRAY===\n");
+        printf("1 - Desfazer\n");
+        printf("2 - Refazer\n");
+        printf("3 - Historico\n");
+        printf("4 - Voltar\n");
+
+        printf("Escolha uma opcao:\n");
+        scanf(" %d", &op); 
+
+        switch (op)
+        {
+        case 1:
+            /* code */
+            break;
+
+        case 2:
+            break;
+
+        case 3:
+            printf("Voltando...\n");
+            break;
+        
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+    } while (op != 4);
 }
