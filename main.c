@@ -1,4 +1,3 @@
-//#include <gtk/gtk.h>
 #include "image.h"
 #include "image.c"
 #include <stdio.h>
@@ -25,8 +24,11 @@
 //     system(command);
 // }
 
-void menuImageGray(LinkedGray *l, ImageGray *image, int numAlteracoes)
+void menuImageGray(ImageGray *image, int numAlteracoes)
 {
+    //Criando lista dupla
+    LinkedGray *l = criar_gray();
+
     int op = 0;
 
     do
@@ -37,7 +39,10 @@ void menuImageGray(LinkedGray *l, ImageGray *image, int numAlteracoes)
         printf("3 - Flip Vertical\n");
         printf("4 - Clahe\n");
         printf("5 - Median blur\n");
-        printf("6 - Voltar\n");
+        printf("6 - Desfazer\n");
+        printf("7 - Refazer\n");
+        printf("8 - Historico\n");
+        printf("9 - Voltar\n");
 
         printf("Escolha uma opcao:\n");
         scanf(" %d", &op);
@@ -79,19 +84,22 @@ void menuImageGray(LinkedGray *l, ImageGray *image, int numAlteracoes)
             //call_python_gray(&numAlteracoes);
             break;
 
-        case 6:
+        case 9:
             printf("Voltando...\n\n");
             break;
 
         default:
-            printf("Opcao invalida!\n\n");
+            printf("Opcao invalida!\n");
             break;
         }
     } while (op != 6);
 }
 
-void menuImageRGB(LinkedRGB *l, ImageRGB *image, int alteracoes)
+void menuImageRGB(ImageRGB *image, int alteracoes)
 {
+    //Criando lista dupla
+    LinkedRGB *l = criar_RGB();
+
     int op = 0;
 
     do
@@ -102,7 +110,10 @@ void menuImageRGB(LinkedRGB *l, ImageRGB *image, int alteracoes)
         printf("3 - Flip Vertical\n");
         printf("4 - Clahe\n");
         printf("5 - Median blur\n");
-        printf("6 - Voltar\n");
+        printf("6 - Desfazer\n");
+        printf("7 - Refazer\n");
+        printf("8 - Historico\n");
+        printf("9 - Voltar\n");
 
         printf("Escolha uma opcao:\n");
         scanf(" %d", &op);
@@ -139,24 +150,20 @@ void menuImageRGB(LinkedRGB *l, ImageRGB *image, int alteracoes)
             adicionar_rgb(l, image);
             break;
 
-        case 6:
-            printf("Saindo...\n\n");
+        case 9:
+            printf("Voltando...\n\n");
             break;
 
         default:
-            printf("Opcao invalida!\n\n");
+            printf("Opcao invalida!\n");
             break;
         }
     } while (op != 6);
 }
 
-int main()
+void menuImageAteatoria()
 {
-    int larguraGray, alturaGray, larguraRGB, alturaRGB, numAlteracoesGray = 1, numAlteracoesRGB = 1, op = 0;
-
-    //Criando listas duplas
-    LinkedRGB *listargb = criar_RGB();
-    LinkedGray *listagray = criar_gray();
+    int larguraGray, alturaGray, larguraRGB, alturaRGB, op = 0;
 
     //Criando arquivo
     FILE *arqGray;
@@ -190,14 +197,93 @@ int main()
     ImageRGB *imageRGB = create_image_rgb(larguraRGB, alturaRGB);
     if (imageGray == NULL || imageRGB == NULL)
     {
-        printf("ERRO ao alocar!\n");
+        printf("ERRO ao alocar structs!\n");
         exit(1);
     }
     
     //Chamando as funcoes para ler os arquivos e colocar nas structs
     readFileGray(imageGray, arqGray);
     readFileRGB(imageRGB, arqRGB);
+    
+    fclose(arqGray);
+    fclose(arqRGB);
 
+    do
+    {
+        printf("\n===MENU ALEATORIO===\n");
+        printf("1 - Criar imagem aleatoria Gray\n");
+        printf("2 - Criar imagem aleatoria RGB\n");
+        printf("3 - Voltar\n");
+
+        printf("Escolha uma opcao:\n");
+        scanf(" %d", &op); 
+
+        switch (op)
+        {
+        case 1:
+            random_gray(imageGray);
+            break;
+
+        case 2:
+            random_rgb(imageRGB);
+            break;
+
+        case 3:
+            printf("Voltando...\n");
+            break;
+        
+        default:
+            printf("Opcao invalida!\n");
+            break;
+        }
+    } while (op != 3);
+    
+}
+
+int main()
+{
+    int larguraGray, alturaGray, larguraRGB, alturaRGB, numAlteracoesGray = 1, numAlteracoesRGB = 1, op = 0;
+
+    //Criando arquivo
+    FILE *arqGray;
+    arqGray = fopen("imageGray.txt", "r");
+    FILE *arqRGB;
+    arqRGB = fopen("imageRGB.txt", "r");
+    if (arqGray == NULL || arqRGB == NULL)
+    {
+        printf("ERRO ao abrir os arquivos!\n");
+        fclose(arqGray);
+        fclose(arqRGB);
+        exit(1);
+    }
+
+    //Lendo dimensoes
+    if (fscanf(arqGray,"%d %d", &larguraGray, &alturaGray) !=2)
+    {
+        printf("ERRO na leitura da dimensao gray");
+        fclose(arqGray);
+        exit(1);
+    }
+    if (fscanf(arqRGB,"%d %d", &larguraRGB, &alturaRGB) !=2)
+    {
+        printf("ERRO na leitura da dimensao rgb");
+        fclose(arqRGB);
+        exit(1);
+    }
+
+    //Criando struct
+    ImageGray *imageGray = create_image_gray(larguraGray, alturaGray);
+    ImageRGB *imageRGB = create_image_rgb(larguraRGB, alturaRGB);
+    if (imageGray == NULL || imageRGB == NULL)
+    {
+        printf("ERRO ao alocar structs!\n");
+        exit(1);
+    }
+    
+    //Chamando as funcoes para ler os arquivos e colocar nas structs
+    readFileGray(imageGray, arqGray);
+    readFileRGB(imageRGB, arqRGB);
+    
     fclose(arqGray);
     fclose(arqRGB);
 
@@ -206,7 +292,8 @@ int main()
         printf("\n===MENU PRINCIPAL===\n");
         printf("1 - Imagem Gray\n");
         printf("2 - Imagem RGB\n");
-        printf("3 - Sair\n");
+        printf("3 - Imagem Aleatoria\n");
+        printf("4 - Sair\n");
 
         printf("Escolha uma opcao:\n");
         scanf(" %d", &op);
@@ -214,14 +301,18 @@ int main()
         switch (op)
         {
         case 1:
-            menuImageGray(listagray, imageGray, numAlteracoesGray);
+            menuImageGray(imageGray, numAlteracoesGray);
             break;
         
         case 2:
-            menuImageRGB(listargb, imageRGB, numAlteracoesRGB);
+            menuImageRGB(imageRGB, numAlteracoesRGB);
             break;
 
         case 3:
+            menuImageAteatoria();
+            break;
+
+        case 4:
             printf("Saindo...\n\n");
             break;
 
