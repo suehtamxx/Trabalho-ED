@@ -89,6 +89,9 @@ ImageGray *median_blur_gray(const ImageGray *image, int kernel_size);
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height);
 ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size);
 
+void random_gray(ImageGray *image);
+void random_rgb(ImageRGB *image);
+
 LinkedRGB *criar_RGB();
 LinkedGray *criar_gray();
 
