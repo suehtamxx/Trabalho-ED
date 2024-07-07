@@ -266,6 +266,73 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
     fclose(arqRGB);
 }
 
+void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes)
+{
+    //Criando nome do arquivo
+    char nomeArq[30];
+    sprintf(nomeArq, "../AlteracaoGrayRandom%d.txt", *numAlteracoes);
+    //printf("%d", *numAlteracoes);
+    (*numAlteracoes)++;
+
+    //Criando o arquivo
+    FILE *arqGray;
+    arqGray = fopen(nomeArq, "w");
+    if (arqGray == NULL)
+    {
+        printf("ERRO ao criar arquivo.\n");
+        exit(1);
+    }
+
+    //Escrevendo as dimensões no arquivo
+    fprintf(arqGray, "%d\n", image->dim.largura);
+    fprintf(arqGray, "%d\n", image->dim.altura);
+    
+    //Escrevendo os pixels no arquivo
+    for (int i = 0; i < image->dim.altura; i++)
+    {
+        for (int j = 0; j < image->dim.largura; j++)
+        {
+            if (j == image->dim.largura - 1) fprintf(arqGray, "%d,\n", image->pixels[i * image->dim.largura + j].value);
+            else fprintf(arqGray, "%d, ", image->pixels[i * image->dim.largura + j].value);
+        }
+    }
+    
+    fclose(arqGray);
+}
+void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes)
+{
+    //Criando nome do arquivo
+    char NomeArq[25];
+    sprintf(NomeArq, "../AlteracaoRGBRandom%d.txt", *numAlteracoes);
+    //printf("%d", *numAlteracoes);
+    (*numAlteracoes)++;
+
+    //Criando o arquivo
+    FILE *arqRGB;
+    arqRGB = fopen(NomeArq, "w");
+    if (arqRGB == NULL)
+    {
+        printf("ERRO ao criar arquivo.\n");
+        exit(1);
+    }
+
+    //Escrevendo as dimensões no arquivo
+    fprintf(arqRGB, "%d\n", image->dim.largura);
+    fprintf(arqRGB, "%d\n", image->dim.altura);
+    
+    //Escrevendo os pixels no arquivo
+    for (int i = 0; i < image->dim.altura; i++)
+    {
+        for (int j = 0; j < image->dim.largura; j++)
+        {
+            if (j == image->dim.largura - 1) fprintf(arqRGB, "%d %d %d,\n", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
+            else fprintf(arqRGB, "%d %d %d, ", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
+        }
+    }
+    
+    fclose(arqRGB);
+}
+
 void insertion_sort(unsigned char *vet, int cont) 
 {
     for (int i = 1; i < cont; i++) 
@@ -285,33 +352,14 @@ void insertion_sort(unsigned char *vet, int cont)
 ImageGray *transpose_gray(const ImageGray *image)
 {
     //Criando struct nova
-    ImageGray *image_transpose = malloc(sizeof(ImageGray));
-    if(image_transpose == NULL)
-    {
-        printf("ERRO ao alocar trasnpose gray!");
-        exit(1);
-    }
-
-    //Atribuindo as dimensoes para a struct nova
-    image_transpose->dim.largura = image->dim.altura;
-    image_transpose->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
-
-    //Alocando os pixels
-    image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelGray));
-    if(image_transpose->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels transpose gray!");
-        free(image_transpose);
-        exit(1);
-    }
+    ImageGray *image_transpose = create_image_gray(image->dim.altura, image->dim.largura);
 
     //Trocando as linhas pelas colunas
-    for(int i = 0; i < image_transpose->dim.altura; i++)
+    for(int i = 0; i < image->dim.altura; i++)
     {
-        for(int j = 0; j < image_transpose->dim.largura; j++)
+        for(int j = 0; j < image->dim.largura; j++)
         {
-            image_transpose->pixels[i * image_transpose->dim.largura + j] = image->pixels[j * image->dim.altura + i];
+            image_transpose->pixels[j * image_transpose->dim.largura + i] = image->pixels[i * image->dim.largura + j];
             //printf("%d ", image_transpose->pixels[i * image->dim.largura + j].value);
         }    
     }
@@ -321,26 +369,7 @@ ImageGray *transpose_gray(const ImageGray *image)
 ImageGray *flip_horizontal_gray(ImageGray *image)
 {
     //Criando struct nova
-    ImageGray *image_horizontal = malloc(sizeof(ImageGray));
-    if(image_horizontal == NULL)
-    {
-        printf("ERRO ao alocar flip horizontal gray!");
-        exit(1);
-    }
-
-    //Atribuindo as dimensoes para a struct nova
-    image_horizontal->dim.largura = image->dim.altura;
-    image_horizontal->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
-
-    //Alocando os pixels
-    image_horizontal->pixels = malloc(image_horizontal->dim.altura * image_horizontal->dim.largura * sizeof(PixelGray));
-    if(image_horizontal->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels flip horizontal gray!");
-        free(image_horizontal);
-        exit(1);
-    }
+    ImageGray *image_horizontal = create_image_gray(image->dim.largura, image->dim.altura);
 
     for (int i = 0; i < image_horizontal->dim.altura; i++)
     {
@@ -355,22 +384,8 @@ ImageGray *flip_horizontal_gray(ImageGray *image)
 }
 ImageGray *flip_vertical_gray(ImageGray *image)
 {
-    ImageGray *flip_image = malloc(sizeof(ImageGray));
-    if(flip_image == NULL){
-        printf("erro ao alocar flip vertical gray!\n");
-        exit(1);
-    }
+    ImageGray *flip_image = create_image_gray(image->dim.largura, image->dim.altura);
 
-    flip_image->dim.altura = image->dim.altura;
-    flip_image->dim.largura = image->dim.largura;
-    //printf("Dimensoes: %d %d", flip_image->dim.largura, flip_image->dim.altura);
-
-    flip_image->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelGray));
-    if(flip_image->pixels == NULL){
-        printf("erro ao alocar pixels flip vertical gray!\n");
-        free(flip_image);
-        exit(1);
-    }
     for(int i = 0; i < image->dim.altura; i++)
     {
         for(int j = 0; j < image->dim.largura; j++)
@@ -386,29 +401,16 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
     int largura = image->dim.largura;
     int altura = image->dim.altura;
 
-    ImageGray *clahe = malloc(sizeof(ImageGray));
-    if (clahe == NULL) {
-        printf("Erro ao alocar memória para a nova imagem.\n");
-        exit(1);
-    }
-
-    clahe->dim.largura = largura;
-    clahe->dim.altura = altura;
-    clahe->pixels = malloc(largura * altura * sizeof(PixelGray));
-    if (clahe->pixels == NULL) {
-        printf("Erro ao alocar memória para os pixels da nova imagem.\n");
-        free(clahe);
-        exit(1);
-    }
+    ImageGray *clahe = create_image_gray(image->dim.largura, image->dim.altura);
 
     int n_tilesx = (largura + tile_width - 1) / tile_width;
     int n_tilesy = (altura + tile_height - 1) / tile_height;
     int lim = (tile_width * tile_height) / 8;
 
-    // Para armazenar as cdfs de cada bloco
+    //Armazenando as cdfs de cada bloco
     int (*cdf)[n_tilesx][256] = malloc(n_tilesy * n_tilesx * 256 * sizeof(int));
     if (cdf == NULL) {
-        printf("Erro ao alocar memória para o cdf.\n");
+        printf("Erro ao alocar memoria para o cdf.\n");
         free(clahe->pixels);
         free(clahe);
         exit(1);
@@ -416,8 +418,10 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
 
     memset(cdf, 0, n_tilesy * n_tilesx * 256 * sizeof(int));
 
-    for (int iy = 0; iy < n_tilesy; iy++) {
-        for (int jx = 0; jx < n_tilesx; jx++) {
+    for (int iy = 0; iy < n_tilesy; iy++) 
+    {
+        for (int jx = 0; jx < n_tilesx; jx++) 
+        {
             int x_inicio = jx * tile_width;
             int y_inicio = iy * tile_height;
             int x_fim = (x_inicio + tile_width > largura) ? largura : x_inicio + tile_width;
@@ -425,15 +429,17 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
 
             int hist[256] = {0};
 
-            for (int i = y_inicio; i < y_fim; i++) {
-                for (int j = x_inicio; j < x_fim; j++) {
+            for (int i = y_inicio; i < y_fim; i++) 
+            {
+                for (int j = x_inicio; j < x_fim; j++) 
                     hist[image->pixels[i * largura + j].value]++;
-                }
             }
 
             int excesso = 0;
-            for (int i = 0; i < 256; i++) {
-                if (hist[i] > lim) {
+            for (int i = 0; i < 256; i++) 
+            {
+                if (hist[i] > lim) 
+                {
                     excesso += hist[i] - lim;
                     hist[i] = lim;
                 }
@@ -444,15 +450,16 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
                 hist[i] += redistribuir;
 
             cdf[iy][jx][0] = hist[0];
-            for (int i = 1; i < 256; i++) {
+            for (int i = 1; i < 256; i++) 
                 cdf[iy][jx][i] = cdf[iy][jx][i - 1] + hist[i];
-            }
         }
     }
 
     // Aplicação da transformação CLAHE com interpolação bilinear
-    for (int i = 0; i < altura; i++) {
-        for (int j = 0; j < largura; j++) {
+    for (int i = 0; i < altura; i++) 
+    {
+        for (int j = 0; j < largura; j++) 
+        {
             int tile_x = j / tile_width;
             int tile_y = i / tile_height;
 
@@ -483,23 +490,7 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
 }
 ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
 {
-    ImageGray *image_median = malloc(sizeof(ImageGray));
-    if(image_median == NULL)
-    {
-        printf("ERRO ao alocar median blur gray");
-        exit(1);
-    }
-
-    image_median->dim.largura = image->dim.largura;
-    image_median->dim.altura = image->dim.altura;
-
-    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelGray));
-    if(image_median->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels median blur gray");
-        free(image_median);
-        exit(1);
-    }
+    ImageGray *image_median = create_image_gray(image->dim.largura, image->dim.altura);
     
     int offset = kernel_size / 2;
     int window_size = kernel_size * kernel_size;
@@ -545,143 +536,54 @@ ImageGray *median_blur_gray(const ImageGray *image, int kernel_size)
 
     return image_median;
 }
-void random_gray(ImageGray *image)
+ImageGray *random_gray(ImageGray *image)
 {
-    int randon = 5, numAlteracoes = 1, op = 0;
-
-    //Criando lista dupla
-    LinkedGray *l = criar_gray();
-
     //Criando struct nova
-    ImageGray *image_random = malloc(sizeof(ImageGray));
-    if(image_random == NULL)
+    ImageGray *image_random = create_image_gray(image->dim.largura, image->dim.altura);
+    
+    int num = rand() % 5;
+        
+    switch (num)
     {
-        printf("ERRO ao alocar random gray!");
-        exit(1);
-    }
+    case 0:
+        image_random = transpose_gray(image);
+        break;
 
-    //Atribuindo as dimensoes para a struct nova
-    image_random->dim.largura = image->dim.altura;
-    image_random->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+    case 1:
+        image_random = flip_horizontal_gray(image);
+        break;
 
-    //Alocando os pixels
-    image_random->pixels = malloc(image_random->dim.altura * image_random->dim.largura * sizeof(PixelGray));
-    if(image_random->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels random gray!");
-        free(image_random);
-        exit(1);
+    case 2:
+        image_random = flip_vertical_gray(image);
+        break;
+
+    case 3:
+        image_random = clahe_gray(image, image_random->dim.largura, image_random->dim.altura);
+        break;
+
+    case 4:
+        image_random = median_blur_gray(image, 5);
+        break;
+    
+    default:
+        break;
     }
     
-    for (int i = 0; i < randon; i++)
-    {
-        int num = rand() % 5;
-        
-        switch (num)
-        {
-        case 0:
-            image_random = transpose_gray(image_random);
-            convertGraytxt(image_random, &numAlteracoes);
-            adicionar_gray(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 1:
-            image_random = flip_horizontal_gray(image_random);
-            convertGraytxt(image_random, &numAlteracoes);
-            adicionar_gray(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 2:
-            image_random = flip_vertical_gray(image_random);
-            convertGraytxt(image_random, &numAlteracoes);
-            adicionar_gray(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 3:
-            image_random = clahe_gray(image_random, image_random->dim.largura, image_random->dim.altura);
-            convertGraytxt(image_random, &numAlteracoes);
-            adicionar_gray(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 4:
-            image_random = median_blur_gray(image_random, 5);
-            convertGraytxt(image_random, &numAlteracoes);
-            adicionar_gray(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-        
-        default:
-            break;
-        }
-    }
-
-    do
-    {
-        printf("\n===MENU ALEATORIO GRAY===\n");
-        printf("1 - Desfazer\n");
-        printf("2 - Refazer\n");
-        printf("3 - Historico\n");
-        printf("4 - Voltar\n");
-
-        printf("Escolha uma opcao:\n");
-        scanf(" %d", &op); 
-
-        switch (op)
-        {
-        case 1:
-            /* code */
-            break;
-
-        case 2:
-            break;
-
-        case 4:
-            printf("Voltando...\n");
-            break;
-        
-        default:
-            printf("Opcao invalida!\n");
-            break;
-        }
-    } while (op != 4);
+    return image_random;
 }
 
 // Operações para ImageRGB
 ImageRGB *transpose_rgb(const ImageRGB *image)
 {
     //Criando a struct nova
-    ImageRGB *image_transpose = malloc(sizeof(ImageRGB));
-    if(image_transpose == NULL)
-    {
-        printf("ERRO ao alocar trasnpose rgb!");
-        exit(1);
-    }
-
-    //Atribuindo as dimensoes para a struct nova
-    image_transpose->dim.largura = image->dim.altura;
-    image_transpose->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
-
-    //Alocando os pixels
-    image_transpose->pixels = malloc(image_transpose->dim.altura * image_transpose->dim.largura * sizeof(PixelRGB));
-    if(image_transpose->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels transpose rgb!");
-        free(image_transpose);
-        exit(1);
-    }
+    ImageRGB *image_transpose = create_image_rgb(image->dim.altura, image->dim.largura);
 
     //Trocando as linhas pelas colunas
-    for(int i = 0; i < image_transpose->dim.altura; i++)
+    for(int i = 0; i < image->dim.altura; i++)
     {
-        for(int j = 0; j < image_transpose->dim.largura; j++)
+        for(int j = 0; j < image->dim.largura; j++)
         {
-            image_transpose->pixels[i * image_transpose->dim.largura + j] = image->pixels[j * image->dim.altura + i];
+            image_transpose->pixels[j * image->dim.altura + i] = image->pixels[i * image->dim.largura + j];
             //printf("%d %d %d ", image->pixels[i * image->dim.largura + j].red, image->pixels[i * image->dim.largura + j].green, image->pixels[i * image->dim.largura + j].blue);
         }    
     }
@@ -691,26 +593,7 @@ ImageRGB *transpose_rgb(const ImageRGB *image)
 ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
 {
     //Criando struct nova
-    ImageRGB *image_horizontal = malloc(sizeof(ImageRGB));
-    if(image_horizontal == NULL)
-    {
-        printf("ERRO ao alocar flip horizontal rgb!");
-        exit(1);
-    }
-
-    //Atribuindo as dimensoes para a struct nova
-    image_horizontal->dim.largura = image->dim.altura;
-    image_horizontal->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
-
-    //Alocando os pixels
-    image_horizontal->pixels = malloc(image_horizontal->dim.altura * image_horizontal->dim.largura * sizeof(PixelRGB));
-    if(image_horizontal->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels flip horizontal rgb!");
-        free(image_horizontal);
-        exit(1);
-    }
+    ImageRGB *image_horizontal = create_image_rgb(image->dim.largura, image->dim.altura);
 
     for (int i = 0; i < image_horizontal->dim.altura; i++)
     {
@@ -725,27 +608,14 @@ ImageRGB *flip_horizontal_rgb(const ImageRGB *image)
 }
 ImageRGB *flip_vertical_rgb(const ImageRGB *image)
 {
-    ImageRGB *flip_image = malloc(sizeof(ImageRGB));
-    if(flip_image == NULL){
-        printf("erro ao alocar");
-        exit(1);
-    }
-
-    flip_image->dim.altura = image->dim.altura;
-    flip_image->dim.largura = image->dim.largura;
-    flip_image->pixels = malloc(image->dim.altura * image->dim.largura * sizeof(PixelRGB));
-    if(flip_image->pixels == NULL){
-        printf("erro ao alocar rgb");
-        free(flip_image);
-        exit(1);
-    }
+    ImageRGB *flip_image = create_image_rgb(image->dim.largura, image->dim.altura);
+    
     for(int i = 0; i < image->dim.altura; i++)
     {
         for(int j = 0; j < image->dim.largura; j++)
-        {
             flip_image->pixels[i * image->dim.largura + j] = image->pixels[(image->dim.altura - 1 - i) * image->dim.largura + j];
-        }
     }
+
     return flip_image;
 }
 ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
@@ -753,24 +623,29 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
     int largura = image->dim.largura;
     int altura = image->dim.altura;
 
-    ImageRGB *clahe = malloc(sizeof(ImageRGB));
-    if(clahe == NULL){
-        printf("erro ao alocar");
-        exit(1);
-    }
-
-    clahe->dim.largura = largura;
-    clahe->dim.altura = altura;
-    clahe->pixels = malloc(largura * altura * sizeof(PixelRGB));
-    if(clahe->pixels == NULL){
-        printf("erro ao alocar");
-        free(clahe);
-        exit(1);
-    }
+    //Criando nova struct
+    ImageRGB *clahe = create_image_rgb(image->dim.largura, image->dim.altura);
 
     //"funcao" para definir o limite
     int n_tilesx = (largura + tile_width - 1) / tile_width;
     int n_tilesy = (altura + tile_height - 1) / tile_height;
+    int lim = (tile_width * tile_height) / 8;
+
+    //Armazenando as cdfs de cada bloco para cada canal de cor
+    int (*cdfR)[n_tilesx][256] = malloc(n_tilesy * n_tilesx * 256 * sizeof(int));
+    int (*cdfG)[n_tilesx][256] = malloc(n_tilesy * n_tilesx * 256 * sizeof(int));
+    int (*cdfB)[n_tilesx][256] = malloc(n_tilesy * n_tilesx * 256 * sizeof(int));
+
+    if (cdfR == NULL || cdfG == NULL || cdfB == NULL) {
+        printf("Erro ao alocar memória para o cdf.\n");
+        free(clahe->pixels);
+        free(clahe);
+        exit(1);
+    }
+
+    memset(cdfR, 0, n_tilesy * n_tilesx * 256 * sizeof(int));
+    memset(cdfG, 0, n_tilesy * n_tilesx * 256 * sizeof(int));
+    memset(cdfB, 0, n_tilesy * n_tilesx * 256 * sizeof(int));
 
     //aqui vai percorrer cada bloco
     //iy itera sobre as linhas de blocos
@@ -804,28 +679,31 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
             }
 
             //"funcao" para limitar o histograma
-            int total_pixels = (x_fim - x_inicio) * (y_fim - y_inicio);
-            int limite = total_pixels / 64;
-            int clipped_r = 0, clipped_g = 0, clipped_b = 0;
-            for(int i = 0; i < 256; i++)
+            int excessoR = 0, excessoG = 0, excessoB = 0;
+            for (int i = 0; i < 256; i++) 
             {
-                if(histR[i] > limite){
-                    clipped_r += histR[i] - limite;
-                    histR[i] = limite;
+                if (histR[i] > lim) 
+                {
+                    excessoR += histR[i] - lim;
+                    histR[i] = lim;
                 }
-                if(histG[i] > limite){
-                    clipped_g += histG[i] - limite;
-                    histG[i] = limite;
+                if (histG[i] > lim) 
+                {
+                    excessoG += histG[i] - lim;
+                    histG[i] = lim;
                 }
-                if(histB[i] > limite){
-                    clipped_b += histB[i] - limite;
-                    histB[i] = limite;
+                if (histB[i] > lim) 
+                {
+                    excessoB += histB[i] - lim;
+                    histB[i] = lim;
                 }
             }
 
             //"funcao" pra redistribuir excesso
-            int redistribuirR = clipped_r / 256, redistribuirG = clipped_g / 256, redistribuirB = clipped_b / 256;
-            for(int i = 0; i < 256; i++)
+            int redistribuirR = excessoR / 256;
+            int redistribuirG = excessoG / 256;
+            int redistribuirB = excessoB / 256;
+            for (int i = 0; i < 256; i++) 
             {
                 histR[i] += redistribuirR;
                 histG[i] += redistribuirG;
@@ -833,71 +711,78 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
             }
 
             //calcula a cdf (funcao de distribuicao acumulada)
-            int cdf_r[256] = {0}, cdf_g[256] = {0}, cdf_b[256] = {0};
-            cdf_r[0] = histR[0];
-            cdf_g[0] = histG[0];
-            cdf_b[0] = histB[0];
+            cdfR[iy][jx][0] = histR[0];
+            cdfG[iy][jx][0] = histG[0];
+            cdfB[iy][jx][0] = histB[0];
 
-            for (int i = 1; i < 256; ++i) {
-                cdf_r[i] = cdf_r[i - 1] + histR[i];
-                cdf_g[i] = cdf_g[i - 1] + histG[i];
-                cdf_b[i] = cdf_b[i - 1] + histB[i];
-            }
+            for (int i = 1; i < 256; i++) 
+            {
+                cdfR[iy][jx][i] = cdfR[iy][jx][i - 1] + histR[i];
+                cdfG[iy][jx][i] = cdfG[iy][jx][i - 1] + histG[i];
+                cdfB[iy][jx][i] = cdfB[iy][jx][i - 1] + histB[i];
+            }            
+        }
+    }
 
-            //aqui aplica transformação baseada na cdf
-            for (int i = y_inicio; i < y_fim; i++) {
-                for (int j = x_inicio; j < x_fim; j++) {
-                    PixelRGB *pixel = &clahe->pixels[i * largura + j];
-                    float x_fracao = ((float)j - x_inicio) / (x_fim - x_inicio);
-                    float y_fracao = ((float)i - y_inicio) / (y_fim - y_inicio);
-                    int x0 = (int)(x_fracao * 255);
-                    int y0 = (int)(y_fracao * 255);
-                    int x1 = (x0 < 255) ? x0 + 1 : x0;
-                    int y1 = (y0 < 255) ? y0 + 1 : y0;
-                    int valor_r = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_r[y0 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_r[y0 * 255 + x1] +
-                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_r[y1 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_r[y1 * 255 + x1];
-                    int valor_g = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_g[y0 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_g[y0 * 255 + x1] +
-                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_g[y1 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_g[y1 * 255 + x1];
-                    int valor_b = (1 - (x_fracao * 255 - x0)) * (1 - (y_fracao * 255 - y0)) * cdf_b[y0 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (1 - (y_fracao * 255 - y0)) * cdf_b[y0 * 255 + x1] +
-                                  (1 - (x_fracao * 255 - x0)) * (y_fracao * 255 - y0) * cdf_b[y1 * 255 + x0] +
-                                  (x_fracao * 255 - x0) * (y_fracao * 255 - y0) * cdf_b[y1 * 255 + x1];
-                                  pixel->red = valor_r;
-                                  pixel->green = valor_g;
-                                  pixel->blue = valor_b;
-                            }
-                        }
-                    }
-                }
-            return clahe;
+    //aplicar transformação CLAHE com interpolação bilinear
+    for (int i = 0; i < altura; i++) 
+    {
+        for (int j = 0; j < largura; j++) 
+        {
+            int tile_x = j / tile_width;
+            int tile_y = i / tile_height;
+
+            int next_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
+            int next_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
+
+            float dx = (float)(j % tile_width) / tile_width;
+            float dy = (float)(i % tile_height) / tile_height;
+
+            PixelRGB pixel = image->pixels[i * largura + j];
+
+            int cdf_tl_R = cdfR[tile_y][tile_x][pixel.red];
+            int cdf_tr_R = cdfR[tile_y][next_tile_x][pixel.red];
+            int cdf_bl_R = cdfR[next_tile_y][tile_x][pixel.red];
+            int cdf_br_R = cdfR[next_tile_y][next_tile_x][pixel.red];
+
+            int cdf_tl_G = cdfG[tile_y][tile_x][pixel.green];
+            int cdf_tr_G = cdfG[tile_y][next_tile_x][pixel.green];
+            int cdf_bl_G = cdfG[next_tile_y][tile_x][pixel.green];
+            int cdf_br_G = cdfG[next_tile_y][next_tile_x][pixel.green];
+
+            int cdf_tl_B = cdfB[tile_y][tile_x][pixel.blue];
+            int cdf_tr_B = cdfB[tile_y][next_tile_x][pixel.blue];
+            int cdf_bl_B = cdfB[next_tile_y][tile_x][pixel.blue];
+            int cdf_br_B = cdfB[next_tile_y][next_tile_x][pixel.blue];
+
+            float cdf_top_R = (1 - dx) * cdf_tl_R + dx * cdf_tr_R;
+            float cdf_bottom_R = (1 - dx) * cdf_bl_R + dx * cdf_br_R;
+            float final_cdf_R = (1 - dy) * cdf_top_R + dy * cdf_bottom_R;
+
+            float cdf_top_G = (1 - dx) * cdf_tl_G + dx * cdf_tr_G;
+            float cdf_bottom_G = (1 - dx) * cdf_bl_G + dx * cdf_br_G;
+            float final_cdf_G = (1 - dy) * cdf_top_G + dy * cdf_bottom_G;
+
+            float cdf_top_B = (1 - dx) * cdf_tl_B + dx * cdf_tr_B;
+            float cdf_bottom_B = (1 - dx) * cdf_bl_B + dx * cdf_br_B;
+            float final_cdf_B = (1 - dy) * cdf_top_B + dy * cdf_bottom_B;
+
+            clahe->pixels[i * largura + j].red = (final_cdf_R * 255) / cdfR[tile_y][tile_x][255];
+            clahe->pixels[i * largura + j].green = (final_cdf_G * 255) / cdfG[tile_y][tile_x][255];
+            clahe->pixels[i * largura + j].blue = (final_cdf_B * 255) / cdfB[tile_y][tile_x][255];
+        }
+    }
+
+    free(cdfR);
+    free(cdfG);
+    free(cdfB);
+
+    return clahe;
 }
 ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
 {
     //Criando struct nova
-    ImageRGB *image_median = malloc(sizeof(ImageRGB));
-    if(image_median == NULL)
-    {
-        printf("ERRO ao alocar median blur rgb!");
-        exit(1);
-    }
-
-    //Atribuindo as dimensoes para a struct nova
-    image_median->dim.largura = image->dim.altura;
-    image_median->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
-
-    //Alocando os pixels
-    image_median->pixels = malloc(image_median->dim.altura * image_median->dim.largura * sizeof(PixelRGB));
-    if(image_median->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels median blur rgb!");
-        free(image_median);
-        exit(1);
-    }
+    ImageRGB *image_median = create_image_rgb(image->dim.largura, image->dim.altura);
 
     int offset = kernel_size / 2; //Determinando o intervalo de indices ao redor do pixel
     int window_size = kernel_size * kernel_size; //Calculando o total de pixels da janela
@@ -962,108 +847,38 @@ ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size)
     
     return image_median;
 }
-void random_rgb(ImageRGB *image)
+ImageRGB *random_rgb(ImageRGB *image)
 {
-    int randon = 5, numAlteracoes = 1, op = 0;
-
-    //Criando lista dupla
-    LinkedRGB *l = criar_RGB();
-
     //Criando struct nova
-    ImageRGB *image_random = malloc(sizeof(ImageRGB));
-    if(image_random == NULL)
+    ImageRGB *image_random = create_image_rgb(image->dim.largura, image->dim.altura);
+    
+    int num = rand() % 5;
+    
+    switch (num)
     {
-        printf("ERRO ao alocar random rgb!");
-        exit(1);
-    }
+    case 0:
+        image_random = transpose_rgb(image);
+        break;
 
-    //Atribuindo as dimensoes para a struct nova
-    image_random->dim.largura = image->dim.altura;
-    image_random->dim.altura = image->dim.largura;
-    //printf("Dimensoes: %d %d", image_transpose->dim.largura, image_transpose->dim.altura);
+    case 1:
+        image_random = flip_horizontal_rgb(image);
+        break;
 
-    //Alocando os pixels
-    image_random->pixels = malloc(image_random->dim.altura * image_random->dim.largura * sizeof(PixelGray));
-    if(image_random->pixels == NULL)
-    {
-        printf("ERRO ao alocar pixels random gray!");
-        free(image_random);
-        exit(1);
+    case 2:
+        image_random = flip_vertical_rgb(image);
+        break;
+
+    case 3:
+        image_random = clahe_rgb(image, image_random->dim.largura, image_random->dim.altura);
+        break;
+
+    case 4:
+        image_random = median_blur_rgb(image, 5);
+        break;
+    
+    default:
+        break;
     }
     
-    for (int i = 0; i < randon; i++)
-    {
-        int num = rand() % 5;
-        
-        switch (num)
-        {
-        case 0:
-            image_random = transpose_rgb(image_random);
-            convertRGBtxt(image_random, &numAlteracoes);
-            adicionar_rgb(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 1:
-            image_random = flip_horizontal_rgb(image_random);
-            convertRGBtxt(image_random, &numAlteracoes);
-            adicionar_rgb(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 2:
-            image_random = flip_vertical_rgb(image_random);
-            convertRGBtxt(image_random, &numAlteracoes);
-            adicionar_rgb(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 3:
-            image_random = clahe_rgb(image_random, image_random->dim.largura, image_random->dim.altura);
-            convertRGBtxt(image_random, &numAlteracoes);
-            adicionar_rgb(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-
-        case 4:
-            image_random = median_blur_rgb(image_random, 5);
-            convertRGBtxt(image_random, &numAlteracoes);
-            adicionar_rgb(l, image_random);
-            //call_python_gray(&numAlteracoes);
-            break;
-        
-        default:
-            break;
-        }
-    }
-
-    do
-    {
-        printf("\n===MENU ALEATORIO GRAY===\n");
-        printf("1 - Desfazer\n");
-        printf("2 - Refazer\n");
-        printf("3 - Historico\n");
-        printf("4 - Voltar\n");
-
-        printf("Escolha uma opcao:\n");
-        scanf(" %d", &op); 
-
-        switch (op)
-        {
-        case 1:
-            /* code */
-            break;
-
-        case 2:
-            break;
-
-        case 3:
-            printf("Voltando...\n");
-            break;
-        
-        default:
-            printf("Opcao invalida!\n");
-            break;
-        }
-    } while (op != 4);
+    return image_random;
 }
