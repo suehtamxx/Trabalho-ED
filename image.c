@@ -78,7 +78,31 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
         l->cabeca = novo;
     }
     l->corpo = novo;
+    l->current = novo;
 }
+
+ImageRGB *desfazer_rgb(LinkedRGB *l)
+{
+    if(l->current == NULL || l->current->ant == NULL)
+    {
+        printf("Nenhuma operacao!");
+        return NULL;
+    }
+    l->current = l->current->ant;
+    return l->current->image;
+}
+
+ImageRGB *refazer_rgb(LinkedRGB *l)
+{
+    if(l->current == NULL || l->current->prox == NULL)
+    {
+        printf("Nenhuma operacao!");
+        return NULL;
+    }
+    l->current = l->current->prox;
+    return l->current->image;
+}
+
 void liberar_rgb(LinkedRGB *l)
 {
     Listargb *aux = l->cabeca;
@@ -120,6 +144,29 @@ void adicionar_gray(LinkedGray *l, ImageGray *image)
     }
     l->corpo = novo;
 }
+
+ImageGray *desfazer_gray(LinkedGray *l)
+{
+    if(l->current == NULL || l->current->ant == NULL)
+    {
+        printf("Nenhuma operacao!");
+        return NULL;
+    }
+    l->current = l->current->ant;
+    return l->current->image;
+}
+
+ImageGray *refazer_gray(LinkedGray *l)
+{
+    if(l->current == NULL || l->current->prox == NULL)
+    {
+        printf("Nenhuma operacao!");
+        return NULL;
+    }
+    l->current = l->current->prox;
+    return l->current->image;
+}
+
 void liberar_gray(LinkedGray *l)
 {
     Listagray *aux = l->cabeca;
