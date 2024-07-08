@@ -133,6 +133,127 @@ void liberar_gray(LinkedGray *l)
     free(l);
 }
 
+ListRandomGray *create_list_random_gray()
+{
+    return NULL;
+}
+void add_list_random_gray(ListRandomGray **l, ImageGray *image, char *nome)
+{
+    if (*l == NULL)
+    {
+        //se o proximo elemento da lista for nulo, cria um novo elemento 
+        ListRandomGray *novo = (ListRandomGray*)malloc(sizeof(ListRandomGray));
+        if (novo == NULL) 
+        {
+            printf("ERRO ao alocar no da lista gray\n");
+            exit(1);
+        }
+
+        //atribui nulo para o novo elemento, representando que é o fim da lista
+        novo->prox = NULL;
+        novo->image = image;
+        novo->nome = strdup(nome);
+
+        //insere no fim da lista
+        *l = novo;
+        
+    }
+    else add_list_random_gray(&((*l)->prox), image, nome);
+}
+void print_list_random_gray(ListRandomGray *l)
+{
+    if (l == NULL) printf("Lista vazia ");
+    else
+    {
+        ListRandomGray *aux = l;
+        while (aux != NULL)
+        {
+            printf("%s -> ", aux->nome);
+            aux = aux->prox;
+        }
+    }
+}
+void free_random_gray(ListRandomGray *l)
+{
+    ListRandomGray *aux = l;
+    ListRandomGray *proximo;
+
+    while (aux != NULL) {
+        proximo = aux->prox;
+
+        // Libera a memória da imagem associada
+        if (aux->image != NULL) {
+            free(aux->image->pixels); 
+            free(aux->image);         
+        }
+
+        free(aux->nome);
+        free(aux);       
+        aux = proximo;      
+    }
+}
+
+ListRandomRGB *create_list_random_RGB()
+{
+    return NULL;
+}
+void add_list_random_rgb(ListRandomRGB **l, ImageRGB *image, char *nome)
+{
+    if (*l == NULL)
+    {
+        //se o proximo elemento da lista for nulo, cria um novo elemento 
+        ListRandomRGB *novo = (ListRandomRGB*)malloc(sizeof(ListRandomRGB));
+        if (novo == NULL) 
+        {
+            printf("ERRO ao alocar no da lista gray\n");
+            exit(1);
+        }
+
+        //atribui nulo para o novo elemento, representando que é o fim da lista
+        novo->prox = NULL;
+        novo->image = image;
+        novo->nome = strdup(nome);
+
+        //insere no fim da lista
+        *l = novo;
+        
+    }
+    else add_list_random_rgb(&((*l)->prox), image, nome);
+}
+void print_list_random_rgb(ListRandomRGB *l)
+{
+    if (l == NULL) printf("Lista vazia ");
+    else
+    {
+        ListRandomRGB *aux = l;
+        while (aux != NULL)
+        {
+            printf("%s -> ", aux->nome);
+            aux = aux->prox;
+        }
+    }
+}
+void free_random_rgb(ListRandomRGB *l)
+{
+    ListRandomRGB *aux = l;
+    ListRandomRGB *proximo;
+
+    while (aux != NULL) 
+    {
+        proximo = aux->prox;
+
+        // Libera a memória da imagem associada
+        if (aux->image != NULL) {
+            free(aux->image->pixels); 
+            free(aux->image);         
+        }
+
+        free(aux->nome);
+        free(aux);       
+        aux = proximo;      
+    }
+}
+
 // Funções de criação e liberação de struct
 ImageGray *create_image_gray(int largura, int altura)
 {
@@ -205,7 +326,6 @@ void convertGraytxt(ImageGray *image, int *numAlteracoes)
     char nomeArq[25];
     sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
-    (*numAlteracoes)++;
 
     //Criando o arquivo
     FILE *arqGray;
@@ -238,7 +358,6 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
     char NomeArq[25];
     sprintf(NomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
-    (*numAlteracoes)++;
 
     //Criando o arquivo
     FILE *arqRGB;
@@ -266,13 +385,12 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
     fclose(arqRGB);
 }
 
-void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes)
+void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes, ListRandomGray **l)
 {
     //Criando nome do arquivo
     char nomeArq[30];
     sprintf(nomeArq, "../AlteracaoGrayRandom%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
-    (*numAlteracoes)++;
 
     //Criando o arquivo
     FILE *arqGray;
@@ -298,14 +416,14 @@ void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes)
     }
     
     fclose(arqGray);
+    add_list_random_gray(l, image, nomeArq);
 }
-void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes)
+void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes, ListRandomRGB **l)
 {
     //Criando nome do arquivo
     char NomeArq[25];
     sprintf(NomeArq, "../AlteracaoRGBRandom%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
-    (*numAlteracoes)++;
 
     //Criando o arquivo
     FILE *arqRGB;
@@ -331,6 +449,7 @@ void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes)
     }
     
     fclose(arqRGB);
+    add_list_random_rgb(l, image, NomeArq);
 }
 
 void insertion_sort(unsigned char *vet, int cont) 
@@ -463,8 +582,8 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
             int tile_x = j / tile_width;
             int tile_y = i / tile_height;
 
-            int next_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
-            int next_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
+            int proximo_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
+            int proximo_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
 
             float dx = (float)(j % tile_width) / tile_width;
             float dy = (float)(i % tile_height) / tile_height;
@@ -472,9 +591,9 @@ ImageGray *clahe_gray(const ImageGray *image, int tile_width, int tile_height)
             unsigned char value = image->pixels[i * largura + j].value;
 
             int cdf_tl = cdf[tile_y][tile_x][value];
-            int cdf_tr = cdf[tile_y][next_tile_x][value];
-            int cdf_bl = cdf[next_tile_y][tile_x][value];
-            int cdf_br = cdf[next_tile_y][next_tile_x][value];
+            int cdf_tr = cdf[tile_y][proximo_tile_x][value];
+            int cdf_bl = cdf[proximo_tile_y][tile_x][value];
+            int cdf_br = cdf[proximo_tile_y][proximo_tile_x][value];
 
             float cdf_top = (1 - dx) * cdf_tl + dx * cdf_tr;
             float cdf_bottom = (1 - dx) * cdf_bl + dx * cdf_br;
@@ -541,6 +660,7 @@ ImageGray *random_gray(ImageGray *image)
     //Criando struct nova
     ImageGray *image_random = create_image_gray(image->dim.largura, image->dim.altura);
     
+    srand(time(NULL)); 
     int num = rand() % 5;
         
     switch (num)
@@ -558,7 +678,7 @@ ImageGray *random_gray(ImageGray *image)
         break;
 
     case 3:
-        image_random = clahe_gray(image, image_random->dim.largura, image_random->dim.altura);
+        image_random = clahe_gray(image, image->dim.largura, image->dim.altura);
         break;
 
     case 4:
@@ -732,8 +852,8 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
             int tile_x = j / tile_width;
             int tile_y = i / tile_height;
 
-            int next_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
-            int next_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
+            int proximo_tile_x = (tile_x + 1 < n_tilesx) ? tile_x + 1 : tile_x;
+            int proximo_tile_y = (tile_y + 1 < n_tilesy) ? tile_y + 1 : tile_y;
 
             float dx = (float)(j % tile_width) / tile_width;
             float dy = (float)(i % tile_height) / tile_height;
@@ -741,19 +861,19 @@ ImageRGB *clahe_rgb(const ImageRGB *image, int tile_width, int tile_height)
             PixelRGB pixel = image->pixels[i * largura + j];
 
             int cdf_tl_R = cdfR[tile_y][tile_x][pixel.red];
-            int cdf_tr_R = cdfR[tile_y][next_tile_x][pixel.red];
-            int cdf_bl_R = cdfR[next_tile_y][tile_x][pixel.red];
-            int cdf_br_R = cdfR[next_tile_y][next_tile_x][pixel.red];
+            int cdf_tr_R = cdfR[tile_y][proximo_tile_x][pixel.red];
+            int cdf_bl_R = cdfR[proximo_tile_y][tile_x][pixel.red];
+            int cdf_br_R = cdfR[proximo_tile_y][proximo_tile_x][pixel.red];
 
             int cdf_tl_G = cdfG[tile_y][tile_x][pixel.green];
-            int cdf_tr_G = cdfG[tile_y][next_tile_x][pixel.green];
-            int cdf_bl_G = cdfG[next_tile_y][tile_x][pixel.green];
-            int cdf_br_G = cdfG[next_tile_y][next_tile_x][pixel.green];
+            int cdf_tr_G = cdfG[tile_y][proximo_tile_x][pixel.green];
+            int cdf_bl_G = cdfG[proximo_tile_y][tile_x][pixel.green];
+            int cdf_br_G = cdfG[proximo_tile_y][proximo_tile_x][pixel.green];
 
             int cdf_tl_B = cdfB[tile_y][tile_x][pixel.blue];
-            int cdf_tr_B = cdfB[tile_y][next_tile_x][pixel.blue];
-            int cdf_bl_B = cdfB[next_tile_y][tile_x][pixel.blue];
-            int cdf_br_B = cdfB[next_tile_y][next_tile_x][pixel.blue];
+            int cdf_tr_B = cdfB[tile_y][proximo_tile_x][pixel.blue];
+            int cdf_bl_B = cdfB[proximo_tile_y][tile_x][pixel.blue];
+            int cdf_br_B = cdfB[proximo_tile_y][proximo_tile_x][pixel.blue];
 
             float cdf_top_R = (1 - dx) * cdf_tl_R + dx * cdf_tr_R;
             float cdf_bottom_R = (1 - dx) * cdf_bl_R + dx * cdf_br_R;
@@ -852,6 +972,7 @@ ImageRGB *random_rgb(ImageRGB *image)
     //Criando struct nova
     ImageRGB *image_random = create_image_rgb(image->dim.largura, image->dim.altura);
     
+    srand(time(NULL)); 
     int num = rand() % 5;
     
     switch (num)
