@@ -4,31 +4,46 @@
 #include <stdlib.h>
 #include <string.h>
 
-// void call_python_gray(int *numAlteracoes) 
-// {
-//     char command[256], nomeArq[25], nomeImage[25];
-//     sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
-//     sprintf(nomeImage, "../AlteracaoGray%d.png", *numAlteracoes);
-
-//     snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
-//     system(command);
-// }
-
-// void call_python_rgb(int *numAlteracoes) 
-// {
-//     char command[256], nomeArq[25], nomeImage[25];
-//     sprintf(nomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
-//     sprintf(nomeImage, "../AlteracaoRGB%d.png", *numAlteracoes);
-
-//     snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
-//     system(command);
-// }
-
-void menuImageGray(ImageGray *image, int numAlteracoes)
+void call_python_gray(int *numAlteracoes) 
 {
-    //Criando lista dupla
-    LinkedGray *l = criar_gray();
+    char command[256], nomeArq[25], nomeImage[25];
+    sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../AlteracaoGray%d.png", *numAlteracoes);
 
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+}
+void call_python_rgb(int *numAlteracoes) 
+{
+    char command[256], nomeArq[25], nomeImage[25];
+    sprintf(nomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../AlteracaoRGB%d.png", *numAlteracoes);
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
+}
+
+void call_python_gray_random(int *numAlteracoes) 
+{
+    char command[256], nomeArq[25], nomeImage[25];
+    sprintf(nomeArq, "../AlteracaoGrayRandom%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../AlteracaoGrayRandom%d.png", *numAlteracoes);
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+}
+void call_python_rgb_random(int *numAlteracoes) 
+{
+    char command[256], nomeArq[25], nomeImage[25];
+    sprintf(nomeArq, "../AlteracaoRGBRandom%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../AlteracaoRGBRandom%d.png", *numAlteracoes);
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
+}
+
+ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
+{
     int op = 0;
 
     do
@@ -51,37 +66,42 @@ void menuImageGray(ImageGray *image, int numAlteracoes)
         {
         case 1:
             image = transpose_gray(image);
-            convertGraytxt(image, &numAlteracoes);
+            convertGraytxt(image, numAlteracoes);
             adicionar_gray(l, image);
-            //call_python_gray(&numAlteracoes);
+            call_python_gray(numAlteracoes);
+            (*numAlteracoes)++;
             break;
         
         case 2:
             image = flip_horizontal_gray(image);
-            convertGraytxt(image, &numAlteracoes);
+            convertGraytxt(image, numAlteracoes);
             adicionar_gray(l, image);
-            //call_python_gray(&numAlteracoes);
+            call_python_gray(numAlteracoes);
+            (*numAlteracoes)++;
             break;
         
         case 3:
             image = flip_vertical_gray(image);
-            convertGraytxt(image, &numAlteracoes);
+            convertGraytxt(image, numAlteracoes);
             adicionar_gray(l, image);
-            //call_python_gray(&numAlteracoes);
+            call_python_gray(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 4:
             image = clahe_gray(image, image->dim.largura, image->dim.altura);
-            convertGraytxt(image, &numAlteracoes);
+            convertGraytxt(image, numAlteracoes);
             adicionar_gray(l, image);
-            //call_python_gray(&numAlteracoes);
+            call_python_gray(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 5:
             image = median_blur_gray(image, 5);
-            convertGraytxt(image, &numAlteracoes);
+            convertGraytxt(image, numAlteracoes);
             adicionar_gray(l, image);
-            //call_python_gray(&numAlteracoes);
+            call_python_gray(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 9:
@@ -93,12 +113,11 @@ void menuImageGray(ImageGray *image, int numAlteracoes)
             break;
         }
     } while (op != 9);
-}
-void menuImageRGB(ImageRGB *image, int numAlteracoes)
-{
-    //Criando lista dupla
-    LinkedRGB *l = criar_RGB();
 
+    return image;
+}
+ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
+{
     int op = 0;
 
     do
@@ -121,32 +140,42 @@ void menuImageRGB(ImageRGB *image, int numAlteracoes)
         {
         case 1:
             image = transpose_rgb(image);
-            convertRGBtxt(image, &numAlteracoes );
+            convertRGBtxt(image, numAlteracoes);
             adicionar_rgb(l, image);
+            call_python_rgb(numAlteracoes);
+            (*numAlteracoes)++;
             break;
         
         case 2:
             image = flip_horizontal_rgb(image);
-            convertRGBtxt(image, &numAlteracoes);
+            convertRGBtxt(image, numAlteracoes);
             adicionar_rgb(l, image);
+            call_python_rgb(numAlteracoes);
+            (*numAlteracoes)++;
             break;
         
         case 3:
             image = flip_vertical_rgb(image);
-            convertRGBtxt(image, &numAlteracoes);
+            convertRGBtxt(image, numAlteracoes);
             adicionar_rgb(l, image);
+            call_python_rgb(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 4:
             image = clahe_rgb(image, image->dim.largura, image->dim.altura);
-            convertRGBtxt(image, &numAlteracoes);
+            convertRGBtxt(image, numAlteracoes);
             adicionar_rgb(l, image);
+            call_python_rgb(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 5:
             image = median_blur_rgb(image, 5);
-            convertRGBtxt(image, &numAlteracoes);
+            convertRGBtxt(image, numAlteracoes);
             adicionar_rgb(l, image);
+            call_python_rgb(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 9:
@@ -158,9 +187,11 @@ void menuImageRGB(ImageRGB *image, int numAlteracoes)
             break;
         }
     } while (op != 9);
+
+    return image;
 }
 
-void menuRandomGray(ImageGray *image, int numAlteracoes)
+ImageGray *menuRandomGray(ImageGray *image, int *numAlteracoes, ListRandomGray **l)
 {
     int op;
     do
@@ -177,12 +208,13 @@ void menuRandomGray(ImageGray *image, int numAlteracoes)
         {
         case 1:
             image = random_gray(image);
-            convertGrayRandomtxt(image, &numAlteracoes);
-            //adicionar ao histórico
+            convertGrayRandomtxt(image, numAlteracoes, l);
+            call_python_gray_random(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 2:
-            //printar histórico
+            print_list_random_gray(*l);
             break;
 
         case 3:
@@ -194,8 +226,10 @@ void menuRandomGray(ImageGray *image, int numAlteracoes)
             break;
         }
     } while (op != 3);
+
+    return image;
 }
-void menuRandomRGB(ImageRGB *image, int numAlteracoes)
+ImageRGB *menuRandomRGB(ImageRGB *image, int *numAlteracoes, ListRandomRGB **l)
 {
     int op;
     do
@@ -212,12 +246,13 @@ void menuRandomRGB(ImageRGB *image, int numAlteracoes)
         {
         case 1:
             image = random_rgb(image);
-            convertRGBRandomtxt(image, &numAlteracoes);
-            //adicionar ao histórico
+            convertRGBRandomtxt(image, numAlteracoes, l);
+            call_python_rgb_random(numAlteracoes);
+            (*numAlteracoes)++;
             break;
 
         case 2:
-            //printar histórico
+            print_list_random_rgb(*l);
             break;
 
         case 3:
@@ -229,6 +264,8 @@ void menuRandomRGB(ImageRGB *image, int numAlteracoes)
             break;
         }
     } while (op != 3);
+
+    return image;
 }
 
 int main()
@@ -284,9 +321,8 @@ int main()
     ImageRGB *RandomRGB = create_image_rgb(larguraRGB, alturaRGB);
 
     for (int i = 0; i < larguraGray * alturaGray; i++) 
-    {
         RandomGray->pixels[i].value = imageGray->pixels[i].value;
-    }
+    
     
     for (int i = 0; i < larguraRGB * alturaRGB; i++) 
     {
@@ -294,6 +330,17 @@ int main()
         RandomRGB->pixels[i].green = imageRGB->pixels[i].green;
         RandomRGB->pixels[i].blue = imageRGB->pixels[i].blue;
     }
+
+    //Criando listas
+    ListRandomGray *listrandomgray = create_list_random_gray();
+    ListRandomRGB *listrandomrgb = create_list_random_RGB();
+    LinkedGray *listgray = criar_gray();
+    LinkedRGB *listrgb = criar_RGB();
+
+    add_list_random_gray(&listrandomgray, imageGray, "LenaGray.txt");
+    add_list_random_rgb(&listrandomrgb, imageRGB, "LenaRGB.txt");
+    adicionar_gray(listgray, imageGray);
+    adicionar_rgb(listrgb, imageRGB);
 
     do
     {
@@ -310,19 +357,19 @@ int main()
         switch (op)
         {
         case 1:
-            menuImageGray(imageGray, numAlteracoesGray);
+            imageGray = menuImageGray(imageGray, &numAlteracoesGray, listgray);
             break;
         
         case 2:
-            menuImageRGB(imageRGB, numAlteracoesRGB);
+            imageRGB = menuImageRGB(imageRGB, &numAlteracoesRGB, listrgb);
             break;
 
         case 3:
-            menuRandomGray(RandomGray, numAlteracoesGrayRandom);
+            RandomGray = menuRandomGray(RandomGray, &numAlteracoesGrayRandom, &listrandomgray);
             break;
 
         case 4:
-            menuRandomRGB(RandomRGB, numAlteracoesRGBRandom);
+            RandomRGB = menuRandomRGB(RandomRGB, &numAlteracoesRGBRandom, &listrandomrgb);
             break;
 
         case 5:
@@ -339,6 +386,11 @@ int main()
     free_image_rgb(imageRGB);
     free_image_gray(RandomGray);
     free_image_rgb(RandomRGB);
+
+    free_random_gray(listrandomgray);
+    free_random_rgb(listrandomrgb);
+    liberar_gray(listgray);
+    liberar_rgb(listrgb);
 
     return 0;
 }
