@@ -59,24 +59,23 @@ def image_rgb_from_txt(txt_path, output_path):
         nova_imagem.save(output_path)
 
 
-# def main():
-#     if len(sys.argv) != 4:
-#         print("Usage: python image_utils.py nomeArq nomeImage mode")
-#         return
+def main():
+    if len(sys.argv) != 4:
+        print("Usage: python image_utils.py nomeArq nomeImage mode")
+        return
 
-#     nomeArq = sys.argv[1]
-#     nomeImage = sys.argv[2]
-#     mode = sys.argv[3]
+    nomeArq = sys.argv[1]
+    nomeImage = sys.argv[2]
+    mode = sys.argv[3]
 
-#     if mode == "gray":
-#         image_gray_from_txt(nomeArq, nomeImage)
-#     elif mode == "rgb":
-#         image_rgb_from_txt(nomeArq, nomeImage)
-#     else:
-#         print(f"Unknown mode: {mode}")
+    if mode == "gray":
+        image_gray_from_txt(nomeArq, nomeImage)
+    elif mode == "rgb":
+        image_rgb_from_txt(nomeArq, nomeImage)
+    else:
+        print(f"Unknown mode: {mode}")
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 
-image_gray_from_txt("AlteracaoGray2.txt", "AlteracaoGray2.png")
