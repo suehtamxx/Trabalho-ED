@@ -104,6 +104,18 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
             (*numAlteracoes)++;
             break;
 
+        case 6:
+            image = desfazer_gray(l);
+            break;
+
+        case 7:
+            image = refazer_gray(l);
+            break;
+
+        case 8:
+            //Historico
+            break;
+
         case 9:
             printf("Voltando...\n\n");
             break;
