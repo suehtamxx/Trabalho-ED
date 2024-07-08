@@ -56,6 +56,20 @@ typedef struct{
     Listargb *corpo;
 } LinkedRGB;
 
+typedef struct elementogray
+{
+    ImageGray *image;
+    char *nome;
+    struct elementogray *prox;
+} ListRandomGray;
+
+typedef struct elementorgb
+{
+    ImageRGB *image;
+    char *nome;
+    struct elementorgb *prox;
+} ListRandomRGB;
+
 // Ler arquivo
 void readFileGray();
 void readFileRGB();
@@ -70,6 +84,8 @@ void free_image_rgb(ImageRGB *image);
 // Converter struct para txt
 void convertGraytxt(ImageGray *image, int *numAlteracoes);
 void convertRGBtxt(ImageRGB *image, int *numAlteracoes);
+void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes, ListRandomGray **l);
+void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes, ListRandomRGB **l);
 
 // Operações para ImageGray
 ImageGray *flip_vertical_gray(ImageGray *image);
@@ -91,6 +107,18 @@ ImageRGB *median_blur_rgb(const ImageRGB *image, int kernel_size);
 
 ImageGray *random_gray(ImageGray *image);
 ImageRGB *random_rgb(ImageRGB *image);
+
+ListRandomGray *create_list_random_gray();
+ListRandomRGB *create_list_random_RGB();
+
+void add_list_random_gray(ListRandomGray **l, ImageGray *image, char *nome);
+void add_list_random_rgb(ListRandomRGB **l, ImageRGB *image, char *nome);
+
+void print_list_random_gray(ListRandomGray *l);
+void print_list_random_rgb(ListRandomRGB *l);
+
+void free_random_gray(ListRandomGray *l);
+void free_random_rgb(ListRandomRGB *l);
 
 LinkedRGB *criar_RGB();
 LinkedGray *criar_gray();
