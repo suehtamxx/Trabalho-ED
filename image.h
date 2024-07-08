@@ -49,11 +49,13 @@ typedef struct listargb{
 typedef struct{
     Listagray *cabeca;
     Listagray *corpo;
+    Listagray *current;
 } LinkedGray;
 
 typedef struct{
     Listargb *cabeca;
     Listargb *corpo;
+    Listargb *current;
 } LinkedRGB;
 
 typedef struct elementogray
@@ -128,5 +130,10 @@ void adicionar_gray(LinkedGray *l, ImageGray *image);
 
 void liberar_rgb(LinkedRGB *l);
 void liberar_gray(LinkedGray *l);
+
+ImageGray *desfazer_gray(LinkedGray *l);
+ImageRGB *desfazer_rgb(LinkedRGB *l);
+ImageGray *refazer_gray(LinkedGray *l);
+ImageRGB *refazer_rgb(LinkedRGB *l);
 
 #endif // IMAGE_H
