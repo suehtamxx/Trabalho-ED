@@ -84,7 +84,7 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
             break;
 
         case 9:
-            //Historico
+            mostrar_gray(l);
             break;
 
         case 10:
@@ -160,7 +160,7 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
         case 6:
             image = random_rgb(image);
             convertRGBtxt(image, numAlteracoes, "Random-", l);
-            call_python_rgb(numAlteracoes, "Radom-");
+            call_python_rgb(numAlteracoes, "Random-");
             (*numAlteracoes)++;
             break;
 
@@ -175,7 +175,7 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
             break;
 
         case 9:
-            //Mostrar historico
+            mostrar_rgb(l);
             break;
 
         case 10:
