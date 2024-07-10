@@ -62,7 +62,7 @@ LinkedRGB *criar_RGB()
     l->corpo = NULL;
     return l;
 }
-void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
+void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome)
 {
     Listargb *novo = malloc(sizeof(Listargb));
     if(novo == NULL){
@@ -72,6 +72,8 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
     novo->image = image;
     novo->prox = NULL;
     novo->ant = l->corpo;
+    novo->nome = strdup(nome);
+
     if(l->corpo != NULL){
         l->corpo->prox = novo;
     } else {
@@ -80,29 +82,32 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image)
     l->corpo = novo;
     l->current = novo;
 }
-
-ImageRGB *desfazer_rgb(LinkedRGB *l)
+ImageRGB *desfazer_rgb(LinkedRGB *l) 
 {
-    if(l->current == NULL || l->current->ant == NULL)
-    {
-        printf("Nenhuma operacao!");
-        return NULL;
-    }
-    l->current = l->current->ant;
-    return l->current->image;
-}
+    if (l->corpo == NULL) return NULL;
 
+    ImageRGB *img = l->corpo->image;
+    Listargb *tmp = l->corpo;
+
+    l->corpo = l->corpo->ant;
+    if (l->corpo != NULL) l->corpo->prox = NULL;
+    else l->cabeca = NULL;
+    
+    free(tmp->nome);
+    free(tmp);
+    return img;
+}
 ImageRGB *refazer_rgb(LinkedRGB *l)
 {
-    if(l->current == NULL || l->current->prox == NULL)
+    if (l->corpo == NULL || l->corpo->prox == NULL) 
     {
-        printf("Nenhuma operacao!");
+        printf("Nenhuma operacao para refazer!\n");
         return NULL;
     }
-    l->current = l->current->prox;
-    return l->current->image;
-}
 
+    l->corpo = l->corpo->prox;
+    return l->corpo->image;
+}
 void liberar_rgb(LinkedRGB *l)
 {
     Listargb *aux = l->cabeca;
@@ -127,7 +132,7 @@ LinkedGray *criar_gray()
     l->corpo = NULL;
     return l;
 }
-void adicionar_gray(LinkedGray *l, ImageGray *image)
+void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
 {
     Listagray *novo = malloc(sizeof(Listagray));
     if(novo == NULL){
@@ -137,6 +142,8 @@ void adicionar_gray(LinkedGray *l, ImageGray *image)
     novo->image = image;
     novo->prox = NULL;
     novo->ant = l->corpo;
+    novo->nome = strdup(nome);
+
     if(l->corpo != NULL){
         l->corpo->prox = novo;
     } else {
@@ -144,7 +151,6 @@ void adicionar_gray(LinkedGray *l, ImageGray *image)
     }
     l->corpo = novo;
 }
-
 ImageGray *desfazer_gray(LinkedGray *l)
 {
     if(l->current == NULL || l->current->ant == NULL)
@@ -155,7 +161,6 @@ ImageGray *desfazer_gray(LinkedGray *l)
     l->current = l->current->ant;
     return l->current->image;
 }
-
 ImageGray *refazer_gray(LinkedGray *l)
 {
     if(l->current == NULL || l->current->prox == NULL)
@@ -166,7 +171,6 @@ ImageGray *refazer_gray(LinkedGray *l)
     l->current = l->current->prox;
     return l->current->image;
 }
-
 void liberar_gray(LinkedGray *l)
 {
     Listagray *aux = l->cabeca;
@@ -367,11 +371,11 @@ void free_image_rgb(ImageRGB *image)
 }
 
 // Converter struct para txt
-void convertGraytxt(ImageGray *image, int *numAlteracoes)
+void convertGraytxt(ImageGray *image, int *numAlteracoes, char *nome, LinkedGray *l)
 {
     //Criando nome do arquivo
     char nomeArq[25];
-    sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
+    sprintf(nomeArq, "../%sGray%d.txt", nome, *numAlteracoes);
     //printf("%d", *numAlteracoes);
 
     //Criando o arquivo
@@ -398,17 +402,18 @@ void convertGraytxt(ImageGray *image, int *numAlteracoes)
     }
     
     fclose(arqGray);
+    adicionar_gray(l, image, nomeArq);
 }
-void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
+void convertRGBtxt(ImageRGB *image, int *numAlteracoes, char *nome, LinkedRGB *l)
 {
     //Criando nome do arquivo
-    char NomeArq[25];
-    sprintf(NomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
+    char nomeArq[25];
+    sprintf(nomeArq, "../%sRGB%d.txt", nome, *numAlteracoes);
     //printf("%d", *numAlteracoes);
 
     //Criando o arquivo
     FILE *arqRGB;
-    arqRGB = fopen(NomeArq, "w");
+    arqRGB = fopen(nomeArq, "w");
     if (arqRGB == NULL)
     {
         printf("ERRO ao criar arquivo.\n");
@@ -430,13 +435,14 @@ void convertRGBtxt(ImageRGB *image, int *numAlteracoes)
     }
     
     fclose(arqRGB);
+    adicionar_rgb(l, image, nomeArq);
 }
 
 void convertGrayRandomtxt(ImageGray *image, int *numAlteracoes, ListRandomGray **l)
 {
     //Criando nome do arquivo
     char nomeArq[30];
-    sprintf(nomeArq, "../AlteracaoGrayRandom%d.txt", *numAlteracoes);
+    sprintf(nomeArq, "../GrayRandom%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
 
     //Criando o arquivo
@@ -469,7 +475,7 @@ void convertRGBRandomtxt(ImageRGB *image, int *numAlteracoes, ListRandomRGB **l)
 {
     //Criando nome do arquivo
     char NomeArq[25];
-    sprintf(NomeArq, "../AlteracaoRGBRandom%d.txt", *numAlteracoes);
+    sprintf(NomeArq, "../RGBRandom%d.txt", *numAlteracoes);
     //printf("%d", *numAlteracoes);
 
     //Criando o arquivo
@@ -1049,4 +1055,62 @@ ImageRGB *random_rgb(ImageRGB *image)
     }
     
     return image_random;
+}
+
+// Chamadas do python
+void call_python_gray(int *numAlteracoes, char *nome) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "../%sGray%d.txt", nome, *numAlteracoes);
+    sprintf(nomeImage, "../LenaGray.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+}
+void call_python_rgb(int *numAlteracoes, char *nome) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "../%sRGB%d.txt", nome, *numAlteracoes);
+    sprintf(nomeImage, "../LenaRGB.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
+}
+
+void call_python_historico_gray(char *nome) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "%s", nome);
+    sprintf(nomeImage, "../LenaGray.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+}
+void call_python_historico_rgb(char *nome) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "%s", nome);
+    sprintf(nomeImage, "../LenaRGB.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
+}
+
+void call_python_gray_random(int *numAlteracoes) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "../GrayRandom%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../LenaGrayRandom.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+}
+void call_python_rgb_random(int *numAlteracoes) 
+{
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "../RGBRandom%d.txt", *numAlteracoes);
+    sprintf(nomeImage, "../LenaRGBRandom.png");
+
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
 }
