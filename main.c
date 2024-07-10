@@ -4,44 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void call_python_gray(int *numAlteracoes) 
-{
-    char command[256], nomeArq[25], nomeImage[25];
-    sprintf(nomeArq, "../AlteracaoGray%d.txt", *numAlteracoes);
-    sprintf(nomeImage, "../AlteracaoGray%d.png", *numAlteracoes);
-
-    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
-    system(command);
-}
-void call_python_rgb(int *numAlteracoes) 
-{
-    char command[256], nomeArq[25], nomeImage[25];
-    sprintf(nomeArq, "../AlteracaoRGB%d.txt", *numAlteracoes);
-    sprintf(nomeImage, "../AlteracaoRGB%d.png", *numAlteracoes);
-
-    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
-    system(command);
-}
-
-void call_python_gray_random(int *numAlteracoes) 
-{
-    char command[256], nomeArq[25], nomeImage[25];
-    sprintf(nomeArq, "../AlteracaoGrayRandom%d.txt", *numAlteracoes);
-    sprintf(nomeImage, "../AlteracaoGrayRandom%d.png", *numAlteracoes);
-
-    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
-    system(command);
-}
-void call_python_rgb_random(int *numAlteracoes) 
-{
-    char command[256], nomeArq[25], nomeImage[25];
-    sprintf(nomeArq, "../AlteracaoRGBRandom%d.txt", *numAlteracoes);
-    sprintf(nomeImage, "../AlteracaoRGBRandom%d.png", *numAlteracoes);
-
-    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
-    system(command);
-}
-
 ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
 {
     int op = 0;
@@ -54,10 +16,11 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
         printf("3 - Flip Vertical\n");
         printf("4 - Clahe\n");
         printf("5 - Median blur\n");
-        printf("6 - Desfazer\n");
-        printf("7 - Refazer\n");
-        printf("8 - Historico\n");
-        printf("9 - Voltar\n");
+        printf("6 - Aleatoria\n");
+        printf("7 - Desfazer\n");
+        printf("8 - Refazer\n");
+        printf("9 - Historico\n");
+        printf("10 - Voltar\n");
 
         printf("Escolha uma opcao:\n");
         scanf(" %d", &op);
@@ -66,57 +29,65 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
         {
         case 1:
             image = transpose_gray(image);
-            convertGraytxt(image, numAlteracoes);
-            adicionar_gray(l, image);
-            call_python_gray(numAlteracoes);
+            convertGraytxt(image, numAlteracoes, "Transpose-", l);
+            call_python_gray(numAlteracoes, "Transpose-");
             (*numAlteracoes)++;
             break;
         
         case 2:
             image = flip_horizontal_gray(image);
-            convertGraytxt(image, numAlteracoes);
-            adicionar_gray(l, image);
-            call_python_gray(numAlteracoes);
+            convertGraytxt(image, numAlteracoes, "FlipHorizontal-", l);
+            call_python_gray(numAlteracoes, "FlipHorizontal-");
             (*numAlteracoes)++;
             break;
         
         case 3:
             image = flip_vertical_gray(image);
-            convertGraytxt(image, numAlteracoes);
-            adicionar_gray(l, image);
-            call_python_gray(numAlteracoes);
+            convertGraytxt(image, numAlteracoes, "FlipVertical-", l);
+            call_python_gray(numAlteracoes, "FlipVertical-");
             (*numAlteracoes)++;
             break;
 
         case 4:
             image = clahe_gray(image, image->dim.largura, image->dim.altura);
-            convertGraytxt(image, numAlteracoes);
-            adicionar_gray(l, image);
-            call_python_gray(numAlteracoes);
+            convertGraytxt(image, numAlteracoes, "Clahe-", l);
+            call_python_gray(numAlteracoes, "Clahe-");
             (*numAlteracoes)++;
             break;
 
         case 5:
             image = median_blur_gray(image, 5);
-            convertGraytxt(image, numAlteracoes);
-            adicionar_gray(l, image);
-            call_python_gray(numAlteracoes);
+            convertGraytxt(image, numAlteracoes, "MedianBlur-", l);
+            call_python_gray(numAlteracoes, "MedianBlur-");
             (*numAlteracoes)++;
             break;
 
         case 6:
-            image = desfazer_gray(l);
+            image = random_gray(image);
+            convertGraytxt(image, numAlteracoes, "Random-", l);
+            call_python_gray(numAlteracoes, "Random-");
+            (*numAlteracoes)++;
             break;
 
         case 7:
-            image = refazer_gray(l);
+            image = desfazer_gray(l);
+            if (l->cabeca != NULL)
+            {
+                printf("Lista vazia!\n");
+                call_python_historico_gray(l->cabeca->nome);
+            }
             break;
 
         case 8:
-            //Historico
+            image = refazer_gray(l);
+            call_python_historico_gray(l->cabeca->nome);
             break;
 
         case 9:
+            //Historico
+            break;
+
+        case 10:
             printf("Voltando...\n\n");
             break;
 
@@ -124,7 +95,7 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
             printf("Opcao invalida!\n");
             break;
         }
-    } while (op != 9);
+    } while (op != 10);
 
     return image;
 }
@@ -140,10 +111,11 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
         printf("3 - Flip Vertical\n");
         printf("4 - Clahe\n");
         printf("5 - Median blur\n");
-        printf("6 - Desfazer\n");
-        printf("7 - Refazer\n");
-        printf("8 - Historico\n");
-        printf("9 - Voltar\n");
+        printf("6 - ALeatoria\n");
+        printf("7 - Desfazer\n");
+        printf("8 - Refazer\n");
+        printf("9 - Historico\n");
+        printf("10 - Voltar\n");
 
         printf("Escolha uma opcao:\n");
         scanf(" %d", &op);
@@ -152,45 +124,61 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
         {
         case 1:
             image = transpose_rgb(image);
-            convertRGBtxt(image, numAlteracoes);
-            adicionar_rgb(l, image);
-            call_python_rgb(numAlteracoes);
+            convertRGBtxt(image, numAlteracoes, "Transpose-", l);
+            call_python_rgb(numAlteracoes, "Transpose-");
             (*numAlteracoes)++;
             break;
         
         case 2:
             image = flip_horizontal_rgb(image);
-            convertRGBtxt(image, numAlteracoes);
-            adicionar_rgb(l, image);
-            call_python_rgb(numAlteracoes);
+            convertRGBtxt(image, numAlteracoes, "FlipHorizontal-", l);
+            call_python_rgb(numAlteracoes, "FlipHorizontal-");
             (*numAlteracoes)++;
             break;
         
         case 3:
             image = flip_vertical_rgb(image);
-            convertRGBtxt(image, numAlteracoes);
-            adicionar_rgb(l, image);
-            call_python_rgb(numAlteracoes);
+            convertRGBtxt(image, numAlteracoes, "FlipVertical-", l);
+            call_python_rgb(numAlteracoes, "FlipVertical-");
             (*numAlteracoes)++;
             break;
 
         case 4:
             image = clahe_rgb(image, image->dim.largura, image->dim.altura);
-            convertRGBtxt(image, numAlteracoes);
-            adicionar_rgb(l, image);
-            call_python_rgb(numAlteracoes);
+            convertRGBtxt(image, numAlteracoes, "Clahe-", l);
+            call_python_rgb(numAlteracoes, "Clahe-");
             (*numAlteracoes)++;
             break;
 
         case 5:
             image = median_blur_rgb(image, 5);
-            convertRGBtxt(image, numAlteracoes);
-            adicionar_rgb(l, image);
-            call_python_rgb(numAlteracoes);
+            convertRGBtxt(image, numAlteracoes, "MedianBlur-", l);
+            call_python_rgb(numAlteracoes, "MedianBlur-");
             (*numAlteracoes)++;
             break;
 
+        case 6:
+            image = random_rgb(image);
+            convertRGBtxt(image, numAlteracoes, "Random-", l);
+            call_python_rgb(numAlteracoes, "Radom-");
+            (*numAlteracoes)++;
+            break;
+
+        case 7:
+            image = desfazer_rgb(l);
+            call_python_historico_rgb(l->cabeca->nome);
+            break;
+
+        case 8:
+            image = refazer_rgb(l);
+            call_python_historico_rgb(l->cabeca->nome);
+            break;
+
         case 9:
+            //Mostrar historico
+            break;
+
+        case 10:
             printf("Voltando...\n\n");
             break;
 
@@ -198,7 +186,7 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
             printf("Opcao invalida!\n");
             break;
         }
-    } while (op != 9);
+    } while (op != 10);
 
     return image;
 }
@@ -351,8 +339,20 @@ int main()
 
     add_list_random_gray(&listrandomgray, imageGray, "LenaGray.txt");
     add_list_random_rgb(&listrandomrgb, imageRGB, "LenaRGB.txt");
-    adicionar_gray(listgray, imageGray);
-    adicionar_rgb(listrgb, imageRGB);
+    adicionar_gray(listgray, imageGray, "LenaGrayRandom.txt");
+    adicionar_rgb(listrgb, imageRGB, "LenaRGBRandom.txt");
+
+    //Transformando as imagens Originais
+    char command[256], nomeArq[50], nomeImage[50];
+    sprintf(nomeArq, "./imageGray.txt");
+    sprintf(nomeImage, "../LenaGray.png");
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s gray", nomeArq, nomeImage);
+    system(command);
+
+    sprintf(nomeArq, "./imageRGB.txt");
+    sprintf(nomeImage, "../LenaRGB.png");
+    snprintf(command, sizeof(command), "python3 ../image_utils.py %s %s rgb", nomeArq, nomeImage);
+    system(command);
 
     do
     {
