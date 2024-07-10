@@ -122,12 +122,14 @@ void free_random_rgb(ListRandomRGB *l);
 LinkedGray *criar_gray();
 void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome);
 void liberar_gray(LinkedGray *l);
+void mostrar_gray(LinkedGray *l);
 ImageGray *desfazer_gray(LinkedGray *l);
 ImageGray *refazer_gray(LinkedGray *l);
 
 LinkedRGB *criar_RGB();
 void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome);
 void liberar_rgb(LinkedRGB *l);
+void mostrar_rgb(LinkedRGB *l);
 ImageRGB *desfazer_rgb(LinkedRGB *l);
 ImageRGB *refazer_rgb(LinkedRGB *l);
 
