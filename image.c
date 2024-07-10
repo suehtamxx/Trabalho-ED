@@ -108,6 +108,20 @@ ImageRGB *refazer_rgb(LinkedRGB *l)
     l->corpo = l->corpo->prox;
     return l->corpo->image;
 }
+void mostrar_rgb(LinkedRGB *l) 
+{
+    if (l == NULL) printf("Lista vazia ");
+    else
+    {
+        Listargb *current = l->cabeca;
+
+        while (current != NULL) 
+        {
+            printf("%s -> ", current->nome);
+            current = current->prox;
+        }
+    }
+}
 void liberar_rgb(LinkedRGB *l)
 {
     Listargb *aux = l->cabeca;
@@ -170,6 +184,20 @@ ImageGray *refazer_gray(LinkedGray *l)
     }
     l->current = l->current->prox;
     return l->current->image;
+}
+void mostrar_gray(LinkedGray *l) 
+{
+    if (l == NULL) printf("Lista vazia ");
+    else
+    {
+        Listagray *current = l->cabeca;
+
+        while (current != NULL) 
+        {
+            printf("%s -> ", current->nome);
+            current = current->prox;
+        }
+    }
 }
 void liberar_gray(LinkedGray *l)
 {
