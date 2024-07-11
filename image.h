@@ -123,15 +123,15 @@ LinkedGray *criar_gray();
 void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome);
 void liberar_gray(LinkedGray *l);
 void mostrar_gray(LinkedGray *l);
-ImageGray *desfazer_gray(LinkedGray *l);
-ImageGray *refazer_gray(LinkedGray *l);
+char *desfazer_gray(LinkedGray *l);
+char *refazer_gray(LinkedGray *l);
 
 LinkedRGB *criar_RGB();
 void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome);
 void liberar_rgb(LinkedRGB *l);
 void mostrar_rgb(LinkedRGB *l);
-ImageRGB *desfazer_rgb(LinkedRGB *l);
-ImageRGB *refazer_rgb(LinkedRGB *l);
+char *desfazer_rgb(LinkedRGB *l);
+char *refazer_rgb(LinkedRGB *l);
 
 //Chamada do python
 void call_python_gray(int *numAlteracoes, char *nome);
@@ -143,4 +143,5 @@ void call_python_historico_rgb(char *nome);
 void call_python_gray_random(int *numAlteracoes);
 void call_python_rgb_random(int *numAlteracoes);
 
+void apontar_para_ultimo(LinkedGray *l);
 #endif // IMAGE_H
