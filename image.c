@@ -50,7 +50,7 @@ void readFileRGB(ImageRGB *imageRGB, FILE *arqRGB)
     }
 }
 
-// Funcções de criação e liberação de listas
+// Funções de criação e liberação de listas
 LinkedRGB *criar_RGB()
 {
     LinkedRGB *l = malloc(sizeof(LinkedRGB));
@@ -110,16 +110,15 @@ char* refazer_rgb(LinkedRGB *l) {
 }
 void mostrar_rgb(LinkedRGB *l) 
 {
-    if (l == NULL) printf("Lista vazia ");
-    else
-    {
-        Listargb *current = l->cabeca;
-
-        while (current != NULL) 
-        {
+    Listargb *current = l->cabeca;  
+    if (current == NULL) {
+        printf("A lista esta vazia.\n");
+    } else {
+        while (current != l->current) {  
             printf("%s -> ", current->nome);
             current = current->prox;
         }
+        printf("%s -> ", current->nome);   
     }
 }
 void liberar_rgb(LinkedRGB *l)
@@ -169,22 +168,6 @@ void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
     l->current = novo;
 }
 
-// void apontar_para_ultimo(LinkedGray *l) {
-//     if (l == NULL || l->cabeca == NULL) {
-//         l->current = NULL;  // Lista vazia, current é NULL
-//         return;
-//     }
-
-//     // Percorre a lista até o último nó
-//     Listagray *ultimo = l->cabeca;
-//     while (ultimo->prox != NULL) {
-//         ultimo = ultimo->prox;
-//     }
-
-//     // Atribui o último nó a current
-//     l->current = ultimo;
-// }
-
 char* desfazer_gray(LinkedGray *l) {
     printf("Entrando em desfazer_gray...\n");
     if (l->current == NULL) {
@@ -215,13 +198,16 @@ char* refazer_gray(LinkedGray *l) {
 
 void mostrar_gray(LinkedGray *l) 
 {
-    Listagray *current = l->current;
-    printf("Lista de Imagens Gray a partir da posição atual:\n");
-    while (current != NULL) {
-        printf("Nome: %s\n", current->nome);
-        current = current->prox;
+    Listagray *current = l->cabeca; 
+    if (current == NULL) {
+        printf("A lista esta vazia.\n");
+    } else {
+        while (current != l->current) {  
+            printf("%s -> ", current->nome);
+            current = current->prox;
+        }
+        printf("%s -> ", current->nome);  
     }
-    printf("\n");
 }
 void liberar_gray(LinkedGray *l)
 {
