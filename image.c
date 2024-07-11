@@ -60,6 +60,7 @@ LinkedRGB *criar_RGB()
     }
     l->cabeca = NULL;
     l->corpo = NULL;
+    l->current = NULL;
     return l;
 }
 void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome)
@@ -82,40 +83,30 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome)
     l->corpo = novo;
     l->current = novo;
 }
-ImageRGB *desfazer_rgb(LinkedRGB *l) 
-{
-    if (l == NULL || l->current == NULL)
+char* desfazer_rgb(LinkedRGB *l) {
+    printf("Entrando em desfazer_rgb...\n");
+    if (l->current == NULL) {
+        printf("Nenhuma operacao para desfazer! (lista vazia)\n");
         return NULL;
-
-    // Salva a imagem a ser desfeita
-    ImageRGB *img = l->current->image;
-
-    // Remove o nó atual da lista
-    Listargb *tmp = l->current;
-    l->current = l->current->ant;
-
-    if (l->current != NULL) {
-        l->current->prox = NULL;
-    } else {
-        l->cabeca = NULL;  // Se l->current era o único elemento
     }
-
-    free(tmp->nome);
-    free(tmp);
-
-    return img;
+    if (l->current->ant == NULL) {
+        printf("Nenhuma operacao para desfazer! (ja na primeira operacao)\n");
+        return NULL;
+    }
+    l->current = l->current->ant;
+    printf("Operacao desfeita. Novo atual: %s\n", l->current->nome);
+    return l->current->nome;
 }
 
-ImageRGB *refazer_rgb(LinkedRGB *l)
-{
-    if (l->corpo == NULL || l->corpo->prox == NULL) 
-    {
+char* refazer_rgb(LinkedRGB *l) {
+    printf("Entrando em refazer_rgb...\n");
+    if (l->current == NULL || l->current->prox == NULL) {
         printf("Nenhuma operacao para refazer!\n");
         return NULL;
     }
-
-    l->corpo = l->corpo->prox;
-    return l->corpo->image;
+    l->current = l->current->prox;
+    printf("Operacao refeita. Novo atual: %s\n", l->current->nome);
+    return l->current->nome;
 }
 void mostrar_rgb(LinkedRGB *l) 
 {
@@ -153,6 +144,7 @@ LinkedGray *criar_gray()
     }
     l->cabeca = NULL;
     l->corpo = NULL;
+    l->current = NULL;
     return l;
 }
 void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
@@ -173,45 +165,63 @@ void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
         l->cabeca = novo;
     }
     l->corpo = novo;
-}
-ImageGray *desfazer_gray(LinkedGray *l) 
-{
-    if (l->corpo == NULL) return NULL;
 
-    ImageGray *img = l->corpo->image;
-    Listagray *tmp = l->corpo;
-
-    l->corpo = l->corpo->ant;
-    if (l->corpo != NULL) l->corpo->prox = NULL;
-    else l->cabeca = NULL;
-    
-    free(tmp->nome);
-    free(tmp);
-    return img;
+    l->current = novo;
 }
-ImageGray *refazer_gray(LinkedGray *l)
-{
-    if(l->current == NULL || l->current->prox == NULL)
-    {
-        printf("Nenhuma operacao!");
+
+// void apontar_para_ultimo(LinkedGray *l) {
+//     if (l == NULL || l->cabeca == NULL) {
+//         l->current = NULL;  // Lista vazia, current é NULL
+//         return;
+//     }
+
+//     // Percorre a lista até o último nó
+//     Listagray *ultimo = l->cabeca;
+//     while (ultimo->prox != NULL) {
+//         ultimo = ultimo->prox;
+//     }
+
+//     // Atribui o último nó a current
+//     l->current = ultimo;
+// }
+
+char* desfazer_gray(LinkedGray *l) {
+    printf("Entrando em desfazer_gray...\n");
+    if (l->current == NULL) {
+        printf("Nenhuma operacao para desfazer! (lista vazia)\n");
+        return NULL;
+    }
+    if (l->current->ant == NULL) {
+        printf("Nenhuma operacao para desfazer! (ja na primeira operacao)\n");
+        return NULL;
+    }
+    l->current = l->current->ant;
+    printf("Operacao desfeita. Novo atual: %s\n", l->current->nome);
+    return l->current->nome;
+}
+
+
+
+char* refazer_gray(LinkedGray *l) {
+    printf("Entrando em refazer_gray...\n");
+    if (l->current == NULL || l->current->prox == NULL) {
+        printf("Nenhuma operacao para refazer!\n");
         return NULL;
     }
     l->current = l->current->prox;
-    return l->current->image;
+    printf("Operacao refeita. Novo atual: %s\n", l->current->nome);
+    return l->current->nome;
 }
+
 void mostrar_gray(LinkedGray *l) 
 {
-    if (l == NULL) printf("Lista vazia ");
-    else
-    {
-        Listagray *current = l->cabeca;
-
-        while (current != NULL) 
-        {
-            printf("%s -> ", current->nome);
-            current = current->prox;
-        }
+    Listagray *current = l->current;
+    printf("Lista de Imagens Gray a partir da posição atual:\n");
+    while (current != NULL) {
+        printf("Nome: %s\n", current->nome);
+        current = current->prox;
     }
+    printf("\n");
 }
 void liberar_gray(LinkedGray *l)
 {
