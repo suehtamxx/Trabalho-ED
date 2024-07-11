@@ -84,19 +84,28 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome)
 }
 ImageRGB *desfazer_rgb(LinkedRGB *l) 
 {
-    if (l->corpo == NULL) return NULL;
+    if (l == NULL || l->current == NULL)
+        return NULL;
 
-    ImageRGB *img = l->corpo->image;
-    Listargb *tmp = l->corpo;
+    // Salva a imagem a ser desfeita
+    ImageRGB *img = l->current->image;
 
-    l->corpo = l->corpo->ant;
-    if (l->corpo != NULL) l->corpo->prox = NULL;
-    else l->cabeca = NULL;
-    
+    // Remove o nó atual da lista
+    Listargb *tmp = l->current;
+    l->current = l->current->ant;
+
+    if (l->current != NULL) {
+        l->current->prox = NULL;
+    } else {
+        l->cabeca = NULL;  // Se l->current era o único elemento
+    }
+
     free(tmp->nome);
     free(tmp);
+
     return img;
 }
+
 ImageRGB *refazer_rgb(LinkedRGB *l)
 {
     if (l->corpo == NULL || l->corpo->prox == NULL) 
@@ -165,15 +174,20 @@ void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
     }
     l->corpo = novo;
 }
-ImageGray *desfazer_gray(LinkedGray *l)
+ImageGray *desfazer_gray(LinkedGray *l) 
 {
-    if(l->current == NULL || l->current->ant == NULL)
-    {
-        printf("Nenhuma operacao!");
-        return NULL;
-    }
-    l->current = l->current->ant;
-    return l->current->image;
+    if (l->corpo == NULL) return NULL;
+
+    ImageGray *img = l->corpo->image;
+    Listagray *tmp = l->corpo;
+
+    l->corpo = l->corpo->ant;
+    if (l->corpo != NULL) l->corpo->prox = NULL;
+    else l->cabeca = NULL;
+    
+    free(tmp->nome);
+    free(tmp);
+    return img;
 }
 ImageGray *refazer_gray(LinkedGray *l)
 {
