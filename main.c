@@ -70,13 +70,17 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
             break;
 
         case 7:
-            image = desfazer_gray(l);
-            call_python_historico_gray(l->cabeca->nome);
-            break;
-
+                printf("Chamando desfazer_gray...\n");
+                char* nomeGrayDesfeita = desfazer_gray(l);
+                if (nomeGrayDesfeita != NULL) {
+                    call_python_historico_gray(nomeGrayDesfeita);
+                }
+                break;
         case 8:
-            image = refazer_gray(l);
-            call_python_historico_gray(l->cabeca->nome);
+            char* nomeGrayRefeita = refazer_gray(l);
+            if (nomeGrayRefeita != NULL) {
+                call_python_historico_gray(nomeGrayRefeita);
+            }
             break;
 
         case 9:
@@ -94,7 +98,7 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
     } while (op != 10);
 
     return image;
-}
+    }
 ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
 {
     int op = 0;
@@ -161,13 +165,17 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
             break;
 
         case 7:
-            image = desfazer_rgb(l);
-            call_python_historico_rgb(l->cabeca->nome);
-            break;
-
+                
+                char* nomeRGBDesfeita = desfazer_rgb(l);
+                if (nomeRGBDesfeita != NULL) {
+                    call_python_historico_rgb(nomeRGBDesfeita);
+                }
+                break;
         case 8:
-            image = refazer_rgb(l);
-            call_python_historico_rgb(l->cabeca->nome);
+            char* nomeRGBRefeita = refazer_rgb(l);
+            if(nomeRGBRefeita != NULL) {
+                call_python_historico_rgb(nomeRGBRefeita);
+            }
             break;
 
         case 9:
