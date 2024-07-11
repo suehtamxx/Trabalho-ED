@@ -71,11 +71,7 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
 
         case 7:
             image = desfazer_gray(l);
-            if (l->cabeca != NULL)
-            {
-                printf("Lista vazia!\n");
-                call_python_historico_gray(l->cabeca->nome);
-            }
+            call_python_historico_gray(l->cabeca->nome);
             break;
 
         case 8:
@@ -337,10 +333,10 @@ int main()
     LinkedGray *listgray = criar_gray();
     LinkedRGB *listrgb = criar_RGB();
 
-    add_list_random_gray(&listrandomgray, imageGray, "LenaGray.txt");
-    add_list_random_rgb(&listrandomrgb, imageRGB, "LenaRGB.txt");
-    adicionar_gray(listgray, imageGray, "LenaGrayRandom.txt");
-    adicionar_rgb(listrgb, imageRGB, "LenaRGBRandom.txt");
+    add_list_random_gray(&listrandomgray, imageGray, "LenaGrayRandom.txt");
+    add_list_random_rgb(&listrandomrgb, imageRGB, "LenaRGBRandom.txt");
+    adicionar_gray(listgray, imageGray, "imageGray.txt");
+    adicionar_rgb(listrgb, imageRGB, "imageRGB.txt");
 
     //Transformando as imagens Originais
     char command[256], nomeArq[50], nomeImage[50];
