@@ -83,7 +83,7 @@ void adicionar_rgb(LinkedRGB *l, ImageRGB *image, char *nome)
     l->corpo = novo;
     l->current = novo;
 }
-char* desfazer_rgb(LinkedRGB *l) {
+ImageRGB* desfazer_rgb(LinkedRGB *l) {
     printf("Entrando em desfazer_rgb...\n");
     if (l->current == NULL) {
         printf("Nenhuma operacao para desfazer! (lista vazia)\n");
@@ -95,10 +95,9 @@ char* desfazer_rgb(LinkedRGB *l) {
     }
     l->current = l->current->ant;
     printf("Operacao desfeita. Novo atual: %s\n", l->current->nome);
-    return l->current->nome;
+    return l->current->image;
 }
-
-char* refazer_rgb(LinkedRGB *l) {
+ImageRGB* refazer_rgb(LinkedRGB *l) {
     printf("Entrando em refazer_rgb...\n");
     if (l->current == NULL || l->current->prox == NULL) {
         printf("Nenhuma operacao para refazer!\n");
@@ -106,7 +105,7 @@ char* refazer_rgb(LinkedRGB *l) {
     }
     l->current = l->current->prox;
     printf("Operacao refeita. Novo atual: %s\n", l->current->nome);
-    return l->current->nome;
+    return l->current->image;
 }
 void mostrar_rgb(LinkedRGB *l) 
 {
@@ -167,8 +166,7 @@ void adicionar_gray(LinkedGray *l, ImageGray *image, char *nome)
 
     l->current = novo;
 }
-
-char* desfazer_gray(LinkedGray *l) {
+ImageGray* desfazer_gray(LinkedGray *l) {
     printf("Entrando em desfazer_gray...\n");
     if (l->current == NULL) {
         printf("Nenhuma operacao para desfazer! (lista vazia)\n");
@@ -180,12 +178,9 @@ char* desfazer_gray(LinkedGray *l) {
     }
     l->current = l->current->ant;
     printf("Operacao desfeita. Novo atual: %s\n", l->current->nome);
-    return l->current->nome;
+    return l->current->image;
 }
-
-
-
-char* refazer_gray(LinkedGray *l) {
+ImageGray* refazer_gray(LinkedGray *l) {
     printf("Entrando em refazer_gray...\n");
     if (l->current == NULL || l->current->prox == NULL) {
         printf("Nenhuma operacao para refazer!\n");
@@ -193,9 +188,8 @@ char* refazer_gray(LinkedGray *l) {
     }
     l->current = l->current->prox;
     printf("Operacao refeita. Novo atual: %s\n", l->current->nome);
-    return l->current->nome;
+    return l->current->image;
 }
-
 void mostrar_gray(LinkedGray *l) 
 {
     Listagray *current = l->cabeca; 
