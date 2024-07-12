@@ -70,16 +70,15 @@ ImageGray *menuImageGray(ImageGray *image, int *numAlteracoes, LinkedGray *l)
             break;
 
         case 7:
-                printf("Chamando desfazer_gray...\n");
-                char* nomeGrayDesfeita = desfazer_gray(l);
-                if (nomeGrayDesfeita != NULL) {
-                    call_python_historico_gray(nomeGrayDesfeita);
-                }
-                break;
+            image = desfazer_gray(l);
+            if (image != NULL) {
+                call_python_historico_gray(l->current->nome);
+            }
+            break;
         case 8:
-            char* nomeGrayRefeita = refazer_gray(l);
-            if (nomeGrayRefeita != NULL) {
-                call_python_historico_gray(nomeGrayRefeita);
+            image = refazer_gray(l);
+            if (image != NULL) {
+                call_python_historico_gray(l->current->nome);
             }
             break;
 
@@ -165,16 +164,15 @@ ImageRGB *menuImageRGB(ImageRGB *image, int *numAlteracoes, LinkedRGB *l)
             break;
 
         case 7:
-                
-                char* nomeRGBDesfeita = desfazer_rgb(l);
-                if (nomeRGBDesfeita != NULL) {
-                    call_python_historico_rgb(nomeRGBDesfeita);
-                }
-                break;
+            image = desfazer_rgb(l);
+            if (image != NULL) {
+                call_python_historico_rgb(l->current->nome);
+            }
+            break;
         case 8:
-            char* nomeRGBRefeita = refazer_rgb(l);
-            if(nomeRGBRefeita != NULL) {
-                call_python_historico_rgb(nomeRGBRefeita);
+            image = refazer_rgb(l);
+            if(image != NULL) {
+                call_python_historico_rgb(l->current->nome);
             }
             break;
 
