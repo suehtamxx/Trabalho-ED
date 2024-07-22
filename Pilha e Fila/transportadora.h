@@ -43,6 +43,7 @@ void liberarLista(ListaCliente *l);
 Pilha *criarPilha();
 Pilha *empilharPilha(Pilha *p);
 Pilha *desempilharPilha(Pilha *p);
+//contar a pilha para descontar no score
 void mostrarPilha(Pilha *p);
 void liberarPilha(Pilha *p);
 
@@ -58,3 +59,6 @@ void cadastarPedido();
 void cadastrarCliente();
 int buscarCliente(ListaCliente *l); //retornar 1 (encontrou) ou 0 (não encontrou)
 
+// Funções da rota
+//gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
+//pegar a pilha e adicionar na fila de devolução
