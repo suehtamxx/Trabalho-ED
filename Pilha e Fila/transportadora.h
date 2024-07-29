@@ -1,3 +1,6 @@
+#ifndef TRANSPORTADORA_H
+#define TRANSPORTADORA_H
+
 typedef struct cliente
 {
     char nome[50];
@@ -35,7 +38,7 @@ typedef struct pilha
 
 // Funções da Lista de Clientes
 ListaCliente *criarLista();
-void addLista(ListaCliente *l, Cliente *cliente);
+void addLista(ListaCliente *l, int *id);
 void mostrarLista(ListaCliente *l);
 void liberarLista(ListaCliente *l);
 
@@ -62,3 +65,5 @@ int buscarCliente(ListaCliente *l); //retornar 1 (encontrou) ou 0 (não encontro
 // Funções da rota
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução
+
+#endif // TRANSPORTADORA_H
