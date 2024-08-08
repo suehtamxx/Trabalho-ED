@@ -275,36 +275,36 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
         //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
-void agruparPorEndereco(Fila *f)
-{
-    if (f->inicio == NULL) {
-        return;
-    }
+// void agruparPorEndereco(Fila *f)
+// {
+//     if (f->inicio == NULL) {
+//         return;
+//     }
 
-    Fila filaaux = {NULL, NULL};
-    Entrega *entrega;
+//     Fila filaaux = {NULL, NULL};
+//     Entrega *entrega;
 
-    // Primeira passagem: mover todos os itens para filaaux
-    while ((entrega = retirarFila(f)) != NULL) {
-        addFila(&filaaux, entrega);
-    }
+//     // Primeira passagem: mover todos os itens para filaaux
+//     while ((entrega = retirarFila(f)) != NULL) {
+//         addFila(&filaaux, entrega);
+//     }
 
-    // Segunda passagem: processar filaaux e reordenar na fila original
-    while ((entrega = retirarFila(&filaaux)) != NULL) {
-        Fila grupoEndereco = {NULL, NULL};
-        addFila(&grupoEndereco, entrega);
+//     // Segunda passagem: processar filaaux e reordenar na fila original
+//     while ((entrega = retirarFila(&filaaux)) != NULL) {
+//         Fila grupoEndereco = {NULL, NULL};
+//         addFila(&grupoEndereco, entrega);
 
-        Entrega *proximo;
-        while ((proximo = retirarFila(&filaaux)) != NULL) {
-            if (strcmp(entrega->cliente->enderecoRua, proximo->cliente->enderecoRua) == 0) {
-                addFila(&grupoEndereco, proximo);
-            } else {
-                addFila(&filaaux, proximo);
-            }
-        }
+//         Entrega *proximo;
+//         while ((proximo = retirarFila(&filaaux)) != NULL) {
+//             if (strcmp(entrega->cliente->enderecoRua, proximo->cliente->enderecoRua) == 0) {
+//                 addFila(&grupoEndereco, proximo);
+//             } else {
+//                 addFila(&filaaux, proximo);
+//             }
+//         }
 
-        while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
-            addFila(f, entrega);
+//         while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
+//             addFila(f, entrega);
     // if(f->inicio == NULL)
     //     return;
 
@@ -339,44 +339,104 @@ void agruparPorEndereco(Fila *f)
     //     while((proxima = retirarFila(&filaaux)) != NULL)
     //         addFila(f, proxima->cliente);
     // }
-        }
-    }
-}
+        //}
+    //}
+//}
 
+
+// void entregar(Fila *f, Pilha **p, Fila *dev)
+// {
+//     agruparPorEndereco(f);
+
+//     while(f->inicio != NULL)
+//     {
+//         Entrega *entrega = retirarFila(f);
+//         entrega->tentativa++;
+
+//         if(entrega->tentativa == 1)
+//         while(strcmp() == 0)
+//         {
+//             int i = rand() % 10;
+            
+//             if(i < 7) printf("Entrega realizada de primeira para %s.\n", entrega->cliente->nome);
+//                 else{
+//                     printf("Entrega nao efetuada, tentaremos de novo amanha\n");
+//                     empilharPilha(p, entrega);
+//                 }
+
+//         } else {
+//             empilharPilha(p, entrega);
+//         }
+//     }
+//         while(*p != NULL)
+//         {
+//             Entrega *entrega = desempilharPilha(p);
+//             int i = rand() % 10;
+
+//             if(i < 7) printf("entrega efetuada na segunda tentativa para %s\n", entrega->cliente->nome);
+//                 else{
+//                     printf("Pedido sera devolvido pois nao conseguimos entregar(2 vezes) para %s\n", entrega->cliente->nome);
+//                     addFila(dev, entrega);
+//                 }
+//             free(entrega);
+//         }
+// }
 
 void entregar(Fila *f, Pilha **p, Fila *dev)
 {
-    agruparPorEndereco(f);
+    //agruparPorEndereco(f);
 
-    while(f->inicio != NULL)
+    while (f->inicio != NULL)
     {
         Entrega *entrega = retirarFila(f);
-        entrega->tentativa++;
+        entrega->tentativa = 1;  // Primeira tentativa
 
-        if(entrega->tentativa == 1)
+        // Verifica se há entregas com o mesmo endereço
+        printf("Iniciando a entrega para %s.\n", entrega->cliente->nome);
+        int i = rand() % 10;
+        int sucesso = (i < 7);
+
+        if (sucesso)
         {
-            int i = rand() % 10;
-            
-            if(i < 7) printf("Entrega realizada de primeira para %s.\n", entrega->cliente->nome);
-                else{
-                    printf("Entrega nao efetuada, tentaremos de novo amanha\n");
-                    empilharPilha(p, entrega);
-                }
+            printf("Entrega realizada para %s.\n", entrega->cliente->nome);
+            //free(entrega);
 
-        } else {
-            empilharPilha(p, entrega);
+            // Entregar todas as entregas seguintes com o mesmo endereço
+            while (f->inicio != NULL && strcmp(entrega->cliente->enderecoRua, f->inicio->cliente->enderecoRua) == 0)
+            {
+                Entrega *proxEntrega = retirarFila(f);
+                proxEntrega->tentativa = 1;
+                printf("Entrega realizada para %s.\n", proxEntrega->cliente->nome);
+                free(entrega);
+                free(proxEntrega);
+                
+            }
+        }
+        else
+        {
+            printf("Entrega não efetuada, tentativa adicionada à pilha para %s.\n", entrega->cliente->nome);
+            empilharPilha(p, entrega);  // Movendo para a pilha para nova tentativa
         }
     }
-        while(*p != NULL)
-        {
-            Entrega *entrega = desempilharPilha(p);
-            int i = rand() % 10;
 
-            if(i < 7) printf("entrega efetuada na segunda tentativa para %s\n", entrega->cliente->nome);
-                else{
-                    printf("Pedido sera devolvido pois nao conseguimos entregar(2 vezes) para %s\n", entrega->cliente->nome);
-                    addFila(dev, entrega);
-                }
+    // Tentar entregar os itens na pilha
+    while (*p != NULL)
+    {
+        Entrega *entrega = desempilharPilha(p);
+        entrega->tentativa = 2;  // Segunda tentativa
+
+        int i = rand() % 10;
+        if (i < 7)
+        {
+            printf("Entrega efetuada na segunda tentativa para %s.\n", entrega->cliente->nome);
             free(entrega);
         }
+        else
+        {
+            printf("Pedido será devolvido pois não conseguimos entregar (2 tentativas) para %s.\n", entrega->cliente->nome);
+            addFila(dev, entrega);  // Movendo para a fila de devolução
+        }
+    }
 }
+
+
