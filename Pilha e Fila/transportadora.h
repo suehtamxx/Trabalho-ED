@@ -71,7 +71,7 @@ void cadastarPedido(Pedido **p, ListaCliente *cliente);
 void cadastrarCliente(Pedido **p, Cliente *cliente);
 int buscarCliente(ListaCliente *l); //retornar 1 (encontrou) ou 0 (não encontrou)
 void entregar(Fila *f, Pilha **p, Fila *dev);
-void agruparPorEndereco(Fila *f);
+//void agruparPorEndereco(Fila *f);
 // Funções da rota
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução
