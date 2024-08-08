@@ -19,7 +19,7 @@ ListaCliente *criarLista()
 }
 Cliente* buscarLista(ListaCliente *l, const char *cpf) 
 {
-    ListaCliente *atual = listacliente->prox; 
+    ListaCliente *atual = l->prox; 
 
     while (atual != NULL) {
         if (strcmp(atual->cliente->cpf, cpf) == 0) return atual->cliente;
@@ -285,78 +285,78 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
 
     novoPedido->prox = *p;
     *p = novoPedido;
-    novoPedido->contador++;
+    
 
     //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
-// void agruparPorEndereco(Fila *f)
-// {
-//     if (f->inicio == NULL) {
-//         return;
-//     }
+void agruparPorEndereco(Fila *f)
+{
+    if (f->inicio == NULL) {
+        return;
+    }
 
-//     Fila filaaux = {NULL, NULL};
-//     Entrega *entrega;
+    Fila filaaux = {NULL, NULL};
+    Entrega *entrega;
 
-//     // Primeira passagem: mover todos os itens para filaaux
-//     while ((entrega = retirarFila(f)) != NULL) {
-//         addFila(&filaaux, entrega);
-//     }
+    // Primeira passagem: mover todos os itens para filaaux
+    while ((entrega = retirarFila(f)) != NULL) {
+        addFila(&filaaux, entrega);
+    }
 
-//     // Segunda passagem: processar filaaux e reordenar na fila original
-//     while ((entrega = retirarFila(&filaaux)) != NULL) {
-//         Fila grupoEndereco = {NULL, NULL};
-//         addFila(&grupoEndereco, entrega);
+    // Segunda passagem: processar filaaux e reordenar na fila original
+    while ((entrega = retirarFila(&filaaux)) != NULL) {
+        Fila grupoEndereco = {NULL, NULL};
+        addFila(&grupoEndereco, entrega);
 
-//         Entrega *proximo;
-//         while ((proximo = retirarFila(&filaaux)) != NULL) {
-//             if (strcmp(entrega->cliente->enderecoRua, proximo->cliente->enderecoRua) == 0) {
-//                 addFila(&grupoEndereco, proximo);
-//             } else {
-//                 addFila(&filaaux, proximo);
-//             }
-//         }
+        Entrega *proximo;
+        while ((proximo = retirarFila(&filaaux)) != NULL) {
+            if (strcmp(entrega->pedido->cliente->enderecoRua, proximo->pedido->cliente->enderecoRua) == 0) {
+                addFila(&grupoEndereco, proximo);
+            } else {
+                addFila(&filaaux, proximo);
+            }
+        }
 
-//         while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
-//             addFila(f, entrega);
-    // if(f->inicio == NULL)
-    //     return;
+        while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
+            addFila(f, entrega);
+    if(f->inicio == NULL)
+        return;
 
-    // Fila filaaux;
-    // filaaux.inicio = NULL;
-    // filaaux.fim = NULL;
+    Fila filaaux;
+    filaaux.inicio = NULL;
+    filaaux.fim = NULL;
 
-    // Entrega *entrega;
+    Entrega *entrega;
 
-    // while((entrega = retirarFila(f)) != NULL)
-    // {
-    //     //agrupar com o mesmo endereço
-    //     Fila grupoEndereco;
-    //         grupoEndereco.inicio = NULL;
-    //         grupoEndereco.fim = NULL;
-    //     addFila(&grupoEndereco, entrega->cliente);
+    while((entrega = retirarFila(f)) != NULL)
+    {
+        //agrupar com o mesmo endereço
+        Fila grupoEndereco;
+            grupoEndereco.inicio = NULL;
+            grupoEndereco.fim = NULL;
+        addFila(&grupoEndereco, entrega->pedido->cliente);
 
-    //     Entrega *proxima;
-    //     while((proxima = retirarFila(f)) != NULL){
-    //         if(strcmp(entrega->cliente->enderecoRua, proxima->cliente->enderecoRua) == 0)
-    //             addFila(&grupoEndereco, proxima->cliente);
-    //         else 
-    //             addFila(&filaaux, proxima->cliente);
-    //         addFila(f, entrega->cliente);
-    //     }
+        Entrega *proxima;
+        while((proxima = retirarFila(f)) != NULL){
+            if(strcmp(entrega->pedido->cliente->enderecoRua, proxima->pedido->cliente->enderecoRua) == 0)
+                addFila(&grupoEndereco, proxima->pedido->cliente);
+            else 
+                addFila(&filaaux, proxima->pedido->cliente);
+            addFila(f, entrega->pedido->cliente);
+        }
 
-    //     //colocar grupos do mesmo endereço
-    //     while((entrega = retirarFila(&grupoEndereco)) != NULL)
-    //         addFila(f, entrega->cliente);
+        //colocar grupos do mesmo endereço
+        while((entrega = retirarFila(&grupoEndereco)) != NULL)
+            addFila(f, entrega->pedido->cliente);
 
-    //     //continuar processando a fila
-    //     while((proxima = retirarFila(&filaaux)) != NULL)
-    //         addFila(f, proxima->cliente);
-    // }
-        //}
-    //}
-//}
+        //continuar processando a fila
+        while((proxima = retirarFila(&filaaux)) != NULL)
+            addFila(f, proxima->pedido->cliente);
+    }
+        }
+    }
+}
 
 
 // void entregar(Fila *f, Pilha **p, Fila *dev)
