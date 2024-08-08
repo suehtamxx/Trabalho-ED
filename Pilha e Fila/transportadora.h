@@ -63,7 +63,7 @@ Fila *criarFila();
 void addFila(Fila *f, Entrega *entrega);
 Fila *buscarFila(Fila *f); //buscar pedidos na mesma rua e ordenar caso tenha 
 Entrega *retirarFila(Fila *f);
-void mostarFila(Pedido *p);
+void mostarFila(Fila *f);
 void liberarFila(Fila **f);
 
 void cadastarPedido(Pedido **p, ListaCliente *l);
