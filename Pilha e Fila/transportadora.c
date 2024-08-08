@@ -95,10 +95,10 @@ void mostrarLista(ListaCliente *l)
         while (aux != NULL)
         {
             printf("\nCliente ID %d", aux->id);
-            printf("Nome: %s", aux->cliente->nome);
-            printf("CPF: %s", aux->cliente->cpf);
-            printf("Rua: %s", aux->cliente->enderecoRua);
-            printf("Numero: %d", aux->cliente->numCasa);
+            printf("\nNome: %s", aux->cliente->nome);
+            printf("\nCPF: %s", aux->cliente->cpf);
+            printf("\nRua: %s", aux->cliente->enderecoRua);
+            printf("\nNumero: %d", aux->cliente->numCasa);
             aux = aux->prox;
         }
     }
@@ -219,19 +219,18 @@ Entrega *retirarFila(Fila *f)
     return remover;
 
 }
-void mostarFila(Fila *f)
+void mostarFila(Pedido *p)
 {
-    if(f->inicio == NULL) printf("Fila vazia!");
+    printf("mostrando os itens a ser entregue:\n");
+    if(p == NULL) printf("Lista vazia!");
     else
     {
-        printf("Mostrando os itens a ser entregues:\n");
-        Entrega *aux = f->inicio;
+        Pedido *aux = p;
         while(aux != NULL)
         {
-            printf("\nNome do cliente: %s", aux->pedido->cliente->nome);
-            printf("\nNome do item: %s", aux->pedido->nomeP);
-            printf("\nQuantidade de itens: %d", aux->pedido->quantidade);
-            printf("\nEndereço: %s, N: %d", aux->pedido->cliente->enderecoRua, aux->pedido->cliente->numCasa);
+            printf("\nNome do item: %s\n", aux->nomeP);
+            printf("\nQuantidade de itens: %d\n", aux->quantidade);
+            //printf("\nNome do cliente: %s\n", aux->cliente->nome);
             aux = aux->prox;
         }
     }
@@ -250,7 +249,7 @@ void liberarFila(Fila **f)
 }
 
 // Funções Pedido
-void cadastrarPedido(Fila *f, ListaCliente *l)
+void cadastrarPedido(Pedido **p, ListaCliente *l)
 {
     if(l->prox == NULL)
     {
@@ -294,57 +293,76 @@ void cadastrarPedido(Fila *f, ListaCliente *l)
     // novoPedido->prox = *p;
     // *p = novoPedido;
 
-    agruparPorEndereco(f, novoPedido);
-
     printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
-void agruparPorEndereco(Fila *f, Pedido *novoPedido)
-{
-    if (f->inicio == NULL) 
-    {
-        Entrega *novaEntrega = (Entrega *)malloc(sizeof(Entrega));
-        if (novaEntrega == NULL) {
-            printf("Erro ao alocar memória para nova entrega!\n");
-            exit(1);
-        }
-        novaEntrega->pedido = novoPedido;
-        novaEntrega->tentativa = 0;
-        novaEntrega->prox = NULL;
-        addFila(f, novaEntrega);
-        return;
-    }
-    
-    int novaEntregaAdicionada = 0;
+// void agruparPorEndereco(Fila *f)
+// {
+//     if (f->inicio == NULL) {
+//         return;
+//     }
 
-    Fila *filaAux = criarFila();
-    Entrega *entrega;
+//     Fila filaaux = {NULL, NULL};
+//     Entrega *entrega;
 
-    Entrega *novaEntrega = (Entrega *)malloc(sizeof(Entrega));
-    if (novaEntrega == NULL) {
-        printf("Erro ao alocar memória para nova entrega!\n");
-        exit(1);
-    }
+//     // Primeira passagem: mover todos os itens para filaaux
+//     while ((entrega = retirarFila(f)) != NULL) {
+//         addFila(&filaaux, entrega);
+//     }
 
-    novaEntrega->pedido = novoPedido;
-    novaEntrega->tentativa = 0;
-    novaEntrega->prox = NULL;
+//     // Segunda passagem: processar filaaux e reordenar na fila original
+//     while ((entrega = retirarFila(&filaaux)) != NULL) {
+//         Fila grupoEndereco = {NULL, NULL};
+//         addFila(&grupoEndereco, entrega);
 
-    while ((entrega = retirarFila(f)) != NULL) 
-    {
-        if (strcmp(novoPedido->cliente->enderecoRua, entrega->pedido->cliente->enderecoRua) == 0) 
-        {
-            addFila(filaAux, novaEntrega);
-            novaEntregaAdicionada = 1;
-        }
-        addFila(filaAux, entrega);        
-    }
+//         Entrega *proximo;
+//         while ((proximo = retirarFila(&filaaux)) != NULL) {
+//             if (strcmp(entrega->cliente->enderecoRua, proximo->cliente->enderecoRua) == 0) {
+//                 addFila(&grupoEndereco, proximo);
+//             } else {
+//                 addFila(&filaaux, proximo);
+//             }
+//         }
 
-    if(!novaEntregaAdicionada) addFila(filaAux, novaEntrega);
-    
-    while ((entrega = retirarFila(filaAux)) != NULL)
-        addFila(f, entrega);
-}
+//         while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
+//             addFila(f, entrega);
+    // if(f->inicio == NULL)
+    //     return;
+
+    // Fila filaaux;
+    // filaaux.inicio = NULL;
+    // filaaux.fim = NULL;
+
+    // Entrega *entrega;
+
+    // while((entrega = retirarFila(f)) != NULL)
+    // {
+    //     //agrupar com o mesmo endereço
+    //     Fila grupoEndereco;
+    //         grupoEndereco.inicio = NULL;
+    //         grupoEndereco.fim = NULL;
+    //     addFila(&grupoEndereco, entrega->cliente);
+
+    //     Entrega *proxima;
+    //     while((proxima = retirarFila(f)) != NULL){
+    //         if(strcmp(entrega->cliente->enderecoRua, proxima->cliente->enderecoRua) == 0)
+    //             addFila(&grupoEndereco, proxima->cliente);
+    //         else 
+    //             addFila(&filaaux, proxima->cliente);
+    //         addFila(f, entrega->cliente);
+    //     }
+
+    //     //colocar grupos do mesmo endereço
+    //     while((entrega = retirarFila(&grupoEndereco)) != NULL)
+    //         addFila(f, entrega->cliente);
+
+    //     //continuar processando a fila
+    //     while((proxima = retirarFila(&filaaux)) != NULL)
+    //         addFila(f, proxima->cliente);
+    // }
+        //}
+    //}
+//}
 
 void entregar(Fila *f, Pilha **p, Fila *dev)
 {
