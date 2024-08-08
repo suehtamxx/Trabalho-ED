@@ -46,6 +46,7 @@ typedef struct pilha
 
 // Funções da Lista de Clientes
 ListaCliente *criarLista();
+Cliente buscarLista(ListaCliente *l, const char *cpf);
 void addLista(ListaCliente *l, int *id);
 void mostrarLista(ListaCliente *l);
 void liberarLista(ListaCliente *l);
