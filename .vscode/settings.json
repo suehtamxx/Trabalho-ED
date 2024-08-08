@@ -59,5 +59,6 @@
   "files.associations": {
     "stdlib.h": "c",
     "image.h": "c"
-  }
+  },
+  "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
 }
