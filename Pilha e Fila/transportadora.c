@@ -208,19 +208,19 @@ Entrega *retirarFila(Fila *f)
     return remover;
 
 }
-void mostarFila(Pedido *p)
+void mostarFila(Fila *f)
 {
     printf("mostrando os itens a ser entregue:\n");
-    if(p == NULL) printf("Lista vazia!");
+    if(f == NULL) printf("Fila vazia!");
     else
     {
-        Pedido *aux = p;
+        Fila *aux = f;
         while(aux != NULL)
         {
-            printf("\nNome do item: %s\n", aux->nomeP);
-            printf("\nQuantidade de itens: %d\n", aux->quantidade);
+            printf("\nNome do item: %s\n", aux->fim->prox->pedido->nomeP);
+            printf("\nQuantidade de itens: %d\n", aux->fim->prox->pedido->quantidade);
             //printf("\nNome do cliente: %s\n", aux->cliente->nome);
-            aux = aux->prox;
+            aux = aux->inicio->prox;
         }
     }
 }
@@ -282,11 +282,6 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
     printf("\nNome do item que vai ser entregue:\n");
     fgets(novoPedido->nomeP, sizeof(novoPedido->nomeP), stdin);
     setbuf(stdin, NULL);
-
-    novoPedido->prox = *p;
-    *p = novoPedido;
-    
-
     //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
