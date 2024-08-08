@@ -58,7 +58,7 @@ Entrega *desempilharPilha(Pilha **p);
 void mostrarPilha(Pilha *p);
 void liberarPilha(Pilha **p);
 
-// Funções da Fila
+// Funções da Fila de Entrega e Segunda Tentativa
 Fila *criarFila();
 void addFila(Fila *f, Entrega *entrega);
 Fila *buscarFila(Fila *f); //buscar pedidos na mesma rua e ordenar caso tenha 
@@ -69,7 +69,7 @@ void liberarFila(Fila **f);
 void cadastarPedido(Pedido **p, ListaCliente *l);
 
 // Funções da rota
-//void agruparPorEndereco(Fila *f);
+void agruparPorEndereco(Fila *f, Pedido *novoPedido);
 void entregar(Fila *f, Pilha **p, Fila *dev);
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução

@@ -8,45 +8,45 @@
 int main ()
 {
     //Fila *fila = criarFila();
-    Fila *filapedidos = NULL;
     ListaCliente listacliente;
     listacliente.prox = NULL;
     Fila *f = criarFila();
     Pilha *p = criarPilha();
     Fila *dev = criarFila();
     //Entrega *entrega = fila;
-    //Cliente cliente1 = {"Joao Silva", "12345678901", "Rua A", 123};
-    //Cliente cliente2 = {"Maria Oliveira", "09876543210", "Rua B", 456};
+
     int id = 0;
 
     addLista(&listacliente, &id);
     addLista(&listacliente, &id);
-    //addLista(&listacliente, &id);
-    //addLista(&listacliente, &id);
-    //mostrarLista(listaCliente);
-    cadastrarPedido(&filapedidos, &listacliente);
-    cadastrarPedido(&filapedidos, &listacliente);
-    //cadastrarPedido(&filapedidos, &listacliente);
-    //cadastrarPedido(&filapedidos, &listacliente);
-    mostarFila(filapedidos);
+    addLista(&listacliente, &id);
+    addLista(&listacliente, &id);
+    mostrarLista(&listacliente);
 
-    Fila *atual = filapedidos;
-    while(atual != NULL)
-    {
-        Entrega *novo = (Entrega *)malloc(sizeof(Entrega));
-        if(novo == NULL)
-        {
-            printf("erro ao alocar memoria(main)");
-            exit(1);
-        }
-        novo->pedido->cliente = atual->fim->pedido->cliente;
-        novo->tentativa = 0;
-        novo->prox = NULL;
+    cadastrarPedido(f, &listacliente);
+    cadastrarPedido(f, &listacliente);
+    cadastrarPedido(f, &listacliente);
+    cadastrarPedido(f, &listacliente);
+    cadastrarPedido(f, &listacliente);
+    mostarFila(f);
 
-        addFila(f, novo);
+    // Entrega *atual = filapedidos;
+    // while(atual != NULL)
+    // {
+    //     Entrega *novo = (Entrega *)malloc(sizeof(Entrega));
+    //     if(novo == NULL)
+    //     {
+    //         printf("erro ao alocar memoria(main)");
+    //         exit(1);
+    //     }
+    //     novo->pedido->cliente = atual->cliente;
+    //     novo->tentativa = 0;
+    //     novo->prox = NULL;
 
-        atual = atual->fim->prox;
-    }
+    //     addFila(f, novo);
+
+    //     atual = atual->prox;
+    // }
 
 
     
