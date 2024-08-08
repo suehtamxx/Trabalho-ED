@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+// Funções Cliente
 ListaCliente *criarLista()
 {
     ListaCliente *novaLista = (ListaCliente*)malloc(sizeof(ListaCliente));
@@ -19,10 +20,11 @@ ListaCliente *criarLista()
 }
 Cliente* buscarLista(ListaCliente *l, const char *cpf) 
 {
-    ListaCliente *atual = listacliente->prox; 
+    ListaCliente *atual = l->prox; 
 
     while (atual != NULL) {
-        if (strcmp(atual->cliente->cpf, cpf) == 0) return atual->cliente;
+        if (strcmp(atual->cliente->cpf, cpf) == 0) 
+            return atual->cliente;
         atual = atual->prox;
     }
 
@@ -30,51 +32,58 @@ Cliente* buscarLista(ListaCliente *l, const char *cpf)
 }
 void addLista(ListaCliente *l, int *id)
 {
-    if (l->prox == NULL)
-    {
-        printf("\nCadastrando um cliente:");
-        ListaCliente *novo = (ListaCliente*)malloc(sizeof(ListaCliente));
-        if (novo == NULL)
-        {
-            printf("\nErro ao alocar novo cliente!\n");
-            exit(1);
-        }
+    char buscaCpf[14];
 
-        novo->cliente = (Cliente*)malloc(sizeof(Cliente));
-        if (novo->cliente == NULL) 
-        {
-            printf("Erro ao alocar clientes da lista.\n");
-            exit(1);
-        }
+    printf("\nInforme o CPF: ");
+    fgets(buscaCpf, sizeof(buscaCpf), stdin);
+    buscaCpf[strcspn(buscaCpf, "\n")] = 0;
+    setbuf(stdin, NULL);
 
-        printf("\nInforme o CPF: ");
-        fgets(novo->cliente->cpf, sizeof(novo->cliente->cpf), stdin);
-        setbuf(stdin, NULL);
-        
-        if (buscarLista(l, novo->cliente->cpf) != NULL) {
-            printf("\nCliente com CPF %s já cadastrado!\n", novo->cliente->cpf);
-            free(novo->cliente);
-            free(novo);
-            return;
-        }
-
-        printf("\nInforme o nome: ");
-        fgets(novo->cliente->nome, sizeof(novo->cliente->nome), stdin);
-        setbuf(stdin, NULL);
-
-        printf("\nInforme a Rua em que reside: ");
-        fgets(novo->cliente->enderecoRua, sizeof(novo->cliente->enderecoRua), stdin);
-        setbuf(stdin, NULL);
-       
-        printf("\nInforme o numero da casa: ");
-        scanf("%d", &novo->cliente->numCasa);
-        setbuf(stdin, NULL);
-
-        novo->prox = NULL;
-        novo->id = (*id)++;
-        l->prox = novo;
+    if (buscarLista(l, buscaCpf) != NULL) {
+        printf("\nCliente com CPF %s ja cadastrado!\n", buscaCpf);
+        return;
     }
-    else addLista(l->prox, id);
+
+    printf("\nCadastrando um cliente:");
+    ListaCliente *novo = (ListaCliente*)malloc(sizeof(ListaCliente));
+    if (novo == NULL)
+    {
+        printf("\nErro ao alocar novo cliente!\n");
+        exit(1);
+    }
+
+    novo->cliente = (Cliente*)malloc(sizeof(Cliente));
+    if (novo->cliente == NULL) 
+    {
+        printf("Erro ao alocar clientes da lista.\n");
+        exit(1);
+    }
+
+    strcpy(novo->cliente->cpf, buscaCpf);
+    
+    printf("\nInforme o nome: ");
+    fgets(novo->cliente->nome, sizeof(novo->cliente->nome), stdin);
+    setbuf(stdin, NULL);
+
+    printf("\nInforme a rua em que reside: ");
+    fgets(novo->cliente->enderecoRua, sizeof(novo->cliente->enderecoRua), stdin);
+    setbuf(stdin, NULL);
+    
+    printf("\nInforme o numero da casa: ");
+    scanf("%d", &novo->cliente->numCasa);
+    setbuf(stdin, NULL);
+
+    novo->prox = NULL;
+    novo->id = (*id)++;
+
+    ListaCliente *atual = l;
+    while (atual->prox != NULL) {
+        atual = atual->prox;
+    }
+
+    atual->prox = novo;
+
+    printf("\nCliente cadastrado com sucesso! ID: %d\n", novo->id);
 }
 void mostrarLista(ListaCliente *l)
 {
@@ -105,6 +114,7 @@ void liberarLista(ListaCliente *l)
     }
     free(l);
 }
+
 
 Pilha *criarPilha()
 {
@@ -154,6 +164,7 @@ void liberarPilha(Pilha **p)
         free(aux);
     }
 }
+
 
 Fila *criarFila()
 {
@@ -237,9 +248,10 @@ void liberarFila(Fila **f)
     *f = NULL;
 }
 
-void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
+// Funções Pedido
+void cadastrarPedido(Pedido **p, ListaCliente *l)
 {
-    if(listacliente->prox == NULL)
+    if(l->prox == NULL)
     {
         printf("Nenhum cliente cadastrado!\n");
         return;
@@ -258,7 +270,7 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
     buscaCliente[strcspn(buscaCliente, "\n")] = 0;
     setbuf(stdin, NULL);
     
-    ListaCliente *cliente = listacliente->prox;
+    ListaCliente *cliente = l->prox;
     while(cliente != NULL)
     {
         cliente->cliente->nome[strcspn(cliente->cliente->nome, "\n")] = 0;
@@ -357,45 +369,6 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
         //}
     //}
 //}
-
-
-// void entregar(Fila *f, Pilha **p, Fila *dev)
-// {
-//     agruparPorEndereco(f);
-
-//     while(f->inicio != NULL)
-//     {
-//         Entrega *entrega = retirarFila(f);
-//         entrega->tentativa++;
-
-//         if(entrega->tentativa == 1)
-//         while(strcmp() == 0)
-//         {
-//             int i = rand() % 10;
-            
-//             if(i < 7) printf("Entrega realizada de primeira para %s.\n", entrega->cliente->nome);
-//                 else{
-//                     printf("Entrega nao efetuada, tentaremos de novo amanha\n");
-//                     empilharPilha(p, entrega);
-//                 }
-
-//         } else {
-//             empilharPilha(p, entrega);
-//         }
-//     }
-//         while(*p != NULL)
-//         {
-//             Entrega *entrega = desempilharPilha(p);
-//             int i = rand() % 10;
-
-//             if(i < 7) printf("entrega efetuada na segunda tentativa para %s\n", entrega->cliente->nome);
-//                 else{
-//                     printf("Pedido sera devolvido pois nao conseguimos entregar(2 vezes) para %s\n", entrega->cliente->nome);
-//                     addFila(dev, entrega);
-//                 }
-//             free(entrega);
-//         }
-// }
 
 void entregar(Fila *f, Pilha **p, Fila *dev)
 {
