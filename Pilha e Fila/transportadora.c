@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 ListaCliente *criarLista()
 {
     ListaCliente *novaLista = (ListaCliente*)malloc(sizeof(ListaCliente));
@@ -15,6 +16,17 @@ ListaCliente *criarLista()
     novaLista->cliente = NULL;
     novaLista->prox = NULL;
     return novaLista;
+}
+Cliente* buscarLista(ListaCliente *l, const char *cpf) 
+{
+    ListaCliente *atual = listacliente->prox; 
+
+    while (atual != NULL) {
+        if (strcmp(atual->cliente->cpf, cpf) == 0) return atual->cliente;
+        atual = atual->prox;
+    }
+
+    return NULL; 
 }
 void addLista(ListaCliente *l, int *id)
 {
@@ -35,12 +47,19 @@ void addLista(ListaCliente *l, int *id)
             exit(1);
         }
 
-        printf("\nInforme o nome: ");
-        fgets(novo->cliente->nome, sizeof(novo->cliente->nome), stdin);
-        setbuf(stdin, NULL);
-
         printf("\nInforme o CPF: ");
         fgets(novo->cliente->cpf, sizeof(novo->cliente->cpf), stdin);
+        setbuf(stdin, NULL);
+        
+        if (buscarLista(l, novo->cliente->cpf) != NULL) {
+            printf("\nCliente com CPF %s já cadastrado!\n", novo->cliente->cpf);
+            free(novo->cliente);
+            free(novo);
+            return;
+        }
+
+        printf("\nInforme o nome: ");
+        fgets(novo->cliente->nome, sizeof(novo->cliente->nome), stdin);
         setbuf(stdin, NULL);
 
         printf("\nInforme a Rua em que reside: ");
@@ -91,7 +110,6 @@ Pilha *criarPilha()
 {
     return NULL;
 }
-
 void empilharPilha(Pilha **p, Entrega *entrega)
 {
     Pilha *novo = (Pilha *)malloc(sizeof(Pilha));
@@ -111,10 +129,10 @@ Entrega *desempilharPilha(Pilha **p)
         return NULL;
     }
     Pilha *aux = *p;
-    Entrega *e = aux->entrega;
+    Entrega *remove = aux->entrega;
     *p = aux->prox;
     free(aux);
-    return e;
+    return remove;
 }
 //contar a pilha para descontar no score
 void mostrarPilha(Pilha *p)
@@ -136,6 +154,7 @@ void liberarPilha(Pilha **p)
         free(aux);
     }
 }
+
 Fila *criarFila()
 {
     Fila *novaFila = (Fila *)malloc(sizeof(Fila));
@@ -149,7 +168,6 @@ Fila *criarFila()
     novaFila->fim = NULL;
     return novaFila;
 }
-
 void addFila(Fila *f, Entrega *entrega)
 {
     Entrega *novaEntrega = (Entrega *)malloc(sizeof(Entrega));
@@ -173,8 +191,6 @@ void addFila(Fila *f, Entrega *entrega)
     }
     
 }
-
-Fila *buscarFila(Fila *f); //buscar pedidos na mesma rua e ordenar caso tenha 
 Entrega *retirarFila(Fila *f)
 {
     if(f->inicio == NULL)
@@ -221,12 +237,11 @@ void liberarFila(Fila **f)
     *f = NULL;
 }
 
-
 void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
 {
     if(listacliente->prox == NULL)
     {
-        printf("Cliente nao cadastrado!\n");
+        printf("Nenhum cliente cadastrado!\n");
         return;
     }
 
@@ -236,43 +251,43 @@ void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
         printf("erro ao alocar memoria!");
         exit(1);
     }
-        char buscaCliente[50];
-        printf("\nDigite o nome do cliente para entrega:\n");
-        fgets(buscaCliente, sizeof(buscaCliente), stdin);
+    char buscaCliente[50];
+    printf("\nDigite o nome do cliente para entrega:\n");
+    fgets(buscaCliente, sizeof(buscaCliente), stdin);
 
-        buscaCliente[strcspn(buscaCliente, "\n")] = 0;
-        setbuf(stdin, NULL);
-        
-        ListaCliente *cliente = listacliente->prox;
-        while(cliente != NULL)
-        {
-            cliente->cliente->nome[strcspn(cliente->cliente->nome, "\n")] = 0;
-            if(strcmp(cliente->cliente->nome, buscaCliente) == 0)
-                break;
-            cliente = cliente->prox;
-        }
-        if(cliente == NULL)
-        {
-            printf("Cliente nao encontrado!\n");
-            free(novoPedido);
-            return;
-        }
+    buscaCliente[strcspn(buscaCliente, "\n")] = 0;
+    setbuf(stdin, NULL);
+    
+    ListaCliente *cliente = listacliente->prox;
+    while(cliente != NULL)
+    {
+        cliente->cliente->nome[strcspn(cliente->cliente->nome, "\n")] = 0;
+        if(strcmp(cliente->cliente->nome, buscaCliente) == 0)
+            break;
+        cliente = cliente->prox;
+    }
+    if(cliente == NULL)
+    {
+        printf("Cliente nao encontrado!\n");
+        free(novoPedido);
+        return;
+    }
 
-        novoPedido->cliente = cliente->cliente;
+    novoPedido->cliente = cliente->cliente;
 
-        printf("\nDigite a quantidade de itens:\n");
-        scanf("%d", &novoPedido->quantidade);
-        setbuf(stdin, NULL);
+    printf("\nDigite a quantidade de itens:\n");
+    scanf("%d", &novoPedido->quantidade);
+    setbuf(stdin, NULL);
 
-        printf("\nNome do item que vai ser entregue:\n");
-        fgets(novoPedido->nomeP, sizeof(novoPedido->nomeP), stdin);
-        setbuf(stdin, NULL);
+    printf("\nNome do item que vai ser entregue:\n");
+    fgets(novoPedido->nomeP, sizeof(novoPedido->nomeP), stdin);
+    setbuf(stdin, NULL);
 
-        novoPedido->prox = *p;
-        *p = novoPedido;
-        novoPedido->contador++;
+    novoPedido->prox = *p;
+    *p = novoPedido;
+    novoPedido->contador++;
 
-        //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
+    //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
 void agruparPorEndereco(Fila *f)
