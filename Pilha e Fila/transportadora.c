@@ -263,29 +263,23 @@ void cadastrarPedido(Pedido **p, ListaCliente *l)
         printf("erro ao alocar memoria!");
         exit(1);
     }
-    char buscaCliente[50];
-    printf("\nDigite o nome do cliente para entrega:\n");
-    fgets(buscaCliente, sizeof(buscaCliente), stdin);
 
-    buscaCliente[strcspn(buscaCliente, "\n")] = 0;
+    char buscaCpf[14];
+    printf("\nDigite o CPF do cliente para entrega:\n");
+    fgets(buscaCpf, sizeof(buscaCpf), stdin);
+    buscaCpf[strcspn(buscaCpf, "\n")] = 0; 
     setbuf(stdin, NULL);
-    
-    ListaCliente *cliente = l->prox;
-    while(cliente != NULL)
+
+    Cliente *cliente = buscarLista(l, buscaCpf);
+
+    if (cliente == NULL)
     {
-        cliente->cliente->nome[strcspn(cliente->cliente->nome, "\n")] = 0;
-        if(strcmp(cliente->cliente->nome, buscaCliente) == 0)
-            break;
-        cliente = cliente->prox;
-    }
-    if(cliente == NULL)
-    {
-        printf("Cliente nao encontrado!\n");
+        printf("Cliente não encontrado!\n");
         free(novoPedido);
         return;
     }
 
-    novoPedido->cliente = cliente->cliente;
+    novoPedido->cliente = cliente;
 
     printf("\nDigite a quantidade de itens:\n");
     scanf("%d", &novoPedido->quantidade);
@@ -293,13 +287,13 @@ void cadastrarPedido(Pedido **p, ListaCliente *l)
 
     printf("\nNome do item que vai ser entregue:\n");
     fgets(novoPedido->nomeP, sizeof(novoPedido->nomeP), stdin);
+    novoPedido->nomeP[strcspn(novoPedido->nomeP, "\n")] = 0;
     setbuf(stdin, NULL);
 
-    novoPedido->prox = *p;
-    *p = novoPedido;
-    novoPedido->contador++;
+    // novoPedido->prox = *p;
+    // *p = novoPedido;
 
-    //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
+    printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
 // void agruparPorEndereco(Fila *f)
