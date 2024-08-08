@@ -25,7 +25,7 @@ typedef struct pedido
 } Pedido;
 
 typedef struct Entrega {
-    Cliente *cliente;
+    Pedido *pedido;
     int tentativa;
     struct Entrega *prox;
 } Entrega;

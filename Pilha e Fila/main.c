@@ -39,7 +39,7 @@ int main ()
             printf("erro ao alocar memoria(main)");
             exit(1);
         }
-        novo->cliente = atual->cliente;
+        novo->pedido->cliente = atual->cliente;
         novo->tentativa = 0;
         novo->prox = NULL;
 
@@ -53,12 +53,12 @@ int main ()
     //addFila(fila, &cliente1);
 
     entregar(f, &p, dev);
-    printf("Fila de devolucoes:\n");
-    Entrega *e;
-    while((e = retirarFila(f)) != NULL){
-        printf("Devolucao para %s, %s\n", e->cliente->nome, e->cliente->enderecoRua);
-        free(e);    
-    }
+    //printf("Fila de devolucoes:\n");
+    //Entrega *e;
+    // while((e = retirarFila(f)) != NULL){
+    //     printf("Devolucao para %s, %s\n", e->cliente->nome, e->cliente->enderecoRua);
+    //     free(e);    
+    // }
     liberarLista(&listacliente);
     liberarPilha(&p);
     liberarFila(&f);
