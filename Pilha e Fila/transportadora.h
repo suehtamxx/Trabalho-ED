@@ -19,22 +19,30 @@ typedef struct listacliente
 typedef struct pedido
 {
     Cliente *cliente;
+    char nomeP[50];
     int contador;
     int quantidade;
     struct pedido *prox;
 } Pedido;
 
+typedef struct Entrega {
+    Cliente *cliente;
+    int tentativa;
+    struct Entrega *prox;
+} Entrega;
+
 typedef struct fila
 {
-    struct pedido *inicio;
-    struct pedido *fim;
+    Entrega *inicio;
+    Entrega *fim;
 } Fila;
 
 typedef struct pilha
 {
-    Pedido *pedido;
     struct pilha *prox;
+    Entrega *entrega;
 } Pilha;
+
 
 // Funções da Lista de Clientes
 ListaCliente *criarLista();
@@ -44,24 +52,25 @@ void liberarLista(ListaCliente *l);
 
 // Funções da Pilha da segunda tentativa
 Pilha *criarPilha();
-Pilha *empilharPilha(Pilha *p);
-Pilha *desempilharPilha(Pilha *p);
+void empilharPilha(Pilha **p, Entrega *entrega);
+Entrega *desempilharPilha(Pilha **p);
 //contar a pilha para descontar no score
 void mostrarPilha(Pilha *p);
-void liberarPilha(Pilha *p);
+void liberarPilha(Pilha **p);
 
 // Funções da Fila
 Fila *criarFila();
-Fila *addFila(Fila *f, Pedido *pedido);
+void addFila(Fila *f, Entrega *entrega);
 Fila *buscarFila(Fila *f); //buscar pedidos na mesma rua e ordenar caso tenha 
-void *retirarFila(Fila *f);
-void mostarFila(Fila *f);
-void liberarFila(Fila *f);
+Entrega *retirarFila(Fila *f);
+void mostarFila(Pedido *p);
+void liberarFila(Fila **f);
 
-void cadastarPedido();
-void cadastrarCliente();
+void cadastarPedido(Pedido **p, ListaCliente *cliente);
+void cadastrarCliente(Pedido **p, Cliente *cliente);
 int buscarCliente(ListaCliente *l); //retornar 1 (encontrou) ou 0 (não encontrou)
-
+void entregar(Fila *f, Pilha **p, Fila *dev);
+void agruparPorEndereco(Fila *f);
 // Funções da rota
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução

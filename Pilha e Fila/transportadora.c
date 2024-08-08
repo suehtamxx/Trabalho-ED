@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 ListaCliente *criarLista()
 {
     ListaCliente *novaLista = (ListaCliente*)malloc(sizeof(ListaCliente));
@@ -46,7 +46,7 @@ void addLista(ListaCliente *l, int *id)
         printf("\nInforme a Rua em que reside: ");
         fgets(novo->cliente->enderecoRua, sizeof(novo->cliente->enderecoRua), stdin);
         setbuf(stdin, NULL);
-
+       
         printf("\nInforme o numero da casa: ");
         scanf("%d", &novo->cliente->numCasa);
         setbuf(stdin, NULL);
@@ -85,4 +85,298 @@ void liberarLista(ListaCliente *l)
         aux = prox;
     }
     free(l);
+}
+
+Pilha *criarPilha()
+{
+    return NULL;
+}
+
+void empilharPilha(Pilha **p, Entrega *entrega)
+{
+    Pilha *novo = (Pilha *)malloc(sizeof(Pilha));
+    if(novo == NULL){
+        printf("erro ao alocar memoria!\n");
+        exit(1);
+    }
+    novo->entrega = entrega;
+    novo->prox = *p;
+    *p = novo;
+}
+Entrega *desempilharPilha(Pilha **p)
+{
+    if(*p == NULL)
+    {
+        printf("Pilha vazia!\n");
+        return NULL;
+    }
+    Pilha *aux = *p;
+    Entrega *e = aux->entrega;
+    *p = aux->prox;
+    free(aux);
+    return e;
+}
+//contar a pilha para descontar no score
+void mostrarPilha(Pilha *p)
+{
+    Pilha *atual = p;
+    while(atual != NULL)
+    {
+        printf("Entrega para: %s\n", atual->entrega->cliente->nome);
+        atual = atual->prox;
+    }
+}
+void liberarPilha(Pilha **p)
+{
+    Pilha *aux;
+    while(*p != NULL)
+    {
+        aux = *p;
+        *p = (*p)->prox;
+        free(aux);
+    }
+}
+Fila *criarFila()
+{
+    Fila *novaFila = (Fila *)malloc(sizeof(Fila));
+    if(novaFila == NULL)
+    {
+        printf("Erro ao alocar memoria!");
+        exit(1);
+    }
+
+    novaFila->inicio = NULL;
+    novaFila->fim = NULL;
+    return novaFila;
+}
+
+void addFila(Fila *f, Entrega *entrega)
+{
+    Entrega *novaEntrega = (Entrega *)malloc(sizeof(Entrega));
+    if(novaEntrega == NULL)
+    {
+        printf("erro ao alocar memoria!");
+        exit(1);
+    }
+    *novaEntrega = *entrega; //copia o conteudo de entrega
+    novaEntrega->prox = NULL;
+
+    if(f->fim == NULL)
+    {
+        f->inicio = novaEntrega;
+        f->fim = novaEntrega;
+    }
+    else
+    {
+        f->fim->prox = novaEntrega;
+        f->fim = novaEntrega;
+    }
+    
+}
+
+Fila *buscarFila(Fila *f); //buscar pedidos na mesma rua e ordenar caso tenha 
+Entrega *retirarFila(Fila *f)
+{
+    if(f->inicio == NULL)
+    {
+        printf("fila de entrega esta vazia!");
+        return NULL;
+    }
+
+    Entrega *remover = f->inicio;
+    f->inicio = f->inicio->prox;
+    if(f->inicio == NULL)
+        f->fim = NULL;
+
+    remover->prox = NULL;
+    return remover;
+
+}
+void mostarFila(Pedido *p)
+{
+    printf("mostrando os itens a ser entregue:\n");
+    if(p == NULL) printf("Lista vazia!");
+    else
+    {
+        Pedido *aux = p;
+        while(aux != NULL)
+        {
+            printf("\nNome do item: %s\n", aux->nomeP);
+            printf("\nQuantidade de itens: %d\n", aux->quantidade);
+            //printf("\nNome do cliente: %s\n", aux->cliente->nome);
+            aux = aux->prox;
+        }
+    }
+}
+void liberarFila(Fila **f)
+{
+    Entrega *aux;
+    while((*f)->inicio != NULL)
+    {
+        aux = (*f)->inicio;
+        (*f)->inicio = (*f)->inicio->prox;
+        free(aux);
+    }
+    free(*f);
+    *f = NULL;
+}
+
+
+void cadastrarPedido(Pedido **p, ListaCliente *listacliente)
+{
+    if(listacliente->prox == NULL)
+    {
+        printf("Cliente nao cadastrado!\n");
+        return;
+    }
+
+    Pedido *novoPedido = (Pedido *)malloc(sizeof(Pedido));
+    if(novoPedido == NULL)
+    {
+        printf("erro ao alocar memoria!");
+        exit(1);
+    }
+        char buscaCliente[50];
+        printf("\nDigite o nome do cliente para entrega:\n");
+        fgets(buscaCliente, sizeof(buscaCliente), stdin);
+
+        buscaCliente[strcspn(buscaCliente, "\n")] = 0;
+        setbuf(stdin, NULL);
+        
+        ListaCliente *cliente = listacliente->prox;
+        while(cliente != NULL)
+        {
+            cliente->cliente->nome[strcspn(cliente->cliente->nome, "\n")] = 0;
+            if(strcmp(cliente->cliente->nome, buscaCliente) == 0)
+                break;
+            cliente = cliente->prox;
+        }
+        if(cliente == NULL)
+        {
+            printf("Cliente nao encontrado!\n");
+            free(novoPedido);
+            return;
+        }
+
+        novoPedido->cliente = cliente->cliente;
+
+        printf("\nDigite a quantidade de itens:\n");
+        scanf("%d", &novoPedido->quantidade);
+        setbuf(stdin, NULL);
+
+        printf("\nNome do item que vai ser entregue:\n");
+        fgets(novoPedido->nomeP, sizeof(novoPedido->nomeP), stdin);
+        setbuf(stdin, NULL);
+
+        novoPedido->prox = *p;
+        *p = novoPedido;
+        novoPedido->contador++;
+
+        //printf("Pedido adicionado: %s, quantidade: %d, para o endereco: %s\n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
+}
+
+void agruparPorEndereco(Fila *f)
+{
+    if (f->inicio == NULL) {
+        return;
+    }
+
+    Fila filaaux = {NULL, NULL};
+    Entrega *entrega;
+
+    // Primeira passagem: mover todos os itens para filaaux
+    while ((entrega = retirarFila(f)) != NULL) {
+        addFila(&filaaux, entrega);
+    }
+
+    // Segunda passagem: processar filaaux e reordenar na fila original
+    while ((entrega = retirarFila(&filaaux)) != NULL) {
+        Fila grupoEndereco = {NULL, NULL};
+        addFila(&grupoEndereco, entrega);
+
+        Entrega *proximo;
+        while ((proximo = retirarFila(&filaaux)) != NULL) {
+            if (strcmp(entrega->cliente->enderecoRua, proximo->cliente->enderecoRua) == 0) {
+                addFila(&grupoEndereco, proximo);
+            } else {
+                addFila(&filaaux, proximo);
+            }
+        }
+
+        while ((entrega = retirarFila(&grupoEndereco)) != NULL) {
+            addFila(f, entrega);
+    // if(f->inicio == NULL)
+    //     return;
+
+    // Fila filaaux;
+    // filaaux.inicio = NULL;
+    // filaaux.fim = NULL;
+
+    // Entrega *entrega;
+
+    // while((entrega = retirarFila(f)) != NULL)
+    // {
+    //     //agrupar com o mesmo endereço
+    //     Fila grupoEndereco;
+    //         grupoEndereco.inicio = NULL;
+    //         grupoEndereco.fim = NULL;
+    //     addFila(&grupoEndereco, entrega->cliente);
+
+    //     Entrega *proxima;
+    //     while((proxima = retirarFila(f)) != NULL){
+    //         if(strcmp(entrega->cliente->enderecoRua, proxima->cliente->enderecoRua) == 0)
+    //             addFila(&grupoEndereco, proxima->cliente);
+    //         else 
+    //             addFila(&filaaux, proxima->cliente);
+    //         addFila(f, entrega->cliente);
+    //     }
+
+    //     //colocar grupos do mesmo endereço
+    //     while((entrega = retirarFila(&grupoEndereco)) != NULL)
+    //         addFila(f, entrega->cliente);
+
+    //     //continuar processando a fila
+    //     while((proxima = retirarFila(&filaaux)) != NULL)
+    //         addFila(f, proxima->cliente);
+    // }
+        }
+    }
+}
+
+
+void entregar(Fila *f, Pilha **p, Fila *dev)
+{
+    agruparPorEndereco(f);
+
+    while(f->inicio != NULL)
+    {
+        Entrega *entrega = retirarFila(f);
+        entrega->tentativa++;
+
+        if(entrega->tentativa == 1)
+        {
+            int i = rand() % 10;
+            
+            if(i < 7) printf("Entrega realizada de primeira para %s.\n", entrega->cliente->nome);
+                else{
+                    printf("Entrega nao efetuada, tentaremos de novo amanha\n");
+                    empilharPilha(p, entrega);
+                }
+
+        } else {
+            empilharPilha(p, entrega);
+        }
+    }
+        while(*p != NULL)
+        {
+            Entrega *entrega = desempilharPilha(p);
+            int i = rand() % 10;
+
+            if(i < 7) printf("entrega efetuada na segunda tentativa para %s\n", entrega->cliente->nome);
+                else{
+                    printf("Pedido sera devolvido pois nao conseguimos entregar(2 vezes) para %s\n", entrega->cliente->nome);
+                    addFila(dev, entrega);
+                }
+            free(entrega);
+        }
 }
