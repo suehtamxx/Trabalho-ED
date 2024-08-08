@@ -21,7 +21,7 @@ typedef struct pedido
     Cliente *cliente;
     char nomeP[50];
     int quantidade;
-    struct pedido *prox;
+    // struct pedido *prox;
 } Pedido;
 
 typedef struct Entrega {
