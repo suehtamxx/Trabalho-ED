@@ -8,7 +8,7 @@
 int main ()
 {
     //Fila *fila = criarFila();
-    Pedido *filapedidos = NULL;
+    Fila *filapedidos = NULL;
     ListaCliente listacliente;
     listacliente.prox = NULL;
     Fila *f = criarFila();
@@ -30,7 +30,7 @@ int main ()
     //cadastrarPedido(&filapedidos, &listacliente);
     mostarFila(filapedidos);
 
-    Pedido *atual = filapedidos;
+    Fila *atual = filapedidos;
     while(atual != NULL)
     {
         Entrega *novo = (Entrega *)malloc(sizeof(Entrega));
@@ -39,13 +39,13 @@ int main ()
             printf("erro ao alocar memoria(main)");
             exit(1);
         }
-        novo->pedido->cliente = atual->cliente;
+        novo->pedido->cliente = atual->fim->pedido->cliente;
         novo->tentativa = 0;
         novo->prox = NULL;
 
         addFila(f, novo);
 
-        atual = atual->prox;
+        atual = atual->fim->prox;
     }
 
 
