@@ -20,9 +20,8 @@ typedef struct pedido
 {
     Cliente *cliente;
     char nomeP[50];
-    int contador;
     int quantidade;
-    struct pedido *prox;
+    // struct pedido *prox;
 } Pedido;
 
 typedef struct Entrega {
@@ -46,7 +45,7 @@ typedef struct pilha
 
 // Funções da Lista de Clientes
 ListaCliente *criarLista();
-Cliente buscarLista(ListaCliente *l, const char *cpf);
+Cliente* buscarLista(ListaCliente *l, const char *cpf);
 void addLista(ListaCliente *l, int *id);
 void mostrarLista(ListaCliente *l);
 void liberarLista(ListaCliente *l);
@@ -67,12 +66,11 @@ Entrega *retirarFila(Fila *f);
 void mostarFila(Pedido *p);
 void liberarFila(Fila **f);
 
-void cadastarPedido(Pedido **p, ListaCliente *cliente);
-void cadastrarCliente(Pedido **p, Cliente *cliente);
-int buscarCliente(ListaCliente *l); //retornar 1 (encontrou) ou 0 (não encontrou)
-void entregar(Fila *f, Pilha **p, Fila *dev);
-//void agruparPorEndereco(Fila *f);
+void cadastarPedido(Pedido **p, ListaCliente *l);
+
 // Funções da rota
+//void agruparPorEndereco(Fila *f);
+void entregar(Fila *f, Pilha **p, Fila *dev);
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução
 
