@@ -122,7 +122,7 @@ void mostrarPilha(Pilha *p)
     Pilha *atual = p;
     while(atual != NULL)
     {
-        printf("Entrega para: %s\n", atual->entrega->cliente->nome);
+        printf("Entrega para: %s\n", atual->entrega->pedido->cliente->nome);
         atual = atual->prox;
     }
 }
@@ -392,29 +392,30 @@ void entregar(Fila *f, Pilha **p, Fila *dev)
         entrega->tentativa = 1;  // Primeira tentativa
 
         // Verifica se há entregas com o mesmo endereço
-        printf("Iniciando a entrega para %s.\n", entrega->cliente->nome);
+        printf("Iniciando a entrega para %s.\n", entrega->pedido->cliente->nome);
         int i = rand() % 10;
         int sucesso = (i < 7);
 
         if (sucesso)
         {
-            printf("Entrega realizada para %s.\n", entrega->cliente->nome);
+            printf("Entrega realizada para %s.\n", entrega->pedido->cliente->nome);
             //free(entrega);
 
             // Entregar todas as entregas seguintes com o mesmo endereço
-            while (f->inicio != NULL && strcmp(entrega->cliente->enderecoRua, f->inicio->cliente->enderecoRua) == 0)
+            while (f->inicio != NULL && strcmp(entrega->pedido->cliente->enderecoRua, f->inicio->pedido->cliente->enderecoRua) == 0)
             {
                 Entrega *proxEntrega = retirarFila(f);
                 proxEntrega->tentativa = 1;
-                printf("Entrega realizada para %s.\n", proxEntrega->cliente->nome);
+                printf("Entrega realizada para %s.\n", proxEntrega->pedido->cliente->nome);
                 free(entrega);
                 free(proxEntrega);
                 
             }
+            
         }
         else
         {
-            printf("Entrega não efetuada, tentativa adicionada à pilha para %s.\n", entrega->cliente->nome);
+            printf("Entrega não efetuada, tentativa adicionada à pilha para %s.\n", entrega->pedido->cliente->nome);
             empilharPilha(p, entrega);  // Movendo para a pilha para nova tentativa
         }
     }
@@ -428,12 +429,12 @@ void entregar(Fila *f, Pilha **p, Fila *dev)
         int i = rand() % 10;
         if (i < 7)
         {
-            printf("Entrega efetuada na segunda tentativa para %s.\n", entrega->cliente->nome);
+            printf("Entrega efetuada na segunda tentativa para %s.\n", entrega->pedido->cliente->nome);
             free(entrega);
         }
         else
         {
-            printf("Pedido será devolvido pois não conseguimos entregar (2 tentativas) para %s.\n", entrega->cliente->nome);
+            printf("Pedido será devolvido pois não conseguimos entregar (2 tentativas) para %s.\n", entrega->pedido->cliente->nome);
             addFila(dev, entrega);  // Movendo para a fila de devolução
         }
     }
