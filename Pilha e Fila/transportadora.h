@@ -70,7 +70,7 @@ void cadastarPedido(Pedido **p, ListaCliente *l);
 
 // Funções da rota
 void agruparPorEndereco(Fila *f, Pedido *novoPedido);
-void entregar(Fila *f, Pilha **p, Fila *dev);
+void entregar(Fila *f, Pilha **p, Fila *dev, int *score);
 //gerar números 1 até 7 pra entregar e 8 até 10 pra não entregar (adicionar o score, contador e na pilha)
 //pegar a pilha e adicionar na fila de devolução
 

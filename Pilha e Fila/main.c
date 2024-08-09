@@ -4,61 +4,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 int main ()
 {
-    //Fila *fila = criarFila();
+    srand(time(NULL));
+
     ListaCliente listacliente;
     listacliente.prox = NULL;
     Fila *f = criarFila();
     Pilha *p = criarPilha();
     Fila *dev = criarFila();
-    //Entrega *entrega = fila;
 
     int id = 0;
+    int score = 0;
+    int op = 0;
+    do{
+        printf("\n===== MENU =====\n");
+        printf("1 - Adicionar cliente\n2 - Adicionar pedido\n3 - Mostrar Pedidos\n4 - Mostrar Clientes\n5 - Realizar Entrega\n6 - Mostrar Fila de devolucao\n7 - Score da trasnportadora\n0 - Sair\n");
+        scanf("%d", &op);
+        getchar();
 
-    addLista(&listacliente, &id);
-    addLista(&listacliente, &id);
-    addLista(&listacliente, &id);
-    addLista(&listacliente, &id);
-    mostrarLista(&listacliente);
+                switch (op)
+                {
+                case 1:
+                    addLista(&listacliente, &id);
+                    break;
+                case 2:
+                    printf("Adicionando um pedido\n");
+                    cadastrarPedido(f, &listacliente);
+                    break;
+                case 3:
+                    mostarFila(f);
+                    break;
+                case 4:
+                    mostrarLista(&listacliente);
+                    break;
+                case 5:
+                    entregar(f, &p, dev, &score);
+                    break;
+                case 6:
+                    mostarFila(dev);
+                    break;
+                case 7:
+                    printf("Score atual: %d\n", score);
+                    break;
+                case 0:
+                    printf("\nsaindo...\n");
+                    break;
+                default:
+                    break;
+                }
+    }while(op != 0);
 
-    cadastrarPedido(f, &listacliente);
-    cadastrarPedido(f, &listacliente);
-    cadastrarPedido(f, &listacliente);
-    cadastrarPedido(f, &listacliente);
-    cadastrarPedido(f, &listacliente);
-    mostarFila(f);
-
-    // Entrega *atual = filapedidos;
-    // while(atual != NULL)
-    // {
-    //     Entrega *novo = (Entrega *)malloc(sizeof(Entrega));
-    //     if(novo == NULL)
-    //     {
-    //         printf("erro ao alocar memoria(main)");
-    //         exit(1);
-    //     }
-    //     novo->pedido->cliente = atual->cliente;
-    //     novo->tentativa = 0;
-    //     novo->prox = NULL;
-
-    //     addFila(f, novo);
-
-    //     atual = atual->prox;
-    // }
-
-
-    
-    //addFila(fila, &cliente1);
-
-    entregar(f, &p, dev);
-    //printf("Fila de devolucoes:\n");
-    //Entrega *e;
-    // while((e = retirarFila(f)) != NULL){
-    //     printf("Devolucao para %s, %s\n", e->cliente->nome, e->cliente->enderecoRua);
-    //     free(e);    
-    // }
     liberarLista(&listacliente);
     liberarPilha(&p);
     liberarFila(&f);
