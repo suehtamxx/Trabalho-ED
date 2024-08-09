@@ -20,8 +20,8 @@ int main ()
     int op = 0;
     do{
         printf("\n===== MENU =====\n");
-        printf("1 - Adicionar cliente\n2 - Adicionar pedido\n3 - Mostrar Pedidos\n4 - Mostrar Clientes\n5 - Realizar Entrega\n6 - Mostrar Fila de devolucao\n7 - Score da trasnportadora\n0 - Sair\n");
-        scanf("%d", &op);
+        printf("1 - Adicionar Cliente\n2 - Adicionar pedido\n3 - Mostrar Pedidos\n4 - Mostrar Clientes\n5 - Realizar Entrega\n6 - Mostrar Fila de devolucao\n7 - Score da trasnportadora\n0 - Sair\n");
+        scanf(" %d", &op);
         getchar();
 
                 switch (op)
@@ -49,7 +49,7 @@ int main ()
                     printf("Score atual: %d\n", score);
                     break;
                 case 0:
-                    printf("\nsaindo...\n");
+                    printf("\nSaindo...\n");
                     break;
                 default:
                     break;
