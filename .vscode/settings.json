@@ -58,7 +58,8 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "stdlib.h": "c",
-    "image.h": "c"
+    "image.h": "c",
+    "string.h": "c"
   },
   "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe"
 }
