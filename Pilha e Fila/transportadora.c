@@ -60,7 +60,7 @@ void addLista(ListaCliente *l, int *id)
     strcpy(novo->cliente->cpf, buscaCpf);
     
     printf("\nInforme o nome: ");
-    scanf(" %[^\n]", novo->cliente->nome);
+    scanf(" %49[^\n]", novo->cliente->nome);
     setbuf(stdin, NULL);
 
     printf("\nInforme a rua em que reside: ");
@@ -268,7 +268,7 @@ void cadastrarPedido(Fila *f, ListaCliente *l)
     novoPedido->cliente = cliente;
 
     printf("\nNome do item que vai ser entregue: ");
-    scanf(" %[^\n]", buscaCpf);
+    scanf("%[^\n]", novoPedido->nomeP);
     setbuf(stdin, NULL);
 
     printf("\nDigite a quantidade de itens: ");
@@ -278,7 +278,7 @@ void cadastrarPedido(Fila *f, ListaCliente *l)
     agruparPorEndereco(f, novoPedido);
 
     printf("Pedido adicionado!\n");
-    printf("%s quantidade: %d para o endereco: %s \n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
+    printf("Nome: %s, quantidade: %d, para o endereco: %s \n", novoPedido->nomeP, novoPedido->quantidade, novoPedido->cliente->enderecoRua);
 }
 
 void agruparPorEndereco(Fila *f, Pedido *novoPedido)
@@ -384,7 +384,7 @@ void entregar(Fila *f, Pilha **p, Fila *dev, int *score)
 
         if (sucesso)
         {
-            printf("Entrega realizada para %s.", entrega->pedido->cliente->nome);
+            printf("Entrega realizada para %s.\n", entrega->pedido->cliente->nome);
             *score += 5;
 
             // Entregar todas as entregas seguintes com o mesmo endereço
@@ -407,16 +407,14 @@ void entregar(Fila *f, Pilha **p, Fila *dev, int *score)
             empilharPilha(p, entrega);  // Movendo para a pilha para nova tentativa
 
             // Também empilha todas as entregas seguintes com o mesmo endereço
-            Entrega *proxEntrega;
             while (f->inicio != NULL && strcmp(entrega->pedido->cliente->enderecoRua, f->inicio->pedido->cliente->enderecoRua) == 0)
             {
-                proxEntrega = retirarFila(f);
+                Entrega *proxEntrega = retirarFila(f);;
                 proxEntrega->tentativa = 1;
                 printf("Entrega nao efetuada! Pedido adicionado a pilha para %s.", proxEntrega->pedido->cliente->nome);
                 empilharPilha(p, proxEntrega);
             }
             
-            free(entrega);
         }
     }
 
@@ -427,46 +425,43 @@ void entregar(Fila *f, Pilha **p, Fila *dev, int *score)
         entrega->tentativa = 2;  // Segunda tentativa
 
         // Verifica o sucesso da segunda tentativa
-        printf("\nIniciando a entrega na segunda tentativa para %s.", entrega->pedido->cliente->nome);
+        printf("\nIniciando a entrega na segunda tentativa para %s.\n", entrega->pedido->cliente->nome);
         int i = rand() % 2;
         int sucesso = (i == 1);
 
         if (sucesso)
         {
-            printf("Entrega efetuada na segunda tentativa para %s.", entrega->pedido->cliente->nome);
+            printf("Entrega efetuada na segunda tentativa para %s.\n", entrega->pedido->cliente->nome);
             *score += 3;
 
             // Entregar todas as entregas seguintes com o mesmo endereço
-            Entrega *proxEntrega;
             while (*p != NULL && strcmp(entrega->pedido->cliente->enderecoRua, (*p)->entrega->pedido->cliente->enderecoRua) == 0)
             {
-                proxEntrega = desempilharPilha(p);
+                Entrega *proxEntrega = desempilharPilha(p);
                 proxEntrega->tentativa = 2;
-                printf("Entrega efetuada na segunda tentativa para %s.", proxEntrega->pedido->cliente->nome);
+                printf("Entrega efetuada na segunda tentativa para %s.\n", proxEntrega->pedido->cliente->nome);
                 free(proxEntrega);
-                free(entrega);
                 *score += 3;
             }
 
+            free(entrega);
         }
         else
         {
             
-            printf("Pedido sera devolvido, pois nao conseguimos entregar (2 tentativas) para %s.", entrega->pedido->cliente->nome);
+            printf("Pedido sera devolvido, pois nao conseguimos entregar (2 tentativas) para %s.\n", entrega->pedido->cliente->nome);
             addFila(dev, entrega);  // Movendo para a fila de devolução
             *score -= 1;
 
             // Também devolve todas as entregas seguintes com o mesmo endereço
-            Entrega *proxEntrega;
             while (*p != NULL && strcmp(entrega->pedido->cliente->enderecoRua, (*p)->entrega->pedido->cliente->enderecoRua) == 0)
             {
-                proxEntrega = desempilharPilha(p);
+                Entrega *proxEntrega = desempilharPilha(p);
                 printf("Pedido sera devolvido pois nao conseguimos entregar (2 tentativas) para %s.", proxEntrega->pedido->cliente->nome);
                 addFila(dev, proxEntrega);
                 *score -= 1;
             }
 
-            free(entrega);
         }
     }
 }
